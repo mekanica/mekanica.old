@@ -77,7 +77,7 @@ public class TileEntityTurbineRotor extends TileEntityBasicBlock {
                 newBlades += ((TileEntityTurbineRotor) rotorTe).getHousedBlades();
             }
 
-            pointer.offset(EnumFacing.UP);
+            pointer = pointer.offset(EnumFacing.UP);
         }
 
         TileEntity teRotationalComplex = pointer.getTileEntity(world);

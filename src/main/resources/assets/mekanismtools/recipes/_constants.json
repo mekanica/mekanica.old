@@ -7,42 +7,42 @@
     }
   },
   {
-    "name": "INGOTBRONZE",
+    "name": "INGOT_BRONZE",
     "ingredient": {
       "type": "forge:ore_dict",
       "ore": "ingotBronze"
     }
   },
   {
-    "name": "INGOTIRON",
+    "name": "INGOT_IRON",
     "ingredient": {
       "type": "forge:ore_dict",
       "ore": "ingotIron"
     }
   },
   {
-    "name": "INGOTSTEEL",
+    "name": "INGOT_STEEL",
     "ingredient": {
       "type": "forge:ore_dict",
       "ore": "ingotSteel"
     }
   },
   {
-    "name": "INGOTOSMIUM",
+    "name": "INGOT_OSMIUM",
     "ingredient": {
       "type": "forge:ore_dict",
       "ore": "ingotOsmium"
     }
   },
   {
-    "name": "INGOTREFINEDGLOWSTONE",
+    "name": "INGOT_REFINED_GLOWSTONE",
     "ingredient": {
       "type": "forge:ore_dict",
       "ore": "ingotRefinedGlowstone"
     }
   },
   {
-    "name": "INGOTREFINEDOBSIDIAN",
+    "name": "INGOT_REFINED_OBSIDIAN",
     "ingredient": {
       "type": "forge:ore_dict",
       "ore": "ingotRefinedObsidian"

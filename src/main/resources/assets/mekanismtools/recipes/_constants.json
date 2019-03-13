@@ -1,0 +1,59 @@
+[
+  {
+    "name": "STICKWOOD",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "stickWood"
+    }
+  },
+  {
+    "name": "INGOTBRONZE",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "ingotBronze"
+    }
+  },
+  {
+    "name": "INGOTIRON",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    }
+  },
+  {
+    "name": "INGOTSTEEL",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "ingotSteel"
+    }
+  },
+  {
+    "name": "INGOTOSMIUM",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "ingotOsmium"
+    }
+  },
+  {
+    "name": "INGOTREFINEDGLOWSTONE",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "ingotRefinedGlowstone"
+    }
+  },
+  {
+    "name": "INGOTREFINEDOBSIDIAN",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "ingotRefinedObsidian"
+    }
+  },
+  {
+    "name": "GEMLAPIS",
+    "ingredient": {
+      "item": "minecraft:dye",
+      "data": 4,
+      "__comment": "using oredict is probably risky here"
+    }
+  }
+]

@@ -10,11 +10,10 @@
   "type": "forge:ore_shaped",
   "key": {
     "I": {
-      "item": "minecraft:iron_ingot"
+      "item": "#INGOTIRON"
     },
     "*": {
-      "ore": "ingotSteel",
-      "type": "forge:ore_dict"
+      "item": "#INGOTSTEEL"
     }
   }
 }

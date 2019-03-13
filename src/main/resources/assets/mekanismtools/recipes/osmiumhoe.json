@@ -10,11 +10,10 @@
   "type": "forge:ore_shaped",
   "key": {
     "T": {
-      "item": "minecraft:stick"
+      "item": "#STICKWOOD"
     },
     "X": {
-      "ore": "ingotOsmium",
-      "type": "forge:ore_dict"
+      "item": "#INGOTOSMIUM"
     }
   }
 }

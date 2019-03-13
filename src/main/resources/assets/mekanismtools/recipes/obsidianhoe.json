@@ -10,7 +10,7 @@
   "type": "forge:ore_shaped",
   "key": {
     "T": {
-      "item": "#STICKWOOD"
+      "item": "#STICK_WOOD"
     },
     "X": {
       "item": "#INGOT_REFINED_OBSIDIAN"

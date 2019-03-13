@@ -9,7 +9,7 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "*": {
-      "item": "#GEMLAPIS"
+      "item": "#GEM_LAPIS"
     }
   }
 }

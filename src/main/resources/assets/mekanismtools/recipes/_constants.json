@@ -1,6 +1,6 @@
 [
   {
-    "name": "STICKWOOD",
+    "name": "STICK_WOOD",
     "ingredient": {
       "type": "forge:ore_dict",
       "ore": "stickWood"
@@ -49,11 +49,10 @@
     }
   },
   {
-    "name": "GEMLAPIS",
+    "name": "GEM_LAPIS",
     "ingredient": {
-      "item": "minecraft:dye",
-      "data": 4,
-      "__comment": "using oredict is probably risky here"
+      "type": "forge:ore_dict",
+      "ore": "gemLapis"
     }
   }
 ]

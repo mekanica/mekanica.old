@@ -13,6 +13,7 @@ import mekanism.common.network.PacketTileEntity.TileEntityMessage;
 import mekanism.common.tile.prefab.TileEntityBasicBlock;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -63,38 +64,31 @@ public class TileEntityTurbineRotor extends TileEntityBasicBlock {
         Coord4D pointer = Coord4D.get(this);
 
         //Go to bottom rotor
-        while (true) {
-            if (isRotor(pointer.offset(EnumFacing.DOWN))) {
-                pointer = pointer.offset(EnumFacing.DOWN);
-                continue;
-            }
-
-            break;
+        while (isRotor(pointer.offset(EnumFacing.DOWN))) {
+            pointer = pointer.offset(EnumFacing.DOWN);
         }
 
-        //Put all rotors in new list, top to bottom
-        while (true) {
+        //Put all rotors in new list, bottom to top
+        while(isRotor(pointer)) {
             newRotors.add(pointer.clone());
-            newBlades += ((TileEntityTurbineRotor) pointer.getTileEntity(world)).getHousedBlades();
 
-            if (isRotor(pointer.offset(EnumFacing.UP))) {
-                pointer = pointer.offset(EnumFacing.UP);
-                continue;
+            TileEntity rotorTe = pointer.getTileEntity(world);
+            if(rotorTe instanceof TileEntityTurbineRotor) {
+                newBlades += ((TileEntityTurbineRotor) rotorTe).getHousedBlades();
             }
 
-            break;
+            pointer.offset(EnumFacing.UP);
         }
 
-        if (isComplex(pointer.offset(EnumFacing.UP))) {
-            id = ((TileEntityRotationalComplex) pointer.offset(EnumFacing.UP).getTileEntity(world)).multiblockUUID;
+        TileEntity teRotationalComplex = pointer.getTileEntity(world);
+        if (teRotationalComplex instanceof TileEntityRotationalComplex) {
+            id = ((TileEntityRotationalComplex) teRotationalComplex).multiblockUUID;
             complex = true;
         }
 
         //Update all rotors, send packet if necessary
         for (Coord4D coord : newRotors) {
             TileEntityTurbineRotor rotor = (TileEntityTurbineRotor) coord.getTileEntity(world);
-            int prevHoused = rotor.getHousedBlades();
-            int prevBlades = rotor.blades;
 
             rotor.rotors = newRotors;
             rotor.blades = newBlades;
@@ -155,10 +149,6 @@ public class TileEntityTurbineRotor extends TileEntityBasicBlock {
 
     private boolean isRotor(Coord4D coord) {
         return coord.getTileEntity(world) instanceof TileEntityTurbineRotor;
-    }
-
-    private boolean isComplex(Coord4D coord) {
-        return coord.getTileEntity(world) instanceof TileEntityRotationalComplex;
     }
 
     @Override

@@ -21,17 +21,15 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 public abstract class TileEntityMachine extends TileEntityNoisyBlock implements IUpgradeTile, IRedstoneControl,
       ISecurityTile {
 
-    public int updateDelay;
-
     public boolean isActive;
-
-    public boolean clientActive;
 
     public double prevEnergy;
 
     public double BASE_ENERGY_PER_TICK;
 
     public double energyPerTick;
+
+    private long lastActive = -1;
 
     /**
      * This machine's current RedstoneControl type.
@@ -54,24 +52,11 @@ public abstract class TileEntityMachine extends TileEntityNoisyBlock implements 
     public void onUpdate() {
         super.onUpdate();
 
-        if (world.isRemote && updateDelay > 0) {
-            updateDelay--;
-
-            if (updateDelay == 0 && clientActive != isActive) {
-                isActive = clientActive;
+        if (world.isRemote && !isActive && lastActive > 0) {
+            long updateDiff = world.getTotalWorldTime() - lastActive;
+            if (updateDiff > 100) {
                 MekanismUtils.updateBlock(world, getPos());
-            }
-        }
-
-        if (!world.isRemote) {
-            if (updateDelay > 0) {
-                updateDelay--;
-
-                if (updateDelay == 0 && clientActive != isActive) {
-                    Mekanism.packetHandler.sendToReceivers(
-                          new TileEntityMessage(Coord4D.get(this), getNetworkedData(new TileNetworkList())),
-                          new Range4D(Coord4D.get(this)));
-                }
+                lastActive = -1;
             }
         }
     }
@@ -88,16 +73,18 @@ public abstract class TileEntityMachine extends TileEntityNoisyBlock implements 
 
     @Override
     public void setActive(boolean active) {
-        isActive = active;
+        boolean stateChange = (isActive != active);
 
-        if (clientActive != active && updateDelay == 0) {
+        if (stateChange) {
+            isActive = active;
             Mekanism.packetHandler
                   .sendToReceivers(new TileEntityMessage(Coord4D.get(this), getNetworkedData(new TileNetworkList())),
                         new Range4D(Coord4D.get(this)));
-
-            updateDelay = 10;
-            clientActive = active;
         }
+    }
+
+    public boolean wasActiveRecently() {
+        return isActive || (lastActive > 0 && (world.getTotalWorldTime() - lastActive) < 100);
     }
 
     @Override
@@ -115,15 +102,24 @@ public abstract class TileEntityMachine extends TileEntityNoisyBlock implements 
         super.handlePacketData(dataStream);
 
         if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
-            clientActive = dataStream.readBoolean();
+            boolean newActive = dataStream.readBoolean();
             controlType = RedstoneControl.values()[dataStream.readInt()];
             energyPerTick = dataStream.readDouble();
             maxEnergy = dataStream.readDouble();
 
-            if (updateDelay == 0 && clientActive != isActive) {
-                updateDelay = general.UPDATE_DELAY;
-                isActive = clientActive;
-                MekanismUtils.updateBlock(world, getPos());
+            boolean stateChange = (newActive != isActive);
+            isActive = newActive;
+
+            if (stateChange && !isActive) {
+                // Switched off; note the time
+                lastActive = world.getTotalWorldTime();
+            } else if (stateChange && isActive) {
+                // Switching on; if lastActive is not currently set, trigger a lighting update
+                // and make sure lastActive is clear
+                if (lastActive == -1) {
+                    MekanismUtils.updateBlock(world, getPos());
+                }
+                lastActive = -1;
             }
         }
     }

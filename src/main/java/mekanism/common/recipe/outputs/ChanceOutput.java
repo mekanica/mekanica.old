@@ -2,7 +2,6 @@ package mekanism.common.recipe.outputs;
 
 import java.util.Random;
 import mekanism.common.util.InventoryUtils;
-import mekanism.common.util.StackUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
@@ -92,6 +91,6 @@ public class ChanceOutput extends MachineOutput<ChanceOutput> {
 
     @Override
     public ChanceOutput copy() {
-        return new ChanceOutput(StackUtils.copy(primaryOutput), StackUtils.copy(secondaryOutput), secondaryChance);
+        return new ChanceOutput(primaryOutput.copy(), secondaryOutput.copy(), secondaryChance);
     }
 }

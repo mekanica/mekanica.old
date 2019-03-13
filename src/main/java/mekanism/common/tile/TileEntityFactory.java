@@ -66,6 +66,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import org.apache.commons.lang3.tuple.Pair;
 
 public class TileEntityFactory extends TileEntityMachine implements IComputerIntegration, ISideConfiguration,
       IGasHandler, ITubeConnection, ISpecialConfigData, ITierUpgradeable, ISustainedData {
@@ -378,6 +379,7 @@ public class TileEntityFactory extends TileEntityMachine implements IComputerInt
         return configComponent.hasSideForData(TransmissionType.ENERGY, facing, 1, side);
     }
 
+    //can be optimised a lot to be linear
     public void sortInventory() {
         if (sorting) {
             boolean didOp = false;
@@ -405,9 +407,9 @@ public class TileEntityFactory extends TileEntityMachine implements IComputerInt
                         continue;
                     }
 
-                    List<ItemStack> evened = StackUtils.even(inventory.get(invID1.ID), inventory.get(invID2.ID));
-                    inventory.set(invID1.ID, evened.get(0));
-                    inventory.set(invID2.ID, evened.get(1));
+                    Pair<ItemStack, ItemStack> evened = StackUtils.even(inventory.get(invID1.ID), inventory.get(invID2.ID));
+                    inventory.set(invID1.ID, evened.getLeft());
+                    inventory.set(invID2.ID, evened.getRight());
 
                     didOp = true;
                     break;

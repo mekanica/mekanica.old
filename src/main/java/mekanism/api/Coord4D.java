@@ -1,5 +1,7 @@
 package mekanism.api;
 
+import javax.annotation.Nullable;
+
 import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
 import mekanism.common.base.TileNetworkList;
@@ -125,6 +127,7 @@ public class Coord4D {
      * @param world - world this Coord4D is in
      * @return the TileEntity of this Coord4D's block
      */
+    @Nullable
     public TileEntity getTileEntity(IBlockAccess world) {
         if (world instanceof World && !exists((World) world)) {
             return null;
@@ -139,6 +142,7 @@ public class Coord4D {
      * @param world - world this Coord4D is in
      * @return the Block value of this Coord4D's block
      */
+    @Nullable
     public Block getBlock(IBlockAccess world) {
         if (world instanceof World && !exists((World) world)) {
             return null;
@@ -269,6 +273,7 @@ public class Coord4D {
      * @param other - Coord4D to find the side difference of
      * @return EnumFacing representing the side the defined relative Coord4D is on to this
      */
+    @Nullable
     public EnumFacing sideDifference(Coord4D other) {
         Coord4D diff = difference(other);
 

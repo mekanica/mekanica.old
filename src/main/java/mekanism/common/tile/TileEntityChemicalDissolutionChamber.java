@@ -59,6 +59,7 @@ public class TileEntityChemicalDissolutionChamber extends TileEntityMachine impl
               usage.chemicalDissolutionChamberUsage, 4);
 
         inventory = NonNullList.withSize(5, ItemStack.EMPTY);
+        upgradeComponent.setSupported(Upgrade.GAS);
     }
 
     @Override
@@ -86,7 +87,7 @@ public class TileEntityChemicalDissolutionChamber extends TileEntityMachine impl
 
             DissolutionRecipe recipe = getRecipe();
 
-            injectUsageThisTick = Math.max(1, StatUtils.inversePoisson(injectUsage));
+            injectUsageThisTick = Math.max(BASE_INJECT_USAGE, StatUtils.inversePoisson(injectUsage));
 
             if (canOperate(recipe) && getEnergy() >= energyPerTick && injectTank.getStored() >= injectUsageThisTick
                   && MekanismUtils.canFunction(this)) {

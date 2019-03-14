@@ -36,21 +36,13 @@ public class GuiWindGenerator extends GuiMekanism {
               MekanismUtils.getResource(ResourceType.GUI, "GuiWindTurbine.png")));
         guiElements.add(new GuiSecurityTab(this, tileEntity,
               MekanismUtils.getResource(ResourceType.GUI, "GuiWindTurbine.png")));
-<<<<<<< HEAD
-        guiElements.add(new GuiEnergyInfo(() -> ListUtils.asList(
-              LangUtils.localize("gui.producing") + ": " + MekanismUtils.getEnergyDisplay(
-                    tileEntity.isActive ? generators.windGenerationMin * tileEntity.getCurrentMultiplier() : 0) + "/t",
-              LangUtils.localize("gui.maxOutput") + ": " + MekanismUtils.getEnergyDisplay(tileEntity.getMaxOutput())
-                    + "/t"), this, MekanismUtils.getResource(ResourceType.GUI, "GuiWindTurbine.png")));
-=======
         guiElements.add(new GuiEnergyInfo(() -> {
             String[] values = new String[]{LangUtils.localize("gui.producing") + ": " + MekanismUtils.getEnergyDisplay(
-                  tileEntity.isActive ? generators.windGenerationMin * tileEntity.currentMultiplier : 0) + "/t",
+                  tileEntity.isActive ? generators.windGenerationMin * tileEntity.getCurrentMultiplier() : 0) + "/t",
                   LangUtils.localize("gui.maxOutput") + ": " + MekanismUtils.getEnergyDisplay(tileEntity.getMaxOutput())
                         + "/t"};
             return Arrays.asList(values);
         }, this, MekanismUtils.getResource(ResourceType.GUI, "GuiWindTurbine.png")));
->>>>>>> b8c7f3d85... remove ListUtils
         guiElements
               .add(new GuiPowerBar(this, tileEntity, MekanismUtils.getResource(ResourceType.GUI, "GuiWindTurbine.png"),
                     164, 15));

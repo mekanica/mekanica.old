@@ -1,6 +1,7 @@
 package mekanism.generators.client.gui;
 
 import java.io.IOException;
+import java.util.Arrays;
 import mekanism.api.Coord4D;
 import mekanism.client.gui.GuiMekanism;
 import mekanism.client.gui.element.GuiEnergyInfo;
@@ -18,7 +19,6 @@ import mekanism.common.inventory.container.ContainerFilter;
 import mekanism.common.network.PacketTileEntity.TileEntityMessage;
 import mekanism.common.tile.TileEntityGasTank;
 import mekanism.common.util.LangUtils;
-import mekanism.common.util.ListUtils;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.MekanismUtils.ResourceType;
 import mekanism.generators.client.gui.element.GuiTurbineTab;
@@ -68,11 +68,10 @@ public class GuiIndustrialTurbine extends GuiMekanism {
             double energyMultiplier = (general.maxEnergyPerSteam / TurbineUpdateProtocol.MAX_BLADES) * Math
                   .min(tileEntity.structure.blades, tileEntity.structure.coils * generators.turbineBladesPerCoil);
 
-            return ListUtils.asList(
-                  LangUtils.localize("gui.storing") + ": " + MekanismUtils
-                        .getEnergyDisplay(tileEntity.getEnergy(), tileEntity.getMaxEnergy()),
+            return Arrays.asList(LangUtils.localize("gui.storing") + ": " + MekanismUtils
+                            .getEnergyDisplay(tileEntity.getEnergy(), tileEntity.getMaxEnergy()),
                   LangUtils.localize("gui.producing") + ": " + MekanismUtils
-                        .getEnergyDisplay(tileEntity.structure.clientFlow * energyMultiplier) + "/t");
+                            .getEnergyDisplay(tileEntity.structure.clientFlow * energyMultiplier) + "/t");
         }, this, MekanismUtils.getResource(ResourceType.GUI, "GuiIndustrialTurbine.png")));
     }
 

@@ -1,12 +1,12 @@
 package mekanism.generators.client.gui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import mekanism.client.gui.GuiMekanism;
 import mekanism.client.gui.element.GuiEnergyInfo;
 import mekanism.client.gui.element.GuiSlot;
 import mekanism.client.gui.element.GuiSlot.SlotType;
 import mekanism.common.util.LangUtils;
-import mekanism.common.util.ListUtils;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.MekanismUtils.ResourceType;
 import mekanism.generators.client.gui.element.GuiFuelTab;
@@ -29,12 +29,12 @@ public class GuiReactorController extends GuiMekanism {
         tileEntity = tentity;
 
         if (tileEntity.isFormed()) {
-            guiElements.add(new GuiEnergyInfo(() -> tileEntity.isFormed() ? ListUtils.asList(
-                  LangUtils.localize("gui.storing") + ": " + MekanismUtils
-                        .getEnergyDisplay(tileEntity.getEnergy(), tileEntity.getMaxEnergy()),
-                  LangUtils.localize("gui.producing") + ": " + MekanismUtils
-                        .getEnergyDisplay(tileEntity.getReactor().getPassiveGeneration(false, true)) + "/t")
-                  : new ArrayList<>(), this, MekanismUtils.getResource(ResourceType.GUI, "GuiBlank.png")));
+            guiElements.add(new GuiEnergyInfo(
+                  () -> tileEntity.isFormed() ? Arrays.asList(LangUtils.localize("gui.storing") + ": " + MekanismUtils
+                              .getEnergyDisplay(tileEntity.getEnergy(), tileEntity.getMaxEnergy()),
+                        LangUtils.localize("gui.producing") + ": " + MekanismUtils
+                              .getEnergyDisplay(tileEntity.getReactor().getPassiveGeneration(false, true)) + "/t")
+                        : new ArrayList<>(), this, MekanismUtils.getResource(ResourceType.GUI, "GuiBlank.png")));
             guiElements
                   .add(new GuiSlot(SlotType.NORMAL, this, MekanismUtils.getResource(ResourceType.GUI, "GuiBlank.png"),
                         79, 38));

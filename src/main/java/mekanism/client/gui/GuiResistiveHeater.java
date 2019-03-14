@@ -55,7 +55,7 @@ public class GuiResistiveHeater extends GuiMekanism {
             String multiplier = MekanismUtils.getEnergyDisplay(tileEntity.energyUsage);
             return Arrays.asList(LangUtils.localize("gui.using") + ": " + multiplier + "/t",
                   LangUtils.localize("gui.needed") + ": " + MekanismUtils
-                            .getEnergyDisplay(tileEntity.getMaxEnergy() - tileEntity.getEnergy()));
+                        .getEnergyDisplay(tileEntity.getMaxEnergy() - tileEntity.getEnergy()));
         }, this, MekanismUtils.getResource(ResourceType.GUI, "GuiResistiveHeater.png")));
         guiElements.add(new GuiHeatInfo(() ->
         {

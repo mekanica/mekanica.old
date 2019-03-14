@@ -57,7 +57,7 @@ public class GuiFactory extends GuiMekanism {
             String multiplier = MekanismUtils.getEnergyDisplay(tileEntity.lastUsage);
             return Arrays.asList(LangUtils.localize("gui.using") + ": " + multiplier + "/t",
                   LangUtils.localize("gui.needed") + ": " + MekanismUtils
-                            .getEnergyDisplay(tileEntity.getMaxEnergy() - tileEntity.getEnergy()));
+                        .getEnergyDisplay(tileEntity.getMaxEnergy() - tileEntity.getEnergy()));
         }, this, tileEntity.tier.guiLocation));
     }
 

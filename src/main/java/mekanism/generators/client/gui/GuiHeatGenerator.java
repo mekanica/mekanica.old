@@ -37,9 +37,11 @@ public class GuiHeatGenerator extends GuiMekanism {
               MekanismUtils.getResource(ResourceType.GUI, "GuiHeatGenerator.png")));
         guiElements.add(new GuiSecurityTab(this, tileEntity,
               MekanismUtils.getResource(ResourceType.GUI, "GuiHeatGenerator.png")));
-        guiElements.add(new GuiEnergyInfo(() -> Arrays.asList(LangUtils.localize("gui.producing") + ": " + MekanismUtils.getEnergyDisplay(tileEntity.producingEnergy)
-                            + "/t", LangUtils.localize("gui.maxOutput") + ": " + MekanismUtils.getEnergyDisplay(tileEntity.getMaxOutput())
-                            + "/t"), this, MekanismUtils.getResource(ResourceType.GUI, "GuiHeatGenerator.png")));
+        guiElements.add(new GuiEnergyInfo(() -> Arrays.asList(
+              LangUtils.localize("gui.producing") + ": " + MekanismUtils.getEnergyDisplay(tileEntity.producingEnergy)
+                    + "/t",
+              LangUtils.localize("gui.maxOutput") + ": " + MekanismUtils.getEnergyDisplay(tileEntity.getMaxOutput())
+                    + "/t"), this, MekanismUtils.getResource(ResourceType.GUI, "GuiHeatGenerator.png")));
         guiElements.add(new GuiFluidGauge(() -> tileEntity.lavaTank, Type.WIDE, this,
               MekanismUtils.getResource(ResourceType.GUI, "GuiHeatGenerator.png"), 55, 18));
         guiElements.add(new GuiPowerBar(this, tileEntity,

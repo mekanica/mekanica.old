@@ -43,12 +43,12 @@ public class GuiReactorHeat extends GuiMekanism {
     public GuiReactorHeat(InventoryPlayer inventory, final TileEntityReactorController tentity) {
         super(new ContainerNull(inventory.player, tentity));
         tileEntity = tentity;
-        guiElements.add(new GuiEnergyInfo(
-              () -> tileEntity.isFormed() ? Arrays.asList(LangUtils.localize("gui.storing") + ": " + MekanismUtils
-                          .getEnergyDisplay(tileEntity.getEnergy(), tileEntity.getMaxEnergy()),
-                    LangUtils.localize("gui.producing") + ": " + MekanismUtils
-                          .getEnergyDisplay(tileEntity.getReactor().getPassiveGeneration(false, true)) + "/t")
-                    : new ArrayList<>(), this, MekanismUtils.getResource(ResourceType.GUI, "GuiTall.png")));
+        guiElements.add(new GuiEnergyInfo(() -> tileEntity.isFormed() ? Arrays.asList(
+              LangUtils.localize("gui.storing") + ": " + MekanismUtils
+                    .getEnergyDisplay(tileEntity.getEnergy(), tileEntity.getMaxEnergy()),
+              LangUtils.localize("gui.producing") + ": " + MekanismUtils
+                    .getEnergyDisplay(tileEntity.getReactor().getPassiveGeneration(false, true)) + "/t")
+              : new ArrayList<>(), this, MekanismUtils.getResource(ResourceType.GUI, "GuiTall.png")));
         guiElements.add(new GuiNumberGauge(new INumberInfoHandler() {
             @Override
             public TextureAtlasSprite getIcon() {

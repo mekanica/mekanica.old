@@ -25,11 +25,12 @@ public class GuiInductionMatrix extends GuiMekanism {
         tileEntity = tentity;
         guiElements.add(new GuiMatrixTab(this, tileEntity, MatrixTab.STAT, 6,
               MekanismUtils.getResource(ResourceType.GUI, "GuiInductionMatrix.png")));
-        guiElements.add(new GuiEnergyInfo(() -> Arrays.asList(LangUtils.localize("gui.storing") + ": " + MekanismUtils
-                            .getEnergyDisplay(tileEntity.getEnergy(), tileEntity.getMaxEnergy()),
+        guiElements.add(new GuiEnergyInfo(() -> Arrays.asList(
+              LangUtils.localize("gui.storing") + ": " + MekanismUtils
+                    .getEnergyDisplay(tileEntity.getEnergy(), tileEntity.getMaxEnergy()),
               LangUtils.localize("gui.input") + ": " + MekanismUtils.getEnergyDisplay(tileEntity.structure.lastInput)
-                            + "/t", LangUtils.localize("gui.output") + ": " + MekanismUtils.getEnergyDisplay(tileEntity.structure.lastOutput)
-                            + "/t"), this, MekanismUtils.getResource(ResourceType.GUI, "GuiInductionMatrix.png")));
+                    + "/t", LangUtils.localize("gui.output") + ": " + MekanismUtils.getEnergyDisplay(tileEntity.structure.lastOutput)
+                    + "/t"), this, MekanismUtils.getResource(ResourceType.GUI, "GuiInductionMatrix.png")));
     }
 
     @Override

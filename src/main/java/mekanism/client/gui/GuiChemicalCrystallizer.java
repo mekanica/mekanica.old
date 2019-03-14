@@ -72,7 +72,7 @@ public class GuiChemicalCrystallizer extends GuiMekanism {
             String multiplier = MekanismUtils.getEnergyDisplay(tileEntity.energyPerTick);
             return Arrays.asList(LangUtils.localize("gui.using") + ": " + multiplier + "/t",
                   LangUtils.localize("gui.needed") + ": " + MekanismUtils
-                            .getEnergyDisplay(tileEntity.getMaxEnergy() - tileEntity.getEnergy()));
+                        .getEnergyDisplay(tileEntity.getMaxEnergy() - tileEntity.getEnergy()));
         }, this, MekanismUtils.getResource(ResourceType.GUI, "GuiChemicalCrystallizer.png")));
         guiElements.add(new GuiGasGauge(() -> tileEntity.inputTank, GuiGauge.Type.STANDARD, this,
               MekanismUtils.getResource(ResourceType.GUI, "GuiChemicalCrystallizer.png"), 5, 4));

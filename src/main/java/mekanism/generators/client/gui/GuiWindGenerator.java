@@ -40,8 +40,7 @@ public class GuiWindGenerator extends GuiMekanism {
               LangUtils.localize("gui.producing") + ": " + MekanismUtils.getEnergyDisplay(
                     tileEntity.isActive ? generators.windGenerationMin * tileEntity.getCurrentMultiplier() : 0) + "/t",
               LangUtils.localize("gui.maxOutput") + ": " + MekanismUtils.getEnergyDisplay(tileEntity.getMaxOutput())
-                    + "/t"),
-         this, MekanismUtils.getResource(ResourceType.GUI, "GuiWindTurbine.png")));
+                    + "/t"),this, MekanismUtils.getResource(ResourceType.GUI, "GuiWindTurbine.png")));
         guiElements
               .add(new GuiPowerBar(this, tileEntity, MekanismUtils.getResource(ResourceType.GUI, "GuiWindTurbine.png"),
                     164, 15));

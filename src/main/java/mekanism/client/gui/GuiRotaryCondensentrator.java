@@ -67,7 +67,7 @@ public class GuiRotaryCondensentrator extends GuiMekanism {
             String usage = MekanismUtils.getEnergyDisplay(tileEntity.clientEnergyUsed);
             return Arrays.asList(LangUtils.localize("gui.using") + ": " + usage + "/t",
                   LangUtils.localize("gui.needed") + ": " + MekanismUtils
-                            .getEnergyDisplay(tileEntity.getMaxEnergy() - tileEntity.getEnergy()));
+                        .getEnergyDisplay(tileEntity.getMaxEnergy() - tileEntity.getEnergy()));
         }, this, MekanismUtils.getResource(ResourceType.GUI, "GuiRotaryCondensentrator.png")));
         guiElements.add(new GuiFluidGauge(() -> tileEntity.fluidTank, GuiGauge.Type.STANDARD, this,
               MekanismUtils.getResource(ResourceType.GUI, "GuiRotaryCondensentrator.png"), 133, 13));

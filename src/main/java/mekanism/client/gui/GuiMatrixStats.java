@@ -53,11 +53,12 @@ public class GuiMatrixStats extends GuiMekanism {
                 return tileEntity.structure.lastOutput / tileEntity.structure.transferCap;
             }
         }, MekanismUtils.getResource(ResourceType.GUI, "GuiNull.png"), 38, 13));
-        guiElements.add(new GuiEnergyInfo(() -> Arrays.asList(LangUtils.localize("gui.storing") + ": " + MekanismUtils
-                            .getEnergyDisplay(tileEntity.getEnergy(), tileEntity.getMaxEnergy()),
+        guiElements.add(new GuiEnergyInfo(() -> Arrays.asList(
+              LangUtils.localize("gui.storing") + ": " + MekanismUtils
+                    .getEnergyDisplay(tileEntity.getEnergy(), tileEntity.getMaxEnergy()),
               LangUtils.localize("gui.input") + ": " + MekanismUtils.getEnergyDisplay(tileEntity.structure.lastInput)
-                            + "/t", LangUtils.localize("gui.output") + ": " + MekanismUtils.getEnergyDisplay(tileEntity.structure.lastOutput)
-                            + "/t"), this, MekanismUtils.getResource(ResourceType.GUI, "GuiNull.png")));
+                    + "/t", LangUtils.localize("gui.output") + ": " + MekanismUtils.getEnergyDisplay(tileEntity.structure.lastOutput)
+                    + "/t"), this, MekanismUtils.getResource(ResourceType.GUI, "GuiNull.png")));
     }
 
     @Override

@@ -39,9 +39,9 @@ public class GuiEnergyCube extends GuiMekanism {
         guiElements.add(new GuiEnergyGauge(() -> tileEntity, GuiEnergyGauge.Type.WIDE, this,
               MekanismUtils.getResource(ResourceType.GUI, "GuiEnergyCube.png"), 55, 18));
         guiElements.add(new GuiEnergyInfo(() -> Arrays.asList(LangUtils.localize("gui.storing") + ": " + MekanismUtils
-                            .getEnergyDisplay(tileEntity.getEnergy(), tileEntity.getMaxEnergy()),
+                    .getEnergyDisplay(tileEntity.getEnergy(), tileEntity.getMaxEnergy()),
               LangUtils.localize("gui.maxOutput") + ": " + MekanismUtils.getEnergyDisplay(tileEntity.getMaxOutput())
-                            + "/t"), this, MekanismUtils.getResource(ResourceType.GUI, "GuiEnergyCube.png")));
+                    + "/t"), this, MekanismUtils.getResource(ResourceType.GUI, "GuiEnergyCube.png")));
         guiElements
               .add(new GuiSlot(SlotType.INPUT, this, MekanismUtils.getResource(ResourceType.GUI, "GuiEnergyCube.png"),
                     16, 34).with(SlotOverlay.MINUS));

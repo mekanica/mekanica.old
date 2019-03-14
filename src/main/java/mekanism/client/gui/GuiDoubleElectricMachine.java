@@ -43,7 +43,7 @@ public class GuiDoubleElectricMachine extends GuiMekanism {
             String multiplier = MekanismUtils.getEnergyDisplay(tileEntity.energyPerTick);
             return Arrays.asList(LangUtils.localize("gui.using") + ": " + multiplier + "/t",
                   LangUtils.localize("gui.needed") + ": " + MekanismUtils
-                            .getEnergyDisplay(tileEntity.getMaxEnergy() - tileEntity.getEnergy()));
+                        .getEnergyDisplay(tileEntity.getMaxEnergy() - tileEntity.getEnergy()));
         }, this, tileEntity.guiLocation));
 
         guiElements.add(new GuiSlot(SlotType.INPUT, this, tileEntity.guiLocation, 55, 16));

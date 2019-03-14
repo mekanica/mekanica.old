@@ -29,12 +29,12 @@ public class GuiReactorController extends GuiMekanism {
         tileEntity = tentity;
 
         if (tileEntity.isFormed()) {
-            guiElements.add(new GuiEnergyInfo(
-                  () -> tileEntity.isFormed() ? Arrays.asList(LangUtils.localize("gui.storing") + ": " + MekanismUtils
-                              .getEnergyDisplay(tileEntity.getEnergy(), tileEntity.getMaxEnergy()),
-                        LangUtils.localize("gui.producing") + ": " + MekanismUtils
-                              .getEnergyDisplay(tileEntity.getReactor().getPassiveGeneration(false, true)) + "/t")
-                        : new ArrayList<>(), this, MekanismUtils.getResource(ResourceType.GUI, "GuiBlank.png")));
+            guiElements.add(new GuiEnergyInfo(() -> tileEntity.isFormed() ? Arrays.asList(
+                  LangUtils.localize("gui.storing") + ": " + MekanismUtils
+                        .getEnergyDisplay(tileEntity.getEnergy(), tileEntity.getMaxEnergy()),
+                  LangUtils.localize("gui.producing") + ": " + MekanismUtils
+                        .getEnergyDisplay(tileEntity.getReactor().getPassiveGeneration(false, true)) + "/t")
+                  : new ArrayList<>(), this, MekanismUtils.getResource(ResourceType.GUI, "GuiBlank.png")));
             guiElements
                   .add(new GuiSlot(SlotType.NORMAL, this, MekanismUtils.getResource(ResourceType.GUI, "GuiBlank.png"),
                         79, 38));

@@ -33,10 +33,11 @@ public class GuiGasGenerator extends GuiMekanism {
               MekanismUtils.getResource(ResourceType.GUI, "GuiGasGenerator.png")));
         guiElements.add(new GuiSecurityTab(this, tileEntity,
               MekanismUtils.getResource(ResourceType.GUI, "GuiGasGenerator.png")));
-        guiElements.add(new GuiEnergyInfo(() -> Arrays.asList(LangUtils.localize("gui.producing") + ": " + MekanismUtils
-                            .getEnergyDisplay(tileEntity.generationRate * tileEntity.clientUsed) + "/t",
+        guiElements.add(new GuiEnergyInfo(() -> Arrays.asList(
+              LangUtils.localize("gui.producing") + ": " + MekanismUtils
+                    .getEnergyDisplay(tileEntity.generationRate * tileEntity.clientUsed) + "/t",
               LangUtils.localize("gui.maxOutput") + ": " + MekanismUtils.getEnergyDisplay(tileEntity.getMaxOutput())
-                            + "/t"), this, MekanismUtils.getResource(ResourceType.GUI, "GuiGasGenerator.png")));
+                    + "/t"), this, MekanismUtils.getResource(ResourceType.GUI, "GuiGasGenerator.png")));
         guiElements.add(new GuiGasGauge(() -> tileEntity.fuelTank, Type.WIDE, this,
               MekanismUtils.getResource(ResourceType.GUI, "GuiGasGenerator.png"), 55, 18));
         guiElements

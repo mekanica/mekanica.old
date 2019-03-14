@@ -39,7 +39,7 @@ public class GuiSeismicVibrator extends GuiMekanism {
             String multiplier = MekanismUtils.getEnergyDisplay(usage.seismicVibratorUsage);
             return Arrays.asList(LangUtils.localize("gui.using") + ": " + multiplier + "/t",
                   LangUtils.localize("gui.needed") + ": " + MekanismUtils
-                            .getEnergyDisplay(tileEntity.getMaxEnergy() - tileEntity.getEnergy()));
+                        .getEnergyDisplay(tileEntity.getMaxEnergy() - tileEntity.getEnergy()));
         }, this, MekanismUtils.getResource(ResourceType.GUI, "GuiSeismicVibrator.png")));
 
         guiElements.add(new GuiSlot(SlotType.NORMAL, this,

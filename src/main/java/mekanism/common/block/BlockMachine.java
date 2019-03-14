@@ -42,7 +42,6 @@ import mekanism.common.tile.TileEntityPersonalChest;
 import mekanism.common.tile.TileEntityQuantumEntangloporter;
 import mekanism.common.tile.prefab.TileEntityBasicBlock;
 import mekanism.common.tile.prefab.TileEntityContainerBlock;
-import mekanism.common.tile.prefab.TileEntityMachine;
 import mekanism.common.util.FluidContainerUtils;
 import mekanism.common.util.ItemDataUtils;
 import mekanism.common.util.MekanismUtils;
@@ -299,20 +298,10 @@ public abstract class BlockMachine extends BlockContainer {
     public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
         if (client.enableAmbientLighting) {
             TileEntity tileEntity = MekanismUtils.getTileEntitySafe(world, pos);
-
-            if (tileEntity instanceof TileEntityMachine) {
-                TileEntityMachine machine = (TileEntityMachine)tileEntity;
-                if (machine.wasActiveRecently()) {
-                    return 15;
-                } else {
-                    return 0;
-                }
-            }
-
-            if (tileEntity instanceof IActiveState) {
-                if (((IActiveState) tileEntity).getActive() && ((IActiveState) tileEntity).lightUpdate()) {
-                    return client.ambientLightingLevel;
-                }
+            if (tileEntity instanceof IActiveState &&
+                  ((IActiveState) tileEntity).lightUpdate() &&
+                  ((IActiveState) tileEntity).wasActiveRecently()) {
+                return client.ambientLightingLevel;
             }
         }
 

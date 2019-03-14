@@ -9,7 +9,6 @@ import mekanism.common.Upgrade;
 import mekanism.common.base.IRedstoneControl;
 import mekanism.common.base.IUpgradeTile;
 import mekanism.common.base.TileNetworkList;
-import mekanism.common.config.MekanismConfig.general;
 import mekanism.common.network.PacketTileEntity.TileEntityMessage;
 import mekanism.common.security.ISecurityTile;
 import mekanism.common.tile.component.TileComponentSecurity;
@@ -30,6 +29,10 @@ public abstract class TileEntityMachine extends TileEntityNoisyBlock implements 
     public double energyPerTick;
 
     private long lastActive = -1;
+
+    // Number of ticks that a machine can be inactive before it's considered not
+    // recently active
+    private final int RECENT_THRESHOLD = 100;
 
     /**
      * This machine's current RedstoneControl type.
@@ -54,7 +57,7 @@ public abstract class TileEntityMachine extends TileEntityNoisyBlock implements 
 
         if (world.isRemote && !isActive && lastActive > 0) {
             long updateDiff = world.getTotalWorldTime() - lastActive;
-            if (updateDiff > 100) {
+            if (updateDiff > RECENT_THRESHOLD) {
                 MekanismUtils.updateBlock(world, getPos());
                 lastActive = -1;
             }
@@ -84,7 +87,9 @@ public abstract class TileEntityMachine extends TileEntityNoisyBlock implements 
     }
 
     public boolean wasActiveRecently() {
-        return isActive || (lastActive > 0 && (world.getTotalWorldTime() - lastActive) < 100);
+        // If the machine is currently active or it flipped off within our threshold,
+        // we'll consider it recently active.
+        return isActive || (lastActive > 0 && (world.getTotalWorldTime() - lastActive) < RECENT_THRESHOLD);
     }
 
     @Override

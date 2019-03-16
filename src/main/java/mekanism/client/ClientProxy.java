@@ -273,6 +273,8 @@ public class ClientProxy extends CommonProxy {
         client.opaqueTransmitters = Mekanism.configuration.get("client", "OpaqueTransmitterRender", false).getBoolean();
         client.allowConfiguratorModeScroll = Mekanism.configuration.get("client", "ConfiguratorModeScroll", true)
               .getBoolean();
+        client.enableMultiblockFormationParticles = Mekanism.configuration.get("client", "MultiblockFormParticles", true,
+            "Set to false to prevent particle spam when loading multiblocks").getBoolean();
 
         if (Mekanism.configuration.hasChanged()) {
             Mekanism.configuration.save();
@@ -952,12 +954,16 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void doGenericSparkle(TileEntity tileEntity, INodeChecker checker) {
-        new SparkleAnimation(tileEntity, checker).run();
+        if(client.enableMultiblockFormationParticles) {
+            new SparkleAnimation(tileEntity, checker).run();
+        }
     }
 
     @Override
     public void doMultiblockSparkle(final TileEntityMultiblock<?> tileEntity) {
-        new SparkleAnimation(tileEntity, tile -> MultiblockManager.areEqual(tile, tileEntity)).run();
+        if(client.enableMultiblockFormationParticles) {
+            new SparkleAnimation(tileEntity, tile -> MultiblockManager.areEqual(tile, tileEntity)).run();
+        }
     }
 
     @Override

@@ -89,6 +89,7 @@ public class MekanismConfig {
         public static int ambientLightingLevel;
         public static boolean opaqueTransmitters = false;
         public static boolean allowConfiguratorModeScroll;
+        public static boolean enableMultiblockFormationParticles = true;
     }
 
     public static class usage {

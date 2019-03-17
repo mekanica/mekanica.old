@@ -145,6 +145,7 @@ public class SoundHandler {
         // At this point, we've got a known block Mekanism sound. We want to re-wrap the original
         // using the (possibly) muffled sound as the initial volume. The TileSound will then periodically poll
         // to see if the volume should be adjusted
+        resultSound.createAccessor(Minecraft.getMinecraft().getSoundHandler()); //this means the sound isn't null
         resultSound = new TileSound(event.getSound(), resultSound.getVolume());
         event.setResultSound(resultSound);
 

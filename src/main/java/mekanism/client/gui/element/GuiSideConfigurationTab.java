@@ -15,14 +15,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiSideConfigurationTab extends GuiElement {
-
-    public TileEntity tileEntity;
+public class GuiSideConfigurationTab extends GuiTileEntityElement<TileEntity> {
 
     public GuiSideConfigurationTab(IGuiWrapper gui, TileEntity tile, ResourceLocation def) {
-        super(MekanismUtils.getResource(ResourceType.GUI_ELEMENT, "GuiConfigurationTab.png"), gui, def);
-
-        tileEntity = tile;
+        super(MekanismUtils.getResource(ResourceType.GUI_ELEMENT, "GuiConfigurationTab.png"), gui, def, tile);
     }
 
     @Override

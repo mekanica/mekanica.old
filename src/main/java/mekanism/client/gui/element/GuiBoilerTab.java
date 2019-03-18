@@ -5,26 +5,23 @@ import mekanism.client.gui.IGuiWrapper;
 import mekanism.client.sound.SoundHandler;
 import mekanism.common.Mekanism;
 import mekanism.common.network.PacketSimpleGui.SimpleGuiMessage;
+import mekanism.common.tile.TileEntityBoilerCasing;
 import mekanism.common.util.LangUtils;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.MekanismUtils.ResourceType;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiBoilerTab extends GuiElement {
+public class GuiBoilerTab extends GuiTileEntityElement<TileEntityBoilerCasing> {
 
-    private TileEntity tileEntity;
     private BoilerTab tabType;
     private int yPos;
 
-    public GuiBoilerTab(IGuiWrapper gui, TileEntity tile, BoilerTab type, int y, ResourceLocation def) {
-        super(type.getResource(), gui, def);
-
-        tileEntity = tile;
+    public GuiBoilerTab(IGuiWrapper gui, TileEntityBoilerCasing tile, BoilerTab type, int y, ResourceLocation def) {
+        super(type.getResource(), gui, def, tile);
         tabType = type;
         yPos = y;
     }
@@ -92,7 +89,7 @@ public class GuiBoilerTab extends GuiElement {
             return MekanismUtils.getResource(ResourceType.GUI_ELEMENT, path);
         }
 
-        public void openGui(TileEntity tile) {
+        public void openGui(TileEntityBoilerCasing tile) {
             Mekanism.packetHandler.sendToServer(new SimpleGuiMessage(Coord4D.get(tile), 0, guiId));
         }
 

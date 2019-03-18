@@ -51,7 +51,7 @@ public class GuiSideConfiguration extends GuiMekanism {
         configurable = tile;
 
         for (TransmissionType type : configurable.getConfig().transmissions) {
-            GuiConfigTypeTab tab = new GuiConfigTypeTab(this, (TileEntity) configurable, type,
+            GuiConfigTypeTab tab = new GuiConfigTypeTab(this, type,
                   MekanismUtils.getResource(ResourceType.GUI, "GuiConfiguration.png"));
 
             guiElements.add(tab);

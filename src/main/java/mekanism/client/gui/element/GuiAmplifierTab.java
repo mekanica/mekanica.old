@@ -11,20 +11,15 @@ import mekanism.common.util.LangUtils;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.MekanismUtils.ResourceType;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiAmplifierTab extends GuiElement {
+public class GuiAmplifierTab extends GuiTileEntityElement<TileEntityLaserAmplifier> {
 
-    public TileEntity tileEntity;
-
-    public GuiAmplifierTab(IGuiWrapper gui, TileEntity tile, ResourceLocation def) {
-        super(MekanismUtils.getResource(ResourceType.GUI_ELEMENT, "GuiAmplifierTab.png"), gui, def);
-
-        tileEntity = tile;
+    public GuiAmplifierTab(IGuiWrapper gui, TileEntityLaserAmplifier tile, ResourceLocation def) {
+        super(MekanismUtils.getResource(ResourceType.GUI_ELEMENT, "GuiAmplifierTab.png"), gui, def, tile);
     }
 
     @Override
@@ -37,7 +32,7 @@ public class GuiAmplifierTab extends GuiElement {
         mc.renderEngine.bindTexture(RESOURCE);
 
         guiObj.drawTexturedRect(guiWidth - 26, guiHeight + 138, 0, 0, 26, 26);
-        int outputOrdinal = ((TileEntityLaserAmplifier) tileEntity).outputMode.ordinal();
+        int outputOrdinal = tileEntity.outputMode.ordinal();
 
         if (xAxis >= -21 && xAxis <= -3 && yAxis >= 142 && yAxis <= 160) {
             guiObj.drawTexturedRect(guiWidth - 21, guiHeight + 142, 26 + 18 * outputOrdinal, 0, 18, 18);
@@ -54,7 +49,7 @@ public class GuiAmplifierTab extends GuiElement {
 
         if (xAxis >= -21 && xAxis <= -3 && yAxis >= 142 && yAxis <= 160) {
             String text = LangUtils.localize("gui.redstoneOutput") + ": ";
-            displayTooltip(text + ((TileEntityLaserAmplifier) tileEntity).outputMode.getName(), xAxis, yAxis);
+            displayTooltip(text + tileEntity.outputMode.getName(), xAxis, yAxis);
         }
 
         mc.renderEngine.bindTexture(defaultLocation);

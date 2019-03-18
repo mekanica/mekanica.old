@@ -5,6 +5,7 @@ import mekanism.client.gui.IGuiWrapper;
 import mekanism.client.sound.SoundHandler;
 import mekanism.common.Mekanism;
 import mekanism.common.network.PacketSimpleGui.SimpleGuiMessage;
+import mekanism.common.tile.TileEntityInductionCasing;
 import mekanism.common.util.LangUtils;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.MekanismUtils.ResourceType;
@@ -15,16 +16,13 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiMatrixTab extends GuiElement {
+public class GuiMatrixTab extends GuiTileEntityElement<TileEntityInductionCasing> {
 
-    private TileEntity tileEntity;
     private MatrixTab tabType;
     private int yPos;
 
-    public GuiMatrixTab(IGuiWrapper gui, TileEntity tile, MatrixTab type, int y, ResourceLocation def) {
-        super(type.getResource(), gui, def);
-
-        tileEntity = tile;
+    public GuiMatrixTab(IGuiWrapper gui, TileEntityInductionCasing tile, MatrixTab type, int y, ResourceLocation def) {
+        super(type.getResource(), gui, def, tile);
         tabType = type;
         yPos = y;
     }

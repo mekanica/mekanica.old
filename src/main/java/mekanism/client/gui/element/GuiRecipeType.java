@@ -9,14 +9,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiRecipeType extends GuiElement {
-
-    public TileEntityFactory tileEntity;
+public class GuiRecipeType extends GuiTileEntityElement<TileEntityFactory> {
 
     public GuiRecipeType(IGuiWrapper gui, TileEntityFactory tile, ResourceLocation def) {
-        super(MekanismUtils.getResource(ResourceType.GUI_ELEMENT, "GuiRecipeType.png"), gui, def);
-
-        tileEntity = tile;
+        super(MekanismUtils.getResource(ResourceType.GUI_ELEMENT, "GuiRecipeType.png"), gui, def, tile);
     }
 
     @Override
@@ -30,8 +26,7 @@ public class GuiRecipeType extends GuiElement {
 
         guiObj.drawTexturedRect(guiWidth + 176, guiHeight + 70, 0, 0, 26, 63);
 
-        TileEntityFactory factory = tileEntity;
-        int displayInt = factory.getScaledRecipeProgress(15);
+        int displayInt = tileEntity.getScaledRecipeProgress(15);
 
         guiObj.drawTexturedRect(guiWidth + 181, guiHeight + 94, 26, 0, 10, displayInt);
 

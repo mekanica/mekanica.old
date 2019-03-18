@@ -7,7 +7,6 @@ import mekanism.client.sound.SoundHandler;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.MekanismUtils.ResourceType;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -18,13 +17,10 @@ public class GuiConfigTypeTab extends GuiElement {
     public TransmissionType transmission;
     public boolean visible;
     public boolean left;
-    private TileEntity tileEntity;
     private int yPos;
 
-    public GuiConfigTypeTab(IGuiWrapper gui, TileEntity tile, TransmissionType type, ResourceLocation def) {
+    public GuiConfigTypeTab(IGuiWrapper gui, TransmissionType type, ResourceLocation def) {
         super(getResource(type), gui, def);
-
-        tileEntity = tile;
         transmission = type;
     }
 

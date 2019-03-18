@@ -45,19 +45,15 @@ public class GuiSlot extends GuiElement {
     @Override
     public void renderBackground(int xAxis, int yAxis, int guiWidth, int guiHeight) {
         mc.renderEngine.bindTexture(RESOURCE);
-
         guiObj.drawTexturedRect(guiWidth + xLocation, guiHeight + yLocation, textureX, textureY, width, height);
-
         if (overlay != null) {
             int w = overlay.width;
             int h = overlay.height;
             int xLocationOverlay = xLocation + (width - w) / 2;
             int yLocationOverlay = yLocation + (height - h) / 2;
-
             guiObj.drawTexturedRect(guiWidth + xLocationOverlay, guiHeight + yLocationOverlay, overlay.textureX,
                   overlay.textureY, w, h);
         }
-
         mc.renderEngine.bindTexture(defaultLocation);
     }
 

@@ -28,33 +28,27 @@ public class GuiRedstoneControl extends GuiTileEntityElement<TileEntity> {
     }
 
     @Override
+    protected boolean inBounds(int xAxis, int yAxis) {
+        return xAxis >= 179 && xAxis <= 197 && yAxis >= 142 && yAxis <= 160;
+    }
+
+    @Override
     public void renderBackground(int xAxis, int yAxis, int guiWidth, int guiHeight) {
         mc.renderEngine.bindTexture(RESOURCE);
-
         guiObj.drawTexturedRect(guiWidth + 176, guiHeight + 138, 0, 0, 26, 26);
-
         IRedstoneControl control = (IRedstoneControl) tileEntity;
         int renderX = 26 + (18 * control.getControlType().ordinal());
-
-        if (xAxis >= 179 && xAxis <= 197 && yAxis >= 142 && yAxis <= 160) {
-            guiObj.drawTexturedRect(guiWidth + 179, guiHeight + 142, renderX, 0, 18, 18);
-        } else {
-            guiObj.drawTexturedRect(guiWidth + 179, guiHeight + 142, renderX, 18, 18, 18);
-        }
-
+        guiObj.drawTexturedRect(guiWidth + 179, guiHeight + 142, renderX, inBounds(xAxis, yAxis) ? 0 : 18, 18, 18);
         mc.renderEngine.bindTexture(defaultLocation);
     }
 
     @Override
     public void renderForeground(int xAxis, int yAxis) {
         mc.renderEngine.bindTexture(RESOURCE);
-
         IRedstoneControl control = (IRedstoneControl) tileEntity;
-
-        if (xAxis >= 179 && xAxis <= 197 && yAxis >= 142 && yAxis <= 160) {
+        if (inBounds(xAxis, yAxis)) {
             displayTooltip(control.getControlType().getDisplay(), xAxis, yAxis);
         }
-
         mc.renderEngine.bindTexture(defaultLocation);
     }
 
@@ -66,19 +60,16 @@ public class GuiRedstoneControl extends GuiTileEntityElement<TileEntity> {
     public void mouseClicked(int xAxis, int yAxis, int button) {
         IRedstoneControl control = (IRedstoneControl) tileEntity;
 
-        if (button == 0) {
-            if (xAxis >= 179 && xAxis <= 197 && yAxis >= 142 && yAxis <= 160) {
-                RedstoneControl current = control.getControlType();
-                int ordinalToSet =
-                      current.ordinal() < (RedstoneControl.values().length - 1) ? current.ordinal() + 1 : 0;
-                if (ordinalToSet == RedstoneControl.PULSE.ordinal() && !control.canPulse()) {
-                    ordinalToSet = 0;
-                }
-
-                SoundHandler.playSound(SoundEvents.UI_BUTTON_CLICK);
-                Mekanism.packetHandler.sendToServer(
-                      new RedstoneControlMessage(Coord4D.get(tileEntity), RedstoneControl.values()[ordinalToSet]));
+        if (button == 0 && inBounds(xAxis, yAxis)) {
+            RedstoneControl current = control.getControlType();
+            int ordinalToSet = current.ordinal() < (RedstoneControl.values().length - 1) ? current.ordinal() + 1 : 0;
+            if (ordinalToSet == RedstoneControl.PULSE.ordinal() && !control.canPulse()) {
+                ordinalToSet = 0;
             }
+
+            SoundHandler.playSound(SoundEvents.UI_BUTTON_CLICK);
+            Mekanism.packetHandler.sendToServer(
+                  new RedstoneControlMessage(Coord4D.get(tileEntity), RedstoneControl.values()[ordinalToSet]));
         }
     }
 }

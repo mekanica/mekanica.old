@@ -51,14 +51,19 @@ public class GuiFluidGauge extends GuiGauge<Fluid> {
     }
 
     @Override
+    protected boolean inBounds(int xAxis, int yAxis) {
+        return xAxis >= xLocation + 1 && xAxis <= xLocation + width - 1 && yAxis >= yLocation + 1
+              && yAxis <= yLocation + height - 1;
+    }
+
+    @Override
     public TransmissionType getTransmission() {
         return TransmissionType.FLUID;
     }
 
     @Override
     public void mouseClicked(int xAxis, int yAxis, int button) {
-        if (xAxis >= xLocation + 1 && xAxis <= xLocation + width - 1 && yAxis >= yLocation + 1
-              && yAxis <= yLocation + height - 1) {
+        if (inBounds(xAxis, yAxis)) {
             ItemStack stack = mc.player.inventory.getItemStack();
 
             if (guiObj instanceof GuiMekanism && !stack.isEmpty() && stack.getItem() instanceof ItemGaugeDropper) {
@@ -84,15 +89,12 @@ public class GuiFluidGauge extends GuiGauge<Fluid> {
         if (dummy) {
             return height - 2;
         }
-
         if (infoHandler.getTank().getFluid() == null || infoHandler.getTank().getCapacity() == 0) {
             return 0;
         }
-
         if (infoHandler.getTank().getFluidAmount() == Integer.MAX_VALUE) {
             return height - 2;
         }
-
         return infoHandler.getTank().getFluidAmount() * (height - 2) / infoHandler.getTank().getCapacity();
     }
 

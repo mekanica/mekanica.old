@@ -69,10 +69,8 @@ public abstract class GuiElement {
             float yAdd = 4 - (scale * 8) / 2F;
 
             GlStateManager.pushMatrix();
-
             GlStateManager.scale(scale, scale, scale);
             getFontRenderer().drawString(text, (int) (x * reverse), (int) ((y * reverse) + yAdd), color);
-
             GlStateManager.popMatrix();
         }
     }
@@ -119,5 +117,9 @@ public abstract class GuiElement {
         public Rectangle toRectangle() {
             return new Rectangle(x, y, width, height);
         }
+    }
+
+    protected boolean inBounds(int xAxis, int yAxis) {
+        return false;
     }
 }

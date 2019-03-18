@@ -28,28 +28,24 @@ public class GuiFuelTab extends GuiTileEntityElement<TileEntityReactorController
     }
 
     @Override
+    protected boolean inBounds(int xAxis, int yAxis) {
+        return xAxis >= -21 && xAxis <= -3 && yAxis >= 38 && yAxis <= 56;
+    }
+
+    @Override
     public void renderBackground(int xAxis, int yAxis, int guiWidth, int guiHeight) {
         mc.renderEngine.bindTexture(RESOURCE);
-
         guiObj.drawTexturedRect(guiWidth - 26, guiHeight + 34, 0, 0, 26, 26);
-
-        if (xAxis >= -21 && xAxis <= -3 && yAxis >= 38 && yAxis <= 56) {
-            guiObj.drawTexturedRect(guiWidth - 21, guiHeight + 38, 26, 0, 18, 18);
-        } else {
-            guiObj.drawTexturedRect(guiWidth - 21, guiHeight + 38, 26, 18, 18, 18);
-        }
-
+        guiObj.drawTexturedRect(guiWidth - 21, guiHeight + 38, 26, inBounds(xAxis, yAxis) ? 0 : 18, 18, 18);
         mc.renderEngine.bindTexture(defaultLocation);
     }
 
     @Override
     public void renderForeground(int xAxis, int yAxis) {
         mc.renderEngine.bindTexture(RESOURCE);
-
-        if (xAxis >= -21 && xAxis <= -3 && yAxis >= 38 && yAxis <= 56) {
+        if (inBounds(xAxis, yAxis)) {
             displayTooltip(LangUtils.localize("gui.fuel"), xAxis, yAxis);
         }
-
         mc.renderEngine.bindTexture(defaultLocation);
     }
 
@@ -59,11 +55,9 @@ public class GuiFuelTab extends GuiTileEntityElement<TileEntityReactorController
 
     @Override
     public void mouseClicked(int xAxis, int yAxis, int button) {
-        if (button == 0) {
-            if (xAxis >= -21 && xAxis <= -3 && yAxis >= 38 && yAxis <= 56) {
-                Mekanism.packetHandler.sendToServer(new SimpleGuiMessage(Coord4D.get(tileEntity), 1, 12));
-                SoundHandler.playSound(SoundEvents.UI_BUTTON_CLICK);
-            }
+        if (button == 0 && inBounds(xAxis, yAxis)) {
+            Mekanism.packetHandler.sendToServer(new SimpleGuiMessage(Coord4D.get(tileEntity), 1, 12));
+            SoundHandler.playSound(SoundEvents.UI_BUTTON_CLICK);
         }
     }
 }

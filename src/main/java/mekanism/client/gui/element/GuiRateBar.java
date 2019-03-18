@@ -29,29 +29,29 @@ public class GuiRateBar extends GuiElement {
     }
 
     @Override
+    protected boolean inBounds(int xAxis, int yAxis) {
+        return xAxis >= xLocation + 1 && xAxis <= xLocation + width - 1 && yAxis >= yLocation + 1
+              && yAxis <= yLocation + height - 1;
+    }
+
+    @Override
     public void renderBackground(int xAxis, int yAxis, int guiWidth, int guiHeight) {
         mc.renderEngine.bindTexture(RESOURCE);
-
         guiObj.drawTexturedRect(guiWidth + xLocation, guiHeight + yLocation, 0, 0, width, height);
-
         if (handler.getLevel() > 0) {
             int displayInt = (int) (handler.getLevel() * 58);
             guiObj.drawTexturedRect(guiWidth + xLocation + 1, guiHeight + yLocation + height - 1 - displayInt, 8,
                   height - 2 - displayInt, width - 2, displayInt);
         }
-
         mc.renderEngine.bindTexture(defaultLocation);
     }
 
     @Override
     public void renderForeground(int xAxis, int yAxis) {
         mc.renderEngine.bindTexture(RESOURCE);
-
-        if (handler.getTooltip() != null && xAxis >= xLocation + 1 && xAxis <= xLocation + width - 1
-              && yAxis >= yLocation + 1 && yAxis <= yLocation + height - 1) {
+        if (handler.getTooltip() != null && inBounds(xAxis, yAxis)) {
             displayTooltip(handler.getTooltip(), xAxis, yAxis);
         }
-
         mc.renderEngine.bindTexture(defaultLocation);
     }
 

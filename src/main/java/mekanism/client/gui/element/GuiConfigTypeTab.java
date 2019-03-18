@@ -54,21 +54,19 @@ public class GuiConfigTypeTab extends GuiElement {
     }
 
     @Override
+    protected boolean inBounds(int xAxis, int yAxis) {
+        return xAxis >= getLeftBound(true) && xAxis <= getRightBound(true) && yAxis >= yPos + 4 && yAxis <= yPos + 22;
+    }
+
+    @Override
     public void renderBackground(int xAxis, int yAxis, int guiWidth, int guiHeight) {
         if (!visible) {
             return;
         }
-
         mc.renderEngine.bindTexture(RESOURCE);
-
         guiObj.drawTexturedRect(guiWidth + getLeftBound(false) - 4, guiHeight + yPos, 0, left ? 0 : 26, 26, 26);
-
-        if (xAxis >= getLeftBound(true) && xAxis <= getRightBound(true) && yAxis >= yPos + 4 && yAxis <= yPos + 22) {
-            guiObj.drawTexturedRect(guiWidth + getLeftBound(true), guiHeight + yPos + 4, 26, 0, 18, 18);
-        } else {
-            guiObj.drawTexturedRect(guiWidth + getLeftBound(true), guiHeight + yPos + 4, 26, 18, 18, 18);
-        }
-
+        guiObj.drawTexturedRect(guiWidth + getLeftBound(true), guiHeight + yPos + 4, 26,
+              inBounds(xAxis, yAxis) ? 0 : 18, 18, 18);
         mc.renderEngine.bindTexture(defaultLocation);
     }
 
@@ -77,13 +75,10 @@ public class GuiConfigTypeTab extends GuiElement {
         if (!visible) {
             return;
         }
-
         mc.renderEngine.bindTexture(RESOURCE);
-
-        if (xAxis >= getLeftBound(true) && xAxis <= getRightBound(true) && yAxis >= yPos + 4 && yAxis <= yPos + 22) {
+        if (inBounds(xAxis, yAxis)) {
             displayTooltip(transmission.localize(), xAxis, yAxis);
         }
-
         mc.renderEngine.bindTexture(defaultLocation);
     }
 
@@ -104,14 +99,10 @@ public class GuiConfigTypeTab extends GuiElement {
         if (!visible) {
             return;
         }
-
-        if (button == 0) {
-            if (xAxis >= getLeftBound(true) && xAxis <= getRightBound(true) && yAxis >= yPos + 4
-                  && yAxis <= yPos + 22) {
-                ((GuiSideConfiguration) guiObj).currentType = transmission;
-                ((GuiSideConfiguration) guiObj).updateTabs();
-                SoundHandler.playSound(SoundEvents.UI_BUTTON_CLICK);
-            }
+        if (button == 0 && inBounds(xAxis, yAxis)) {
+            ((GuiSideConfiguration) guiObj).currentType = transmission;
+            ((GuiSideConfiguration) guiObj).updateTabs();
+            SoundHandler.playSound(SoundEvents.UI_BUTTON_CLICK);
         }
     }
 }

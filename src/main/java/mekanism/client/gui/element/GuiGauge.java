@@ -61,13 +61,10 @@ public abstract class GuiGauge<T> extends GuiElement {
     @Override
     public void renderBackground(int xAxis, int yAxis, int guiWidth, int guiHeight) {
         mc.renderEngine.bindTexture(RESOURCE);
-
         guiObj.drawTexturedRect(guiWidth + xLocation, guiHeight + yLocation, texX, texY, width, height);
-
         if (!dummy) {
             renderScale(xAxis, yAxis, guiWidth, guiHeight);
         }
-
         mc.renderEngine.bindTexture(defaultLocation);
     }
 
@@ -148,12 +145,10 @@ public abstract class GuiGauge<T> extends GuiElement {
 
     @Override
     public void preMouseClicked(int xAxis, int yAxis, int button) {
-
     }
 
     @Override
     public void mouseClicked(int xAxis, int yAxis, int button) {
-
     }
 
     public abstract TransmissionType getTransmission();

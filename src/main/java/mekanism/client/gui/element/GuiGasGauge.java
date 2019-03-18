@@ -38,14 +38,19 @@ public class GuiGasGauge extends GuiGauge<Gas> {
     }
 
     @Override
+    protected boolean inBounds(int xAxis, int yAxis) {
+        return xAxis >= xLocation + 1 && xAxis <= xLocation + width - 1 && yAxis >= yLocation + 1
+              && yAxis <= yLocation + height - 1;
+    }
+
+    @Override
     public TransmissionType getTransmission() {
         return TransmissionType.GAS;
     }
 
     @Override
     public void mouseClicked(int xAxis, int yAxis, int button) {
-        if (xAxis >= xLocation + 1 && xAxis <= xLocation + width - 1 && yAxis >= yLocation + 1
-              && yAxis <= yLocation + height - 1) {
+        if (inBounds(xAxis, yAxis)) {
             ItemStack stack = mc.player.inventory.getItemStack();
 
             if (guiObj instanceof GuiMekanism && !stack.isEmpty() && stack.getItem() instanceof ItemGaugeDropper) {

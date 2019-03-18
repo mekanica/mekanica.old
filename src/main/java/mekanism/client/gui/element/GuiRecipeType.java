@@ -21,15 +21,16 @@ public class GuiRecipeType extends GuiTileEntityElement<TileEntityFactory> {
     }
 
     @Override
+    protected boolean inBounds(int xAxis, int yAxis) {
+        return xAxis >= 180 && xAxis <= 196 && (yAxis >= 75 && yAxis <= 91 || yAxis >= 112 && yAxis <= 128);
+    }
+
+    @Override
     public void renderBackground(int xAxis, int yAxis, int guiWidth, int guiHeight) {
         mc.renderEngine.bindTexture(RESOURCE);
-
         guiObj.drawTexturedRect(guiWidth + 176, guiHeight + 70, 0, 0, 26, 63);
-
         int displayInt = tileEntity.getScaledRecipeProgress(15);
-
         guiObj.drawTexturedRect(guiWidth + 181, guiHeight + 94, 26, 0, 10, displayInt);
-
         mc.renderEngine.bindTexture(defaultLocation);
     }
 
@@ -39,23 +40,15 @@ public class GuiRecipeType extends GuiTileEntityElement<TileEntityFactory> {
 
     @Override
     public void preMouseClicked(int xAxis, int yAxis, int button) {
-        if (button == 0) {
-            if (xAxis >= 180 && xAxis <= 196 && yAxis >= 75 && yAxis <= 91) {
-                offsetX(26);
-            } else if (xAxis >= 180 && xAxis <= 196 && yAxis >= 112 && yAxis <= 128) {
-                offsetX(26);
-            }
+        if (button == 0 && inBounds(xAxis, yAxis)) {
+            offsetX(26);
         }
     }
 
     @Override
     public void mouseClicked(int xAxis, int yAxis, int button) {
-        if (button == 0) {
-            if (xAxis >= 180 && xAxis <= 196 && yAxis >= 75 && yAxis <= 91) {
-                offsetX(-26);
-            } else if (xAxis >= 180 && xAxis <= 196 && yAxis >= 112 && yAxis <= 128) {
-                offsetX(-26);
-            }
+        if (button == 0 && inBounds(xAxis, yAxis)) {
+            offsetX(-26);
         }
     }
 }

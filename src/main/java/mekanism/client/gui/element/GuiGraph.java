@@ -27,13 +27,10 @@ public class GuiGraph extends GuiElement {
     public GuiGraph(IGuiWrapper gui, ResourceLocation def, int x, int y, int sizeX, int sizeY,
           GraphDataHandler handler) {
         super(MekanismUtils.getResource(ResourceType.GUI_ELEMENT, "GuiGraph.png"), gui, def);
-
         xPosition = x;
         yPosition = y;
-
         xSize = sizeX;
         ySize = sizeY;
-
         dataHandler = handler;
     }
 
@@ -64,21 +61,23 @@ public class GuiGraph extends GuiElement {
     }
 
     @Override
+    protected boolean inBounds(int xAxis, int yAxis) {
+        return xAxis >= xPosition && xAxis <= xPosition + xSize && yAxis >= yPosition && yAxis <= yPosition + ySize;
+    }
+
+    @Override
     public void renderBackground(int xAxis, int yAxis, int guiWidth, int guiHeight) {
         mc.renderEngine.bindTexture(RESOURCE);
-
         drawBlack(guiWidth, guiHeight);
         drawGraph(guiWidth, guiHeight);
-
         mc.renderEngine.bindTexture(defaultLocation);
     }
 
     @Override
     public void renderForeground(int xAxis, int yAxis) {
-        if (xAxis >= xPosition && xAxis <= xPosition + xSize && yAxis >= yPosition && yAxis <= yPosition + ySize) {
+        if (inBounds(xAxis, yAxis)) {
             int height = ySize - (yAxis - yPosition);
             int scaled = (int) (((double) height / (double) ySize) * currentScale);
-
             displayTooltip(dataHandler.getDataDisplay(scaled), xAxis, yAxis);
         }
     }
@@ -99,7 +98,6 @@ public class GuiGraph extends GuiElement {
             for (int xIter = 0; xIter < xDisplays; xIter++) {
                 int width = (xSize % 10 > 0 && xIter == xDisplays - 1 ? xSize % 10 : 10);
                 int height = (ySize % 10 > 0 && yIter == yDisplays - 1 ? ySize % 10 : 10);
-
                 guiObj.drawTexturedRect(guiWidth + xPosition + (xIter * 10), guiHeight + yPosition + (yIter * 10), 0, 0,
                       width, height);
             }
@@ -110,7 +108,6 @@ public class GuiGraph extends GuiElement {
         for (int i = 0; i < graphData.size(); i++) {
             int data = Math.min(currentScale, graphData.get(i));
             int relativeHeight = (int) (((double) data / (double) currentScale) * ySize);
-
             guiObj.drawTexturedRect(guiWidth + xPosition + i, guiHeight + yPosition + (ySize - relativeHeight), 10, 0,
                   1, 1);
 

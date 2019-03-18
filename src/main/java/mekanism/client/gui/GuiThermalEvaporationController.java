@@ -1,6 +1,6 @@
 package mekanism.client.gui;
 
-import java.util.Arrays;
+import java.util.Collections;
 import mekanism.client.gui.element.GuiFluidGauge;
 import mekanism.client.gui.element.GuiGauge;
 import mekanism.client.gui.element.GuiHeatInfo;
@@ -35,7 +35,7 @@ public class GuiThermalEvaporationController extends GuiMekanism {
             TemperatureUnit unit = TemperatureUnit.values()[general.tempUnit.ordinal()];
             String environment = UnitDisplayUtils
                   .getDisplayShort(tileEntity.totalLoss * unit.intervalSize, false, unit);
-            return Arrays.asList(LangUtils.localize("gui.dissipated") + ": " + environment + "/t");
+            return Collections.singletonList(LangUtils.localize("gui.dissipated") + ": " + environment + "/t");
         }, this, MekanismUtils.getResource(ResourceType.GUI, "GuiThermalEvaporationController.png")));
     }
 

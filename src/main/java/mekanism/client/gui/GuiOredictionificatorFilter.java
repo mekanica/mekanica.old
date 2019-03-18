@@ -319,7 +319,6 @@ public class GuiOredictionificatorFilter extends GuiMekanism {
             renderStack = stacks.get(filter.index).copy();
         } else {
             renderStack = ItemStack.EMPTY;
-            return;
         }
     }
 }

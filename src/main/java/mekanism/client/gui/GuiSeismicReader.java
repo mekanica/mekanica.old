@@ -2,6 +2,7 @@ package mekanism.client.gui;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 import mekanism.api.Coord4D;
 import mekanism.common.util.LangUtils;
 import mekanism.common.util.MekanismUtils;
@@ -152,7 +153,8 @@ public class GuiSeismicReader extends GuiScreen {
             if (blockList.get(currentLayer - 1) != null) {
                 Block block = blockList.get(currentLayer - 1).getRight();
 
-                if (pair.getRight() == block && pair.getLeft() == blockList.get(currentLayer - 1).getLeft()) {
+                if (pair.getRight() == block && Objects
+                      .equals(pair.getLeft(), blockList.get(currentLayer - 1).getLeft())) {
                     frequency++;
                 }
             }

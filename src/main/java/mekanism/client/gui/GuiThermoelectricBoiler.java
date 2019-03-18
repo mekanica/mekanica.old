@@ -1,6 +1,6 @@
 package mekanism.client.gui;
 
-import java.util.Arrays;
+import java.util.Collections;
 import mekanism.client.gui.element.GuiBoilerTab;
 import mekanism.client.gui.element.GuiBoilerTab.BoilerTab;
 import mekanism.client.gui.element.GuiHeatInfo;
@@ -62,7 +62,7 @@ public class GuiThermoelectricBoiler extends GuiMekanism {
             TemperatureUnit unit = TemperatureUnit.values()[general.tempUnit.ordinal()];
             String environment = UnitDisplayUtils
                   .getDisplayShort(tileEntity.structure.lastEnvironmentLoss * unit.intervalSize, false, unit);
-            return Arrays.asList(LangUtils.localize("gui.dissipated") + ": " + environment + "/t");
+            return Collections.singletonList(LangUtils.localize("gui.dissipated") + ": " + environment + "/t");
         }, this, MekanismUtils.getResource(ResourceType.GUI, "GuiThermoelectricBoiler.png")));
     }
 

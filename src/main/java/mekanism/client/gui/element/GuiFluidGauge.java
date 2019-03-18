@@ -17,6 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -46,7 +47,8 @@ public class GuiFluidGauge extends GuiGauge<Fluid> {
             return dummyType.getColor();
         }
 
-        return infoHandler.getTank().getFluid().getFluid().getColor();
+        FluidStack fluid = infoHandler.getTank().getFluid();
+        return fluid == null ? dummyType.getColor() : fluid.getFluid().getColor();
     }
 
     @Override
@@ -100,8 +102,8 @@ public class GuiFluidGauge extends GuiGauge<Fluid> {
         if (dummy) {
             return MekanismRenderer.getFluidTexture(dummyType, FluidType.STILL);
         }
-
-        return MekanismRenderer.getFluidTexture(infoHandler.getTank().getFluid().getFluid(), FluidType.STILL);
+        FluidStack fluid = infoHandler.getTank().getFluid();
+        return MekanismRenderer.getFluidTexture(fluid == null ? dummyType : fluid.getFluid(), FluidType.STILL);
     }
 
     @Override

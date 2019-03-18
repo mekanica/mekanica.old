@@ -1,6 +1,6 @@
 package mekanism.client.gui;
 
-import java.util.Arrays;
+import java.util.Collections;
 import mekanism.client.gui.element.GuiHeatInfo;
 import mekanism.client.gui.element.GuiSecurityTab;
 import mekanism.client.gui.element.GuiSlot;
@@ -36,7 +36,7 @@ public class GuiFuelwoodHeater extends GuiMekanism {
             TemperatureUnit unit = TemperatureUnit.values()[general.tempUnit.ordinal()];
             String environment = UnitDisplayUtils
                   .getDisplayShort(tileEntity.lastEnvironmentLoss * unit.intervalSize, false, unit);
-            return Arrays.asList(LangUtils.localize("gui.dissipated") + ": " + environment + "/t");
+            return Collections.singletonList(LangUtils.localize("gui.dissipated") + ": " + environment + "/t");
         }, this, MekanismUtils.getResource(ResourceType.GUI, "GuiFuelwoodHeater.png")));
     }
 

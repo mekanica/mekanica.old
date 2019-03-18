@@ -135,8 +135,8 @@ public abstract class GuiGauge<T> extends GuiElement {
                                 break;
                             }
                         }
-
-                        guiObj.displayTooltip(color + data.localize() + " (" + color.getColoredName() + ")", xAxis,
+                        String localized = data == null ? "" : data.localize();
+                        guiObj.displayTooltip(color + localized + " (" + color.getColoredName() + ")", xAxis,
                               yAxis);
                     }
                 }

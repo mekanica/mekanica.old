@@ -50,9 +50,6 @@ public class GuiGasTank extends GuiMekanism {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        int xAxis = (mouseX - (width - xSize) / 2);
-        int yAxis = (mouseY - (height - ySize) / 2);
-
         String stored = "" + (tileEntity.gasTank.getStored() == Integer.MAX_VALUE ? LangUtils.localize("gui.infinite")
               : tileEntity.gasTank.getStored());
         String capacityInfo =

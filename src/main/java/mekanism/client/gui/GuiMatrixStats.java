@@ -63,9 +63,6 @@ public class GuiMatrixStats extends GuiMekanism {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        int xAxis = (mouseX - (width - xSize) / 2);
-        int yAxis = (mouseY - (height - ySize) / 2);
-
         String stats = LangUtils.localize("gui.matrixStats");
 
         fontRenderer.drawString(stats, (xSize / 2) - (fontRenderer.getStringWidth(stats) / 2), 6, 0x404040);

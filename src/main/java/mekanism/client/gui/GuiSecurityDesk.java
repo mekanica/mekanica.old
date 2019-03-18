@@ -19,7 +19,6 @@ import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.MekanismUtils.ResourceType;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
@@ -35,7 +34,6 @@ public class GuiSecurityDesk extends GuiMekanism {
     public static int MAX_LENGTH = 24;
     public ResourceLocation resource;
     public TileEntitySecurityDesk tileEntity;
-    public EntityPlayer entityPlayer;
     public GuiButton removeButton;
     public GuiScrollList scrollList;
     public GuiTextField trustedField;

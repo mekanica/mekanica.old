@@ -40,12 +40,8 @@ public class GuiPersonalChest extends GuiMekanism {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        int xAxis = (mouseX - (width - xSize) / 2);
-        int yAxis = (mouseY - (height - ySize) / 2);
-
         fontRenderer.drawString(LangUtils.localize("tile.MachineBlock.PersonalChest.name"), 8, 6, 0x404040);
         fontRenderer.drawString(LangUtils.localize("container.inventory"), 8, (ySize - 96) + 2, 0x404040);
-
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
     }
 
@@ -56,10 +52,6 @@ public class GuiPersonalChest extends GuiMekanism {
         int guiWidth = (width - xSize) / 2;
         int guiHeight = (height - ySize) / 2;
         drawTexturedModalRect(guiWidth, guiHeight, 0, 0, xSize, ySize);
-
-        int xAxis = (mouseX - (width - xSize) / 2);
-        int yAxis = (mouseY - (height - ySize) / 2);
-
         super.drawGuiContainerBackgroundLayer(partialTick, mouseX, mouseY);
     }
 }

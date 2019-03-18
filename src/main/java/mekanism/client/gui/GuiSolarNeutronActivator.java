@@ -58,9 +58,6 @@ public class GuiSolarNeutronActivator extends GuiMekanism {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        int xAxis = (mouseX - (width - xSize) / 2);
-        int yAxis = (mouseY - (height - ySize) / 2);
-
         fontRenderer.drawString(tileEntity.getName(), 26, 4, 0x404040);
         fontRenderer.drawString(LangUtils.localize("container.inventory"), 8, (ySize - 96) + 4, 0x404040);
 
@@ -74,11 +71,6 @@ public class GuiSolarNeutronActivator extends GuiMekanism {
         int guiWidth = (width - xSize) / 2;
         int guiHeight = (height - ySize) / 2;
         drawTexturedModalRect(guiWidth, guiHeight, 0, 0, xSize, ySize);
-        int displayInt;
-
-        int xAxis = (mouseX - (width - xSize) / 2);
-        int yAxis = (mouseY - (height - ySize) / 2);
-
         super.drawGuiContainerBackgroundLayer(partialTick, mouseX, mouseY);
     }
 }

@@ -22,7 +22,6 @@ import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.MekanismUtils.ResourceType;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
@@ -37,8 +36,6 @@ public class GuiQuantumEntangloporter extends GuiMekanism {
     public ResourceLocation resource;
 
     public TileEntityQuantumEntangloporter tileEntity;
-
-    public EntityPlayer entityPlayer;
 
     public GuiButton publicButton;
     public GuiButton privateButton;
@@ -240,9 +237,6 @@ public class GuiQuantumEntangloporter extends GuiMekanism {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        int xAxis = (mouseX - (width - xSize) / 2);
-        int yAxis = (mouseY - (height - ySize) / 2);
-
         fontRenderer
               .drawString(tileEntity.getName(), (xSize / 2) - (fontRenderer.getStringWidth(tileEntity.getName()) / 2),
                     4, 0x404040);

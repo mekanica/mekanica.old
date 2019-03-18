@@ -293,12 +293,9 @@ public class GuiLogisticalSorter extends GuiMekanism {
     @Override
     protected void mouseClickMove(int mouseX, int mouseY, int button, long ticks) {
         super.mouseClickMove(mouseX, mouseY, button, ticks);
-
-        // Get mouse position relative to gui
-        final int xAxis = mouseX - guiLeft;
-        final int yAxis = mouseY - guiTop;
-
         if (isDragging) {
+            // Get mouse position relative to gui
+            final int yAxis = mouseY - guiTop;
             scroll = Math.min(Math.max((yAxis - 18 - dragOffset) / 123F, 0), 1);
         }
     }

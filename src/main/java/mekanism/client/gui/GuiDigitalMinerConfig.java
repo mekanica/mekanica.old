@@ -272,11 +272,8 @@ public class GuiDigitalMinerConfig extends GuiMekanism {
     @Override
     protected void mouseClickMove(int mouseX, int mouseY, int button, long ticks) {
         super.mouseClickMove(mouseX, mouseY, button, ticks);
-
-        int xAxis = (mouseX - (width - xSize) / 2);
-        int yAxis = (mouseY - (height - ySize) / 2);
-
         if (isDragging) {
+            int yAxis = (mouseY - (height - ySize) / 2);
             scroll = Math.min(Math.max((float) (yAxis - 18 - dragOffset) / 123F, 0), 1);
         }
     }

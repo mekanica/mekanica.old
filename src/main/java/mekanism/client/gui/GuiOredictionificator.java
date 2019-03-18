@@ -107,9 +107,6 @@ public class GuiOredictionificator extends GuiMekanism {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        int xAxis = (mouseX - (width - xSize) / 2);
-        int yAxis = (mouseY - (height - ySize) / 2);
-
         fontRenderer
               .drawString(tileEntity.getName(), (xSize / 2) - (fontRenderer.getStringWidth(tileEntity.getName()) / 2),
                     6, 0x404040);
@@ -210,11 +207,8 @@ public class GuiOredictionificator extends GuiMekanism {
     @Override
     protected void mouseClickMove(int mouseX, int mouseY, int button, long ticks) {
         super.mouseClickMove(mouseX, mouseY, button, ticks);
-
-        int xAxis = (mouseX - (width - xSize) / 2);
-        int yAxis = (mouseY - (height - ySize) / 2);
-
         if (isDragging) {
+            int yAxis = (mouseY - (height - ySize) / 2);
             scroll = Math.min(Math.max((float) (yAxis - 18 - dragOffset) / 73F, 0), 1);
         }
     }

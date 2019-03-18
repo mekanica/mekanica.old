@@ -61,10 +61,6 @@ public class GuiFuelwoodHeater extends GuiMekanism {
         int guiWidth = (width - xSize) / 2;
         int guiHeight = (height - ySize) / 2;
         drawTexturedModalRect(guiWidth, guiHeight, 0, 0, xSize, ySize);
-
-        int xAxis = (mouseX - (width - xSize) / 2);
-        int yAxis = (mouseY - (height - ySize) / 2);
-
         if (tileEntity.burnTime > 0) {
             int displayInt = tileEntity.burnTime * 13 / tileEntity.maxBurnTime;
             drawTexturedModalRect(guiWidth + 143, guiHeight + 30 + 12 - displayInt, 176, 12 - displayInt, 14,

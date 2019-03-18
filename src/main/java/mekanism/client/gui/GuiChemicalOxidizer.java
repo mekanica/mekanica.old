@@ -87,13 +87,7 @@ public class GuiChemicalOxidizer extends GuiMekanism {
         int guiWidth = (width - xSize) / 2;
         int guiHeight = (height - ySize) / 2;
         drawTexturedModalRect(guiWidth, guiHeight, 0, 0, xSize, ySize);
-
-        int xAxis = mouseX - guiWidth;
-        int yAxis = mouseY - guiHeight;
-
-        int displayInt;
-
-        displayInt = tileEntity.getScaledEnergyLevel(52);
+        int displayInt = tileEntity.getScaledEnergyLevel(52);
         drawTexturedModalRect(guiWidth + 116, guiHeight + 76, 176, 0, displayInt, 4);
 
         super.drawGuiContainerBackgroundLayer(partialTick, mouseX, mouseY);

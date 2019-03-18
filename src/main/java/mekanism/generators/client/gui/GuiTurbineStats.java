@@ -44,9 +44,6 @@ public class GuiTurbineStats extends GuiMekanism {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        int xAxis = (mouseX - (width - xSize) / 2);
-        int yAxis = (mouseY - (height - ySize) / 2);
-
         String stats = LangUtils.localize("gui.turbineStats");
         String limiting = EnumColor.DARK_RED + " (" + LangUtils.localize("gui.limiting") + ")";
 

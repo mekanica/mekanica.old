@@ -23,15 +23,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiWindGenerator extends GuiMekanism {
-
-    public TileEntityWindGenerator tileEntity;
+public class GuiWindGenerator extends GuiMekanism<TileEntityWindGenerator> {
 
     private DecimalFormat powerFormat = new DecimalFormat("0.##");
 
-    public GuiWindGenerator(InventoryPlayer inventory, TileEntityWindGenerator tentity) {
-        super(new ContainerWindGenerator(inventory, tentity));
-        tileEntity = tentity;
+    public GuiWindGenerator(InventoryPlayer inventory, TileEntityWindGenerator tile) {
+        super(tile, new ContainerWindGenerator(inventory, tile));
         guiElements.add(new GuiRedstoneControl(this, tileEntity,
               MekanismUtils.getResource(ResourceType.GUI, "GuiWindTurbine.png")));
         guiElements.add(new GuiSecurityTab(this, tileEntity,
@@ -40,7 +37,7 @@ public class GuiWindGenerator extends GuiMekanism {
               LangUtils.localize("gui.producing") + ": " + MekanismUtils.getEnergyDisplay(
                     tileEntity.isActive ? generators.windGenerationMin * tileEntity.getCurrentMultiplier() : 0) + "/t",
               LangUtils.localize("gui.maxOutput") + ": " + MekanismUtils.getEnergyDisplay(tileEntity.getMaxOutput())
-                    + "/t"),this, MekanismUtils.getResource(ResourceType.GUI, "GuiWindTurbine.png")));
+                    + "/t"), this, MekanismUtils.getResource(ResourceType.GUI, "GuiWindTurbine.png")));
         guiElements
               .add(new GuiPowerBar(this, tileEntity, MekanismUtils.getResource(ResourceType.GUI, "GuiWindTurbine.png"),
                     164, 15));
@@ -57,7 +54,8 @@ public class GuiWindGenerator extends GuiMekanism {
               .drawString(MekanismUtils.getEnergyDisplay(tileEntity.getEnergy(), tileEntity.getMaxEnergy()), 51, 26,
                     0x00CD00);
         fontRenderer.drawString(LangUtils.localize("gui.power") + ": " + powerFormat
-                    .format(MekanismUtils.convertToDisplay(generators.windGenerationMin * tileEntity.getCurrentMultiplier())), 51,
+                    .format(MekanismUtils.convertToDisplay(generators.windGenerationMin * tileEntity.getCurrentMultiplier())),
+              51,
               35, 0x00CD00);
         fontRenderer.drawString(
               LangUtils.localize("gui.out") + ": " + MekanismUtils.getEnergyDisplay(tileEntity.getMaxOutput()) + "/t",

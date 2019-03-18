@@ -19,14 +19,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiFuelwoodHeater extends GuiMekanism {
+public class GuiFuelwoodHeater extends GuiMekanism<TileEntityFuelwoodHeater> {
 
-    public TileEntityFuelwoodHeater tileEntity;
-
-    public GuiFuelwoodHeater(InventoryPlayer inventory, TileEntityFuelwoodHeater tentity) {
-        super(tentity, new ContainerFuelwoodHeater(inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiFuelwoodHeater(InventoryPlayer inventory, TileEntityFuelwoodHeater tile) {
+        super(tile, new ContainerFuelwoodHeater(inventory, tile));
         guiElements.add(new GuiSlot(SlotType.NORMAL, this,
               MekanismUtils.getResource(ResourceType.GUI, "GuiFuelwoodHeater.png"), 14, 28));
         guiElements.add(new GuiSecurityTab(this, tileEntity,

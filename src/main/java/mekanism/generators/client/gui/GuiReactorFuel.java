@@ -32,26 +32,23 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiReactorFuel extends GuiMekanism {
-
-    public TileEntityReactorController tileEntity;
+public class GuiReactorFuel extends GuiMekanism<TileEntityReactorController> {
 
     public GuiTextField injectionRateField;
 
-    public GuiReactorFuel(InventoryPlayer inventory, final TileEntityReactorController tentity) {
-        super(new ContainerNull(inventory.player, tentity));
-        tileEntity = tentity;
+    public GuiReactorFuel(InventoryPlayer inventory, final TileEntityReactorController tile) {
+        super(tile, new ContainerNull(inventory.player, tile));
         guiElements.add(new GuiEnergyInfo(() -> tileEntity.isFormed() ? Arrays.asList(
               LangUtils.localize("gui.storing") + ": " + MekanismUtils
                     .getEnergyDisplay(tileEntity.getEnergy(), tileEntity.getMaxEnergy()),
               LangUtils.localize("gui.producing") + ": " + MekanismUtils
                     .getEnergyDisplay(tileEntity.getReactor().getPassiveGeneration(false, true)) + "/t")
               : new ArrayList<>(), this, MekanismUtils.getResource(ResourceType.GUI, "GuiTall.png")));
-        guiElements.add(new GuiGasGauge(() -> tentity.deuteriumTank, Type.SMALL, this,
+        guiElements.add(new GuiGasGauge(() -> tileEntity.deuteriumTank, Type.SMALL, this,
               MekanismUtils.getResource(ResourceType.GUI, "GuiTall.png"), 25, 64));
-        guiElements.add(new GuiGasGauge(() -> tentity.fuelTank, Type.STANDARD, this,
+        guiElements.add(new GuiGasGauge(() -> tileEntity.fuelTank, Type.STANDARD, this,
               MekanismUtils.getResource(ResourceType.GUI, "GuiTall.png"), 79, 50));
-        guiElements.add(new GuiGasGauge(() -> tentity.tritiumTank, Type.SMALL, this,
+        guiElements.add(new GuiGasGauge(() -> tileEntity.tritiumTank, Type.SMALL, this,
               MekanismUtils.getResource(ResourceType.GUI, "GuiTall.png"), 133, 64));
         guiElements.add(new GuiProgress(new IProgressInfoHandler() {
             @Override

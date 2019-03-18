@@ -12,14 +12,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiLaserTractorBeam extends GuiMekanism {
+public class GuiLaserTractorBeam extends GuiMekanism<TileEntityLaserTractorBeam> {
 
-    public TileEntityLaserTractorBeam tileEntity;
-
-    public GuiLaserTractorBeam(InventoryPlayer inventory, TileEntityLaserTractorBeam tentity) {
-        super(tentity, new ContainerLaserTractorBeam(inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiLaserTractorBeam(InventoryPlayer inventory, TileEntityLaserTractorBeam tile) {
+        super(tile, new ContainerLaserTractorBeam(inventory, tile));
         guiElements
               .add(new GuiSecurityTab(this, tileEntity, MekanismUtils.getResource(ResourceType.GUI, "GuiFullInv.png")));
     }

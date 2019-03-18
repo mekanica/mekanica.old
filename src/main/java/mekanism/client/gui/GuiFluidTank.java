@@ -17,13 +17,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiFluidTank extends GuiMekanism {
+public class GuiFluidTank extends GuiMekanism<TileEntityFluidTank> {
 
-    public TileEntityFluidTank tileEntity;
-
-    public GuiFluidTank(InventoryPlayer inventory, TileEntityFluidTank tentity) {
-        super(tentity, new ContainerFluidTank(inventory, tentity));
-        tileEntity = tentity;
+    public GuiFluidTank(InventoryPlayer inventory, TileEntityFluidTank tile) {
+        super(tile, new ContainerFluidTank(inventory, tile));
         guiElements.add(new GuiContainerEditMode(this, tileEntity,
               MekanismUtils.getResource(ResourceType.GUI, "GuiBlank.png")));
         guiElements

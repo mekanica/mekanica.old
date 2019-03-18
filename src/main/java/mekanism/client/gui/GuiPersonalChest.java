@@ -13,17 +13,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiPersonalChest extends GuiMekanism {
+public class GuiPersonalChest extends GuiMekanism<TileEntityPersonalChest> {
 
-    public TileEntityPersonalChest tileEntity;
-
-    public GuiPersonalChest(InventoryPlayer inventory, TileEntityPersonalChest tentity) {
-        super(tentity, new ContainerPersonalChest(inventory, tentity, null, true));
-
+    public GuiPersonalChest(InventoryPlayer inventory, TileEntityPersonalChest tile) {
+        super(tile, new ContainerPersonalChest(inventory, tile, null, true));
         xSize += 26;
         ySize += 64;
-        tileEntity = tentity;
-
         guiElements.add(new GuiSecurityTab(this, tileEntity,
               MekanismUtils.getResource(ResourceType.GUI, "GuiPersonalChest.png")));
     }

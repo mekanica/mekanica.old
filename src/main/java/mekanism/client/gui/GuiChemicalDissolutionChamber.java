@@ -24,14 +24,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiChemicalDissolutionChamber extends GuiMekanism {
+public class GuiChemicalDissolutionChamber extends GuiMekanism<TileEntityChemicalDissolutionChamber> {
 
-    public TileEntityChemicalDissolutionChamber tileEntity;
-
-    public GuiChemicalDissolutionChamber(InventoryPlayer inventory, TileEntityChemicalDissolutionChamber tentity) {
-        super(tentity, new ContainerChemicalDissolutionChamber(inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiChemicalDissolutionChamber(InventoryPlayer inventory, TileEntityChemicalDissolutionChamber tile) {
+        super(tile, new ContainerChemicalDissolutionChamber(inventory, tile));
         guiElements.add(new GuiSecurityTab(this, tileEntity,
               MekanismUtils.getResource(ResourceType.GUI, "GuiChemicalDissolutionChamber.png")));
         guiElements.add(new GuiRedstoneControl(this, tileEntity,

@@ -40,7 +40,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiDigitalMinerConfig extends GuiMekanism {
+public class GuiDigitalMinerConfig extends GuiMekanism<TileEntityDigitalMiner> {
 
     // Scrollbar dimensions
     private final int scrollX = 154;
@@ -52,7 +52,6 @@ public class GuiDigitalMinerConfig extends GuiMekanism {
     private final int filterY = 18;
     private final int filterW = 96;
     private final int filterH = 29;
-    public TileEntityDigitalMiner tileEntity;
     public boolean isDragging = false;
     public int dragOffset = 0;
 
@@ -67,9 +66,8 @@ public class GuiDigitalMinerConfig extends GuiMekanism {
     private GuiTextField minField;
     private GuiTextField maxField;
 
-    public GuiDigitalMinerConfig(EntityPlayer player, TileEntityDigitalMiner tentity) {
-        super(tentity, new ContainerNull(player, tentity));
-        tileEntity = tentity;
+    public GuiDigitalMinerConfig(EntityPlayer player, TileEntityDigitalMiner tile) {
+        super(tile, new ContainerNull(player, tile));
     }
 
     public int getScroll() {

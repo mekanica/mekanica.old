@@ -26,14 +26,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiReactorStats extends GuiMekanism {
+public class GuiReactorStats extends GuiMekanism<TileEntityReactorController> {
 
     public static NumberFormat nf = NumberFormat.getIntegerInstance();
-    public TileEntityReactorController tileEntity;
 
-    public GuiReactorStats(InventoryPlayer inventory, final TileEntityReactorController tentity) {
-        super(new ContainerNull(inventory.player, tentity));
-        tileEntity = tentity;
+    public GuiReactorStats(InventoryPlayer inventory, final TileEntityReactorController tile) {
+        super(tile, new ContainerNull(inventory.player, tile));
         guiElements.add(new GuiEnergyInfo(() -> tileEntity.isFormed() ? Arrays.asList(
               LangUtils.localize("gui.storing") + ": " + MekanismUtils
                     .getEnergyDisplay(tileEntity.getEnergy(), tileEntity.getMaxEnergy()),

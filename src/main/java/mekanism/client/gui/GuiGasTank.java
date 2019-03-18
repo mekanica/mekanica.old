@@ -25,13 +25,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiGasTank extends GuiMekanism {
+public class GuiGasTank extends GuiMekanism<TileEntityGasTank> {
 
-    public TileEntityGasTank tileEntity;
-
-    public GuiGasTank(InventoryPlayer inventory, TileEntityGasTank tentity) {
-        super(tentity, new ContainerGasTank(inventory, tentity));
-        tileEntity = tentity;
+    public GuiGasTank(InventoryPlayer inventory, TileEntityGasTank tile) {
+        super(tile, new ContainerGasTank(inventory, tile));
         guiElements.add(new GuiRedstoneControl(this, tileEntity,
               MekanismUtils.getResource(ResourceType.GUI, "GuiGasTank.png")));
         guiElements

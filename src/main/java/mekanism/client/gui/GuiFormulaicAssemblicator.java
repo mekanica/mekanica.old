@@ -36,15 +36,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiFormulaicAssemblicator extends GuiMekanism {
-
-    public TileEntityFormulaicAssemblicator tileEntity;
+public class GuiFormulaicAssemblicator extends GuiMekanism<TileEntityFormulaicAssemblicator> {
 
     public ResourceLocation guiLocation = MekanismUtils.getResource(ResourceType.GUI, "GuiFormulaicAssemblicator.png");
 
-    public GuiFormulaicAssemblicator(InventoryPlayer inventory, TileEntityFormulaicAssemblicator tentity) {
-        super(tentity, new ContainerFormulaicAssemblicator(inventory, tentity));
-        tileEntity = tentity;
+    public GuiFormulaicAssemblicator(InventoryPlayer inventory, TileEntityFormulaicAssemblicator tile) {
+        super(tile, new ContainerFormulaicAssemblicator(inventory, tile));
         guiElements.add(new GuiSecurityTab(this, tileEntity, guiLocation));
         guiElements.add(new GuiUpgradeTab(this, tileEntity, guiLocation));
         guiElements.add(new GuiRedstoneControl(this, tileEntity, guiLocation));

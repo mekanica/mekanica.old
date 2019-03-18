@@ -37,9 +37,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiChemicalCrystallizer extends GuiMekanism {
-
-    public TileEntityChemicalCrystallizer tileEntity;
+public class GuiChemicalCrystallizer extends GuiMekanism<TileEntityChemicalCrystallizer> {
 
     public Gas prevGas;
 
@@ -51,10 +49,8 @@ public class GuiChemicalCrystallizer extends GuiMekanism {
 
     public List<ItemStack> iterStacks = new ArrayList<>();
 
-    public GuiChemicalCrystallizer(InventoryPlayer inventory, TileEntityChemicalCrystallizer tentity) {
-        super(tentity, new ContainerChemicalCrystallizer(inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiChemicalCrystallizer(InventoryPlayer inventory, TileEntityChemicalCrystallizer tile) {
+        super(tile, new ContainerChemicalCrystallizer(inventory, tile));
         guiElements.add(new GuiSecurityTab(this, tileEntity,
               MekanismUtils.getResource(ResourceType.GUI, "GuiChemicalCrystallizer.png")));
         guiElements.add(new GuiRedstoneControl(this, tileEntity,

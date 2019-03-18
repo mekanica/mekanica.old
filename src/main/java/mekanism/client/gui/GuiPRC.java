@@ -28,13 +28,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiPRC extends GuiMekanism {
+public class GuiPRC extends GuiMekanism<TileEntityPRC> {
 
-    public TileEntityPRC tileEntity;
-
-    public GuiPRC(InventoryPlayer inventory, TileEntityPRC tentity) {
-        super(tentity, new ContainerPRC(inventory, tentity));
-        tileEntity = tentity;
+    public GuiPRC(InventoryPlayer inventory, TileEntityPRC tile) {
+        super(tile, new ContainerPRC(inventory, tile));
 
         guiElements.add(new GuiRedstoneControl(this, tileEntity,
               MekanismUtils.getResource(ResourceType.GUI, "GuiBlank.png")));

@@ -20,14 +20,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiSeismicVibrator extends GuiMekanism {
+public class GuiSeismicVibrator extends GuiMekanism<TileEntitySeismicVibrator> {
 
-    public TileEntitySeismicVibrator tileEntity;
-
-    public GuiSeismicVibrator(InventoryPlayer inventory, TileEntitySeismicVibrator tentity) {
-        super(tentity, new ContainerSeismicVibrator(inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiSeismicVibrator(InventoryPlayer inventory, TileEntitySeismicVibrator tile) {
+        super(tile, new ContainerSeismicVibrator(inventory, tile));
         guiElements.add(new GuiSecurityTab(this, tileEntity,
               MekanismUtils.getResource(ResourceType.GUI, "GuiSeismicVibrator.png")));
         guiElements.add(new GuiRedstoneControl(this, tileEntity,

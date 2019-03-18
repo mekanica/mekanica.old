@@ -30,9 +30,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiMMaterialFilter extends GuiMekanism {
-
-    public TileEntityDigitalMiner tileEntity;
+public class GuiMMaterialFilter extends GuiMekanism<TileEntityDigitalMiner> {
 
     public boolean isNew = false;
 
@@ -44,18 +42,14 @@ public class GuiMMaterialFilter extends GuiMekanism {
 
     public int ticker;
 
-    public GuiMMaterialFilter(EntityPlayer player, TileEntityDigitalMiner tentity, int index) {
-        super(tentity, new ContainerFilter(player.inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiMMaterialFilter(EntityPlayer player, TileEntityDigitalMiner tile, int index) {
+        super(tile, new ContainerFilter(player.inventory, tile));
         origFilter = (MMaterialFilter) tileEntity.filters.get(index);
         filter = ((MMaterialFilter) tileEntity.filters.get(index)).clone();
     }
 
-    public GuiMMaterialFilter(EntityPlayer player, TileEntityDigitalMiner tentity) {
-        super(tentity, new ContainerFilter(player.inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiMMaterialFilter(EntityPlayer player, TileEntityDigitalMiner tile) {
+        super(tile, new ContainerFilter(player.inventory, tile));
         isNew = true;
     }
 

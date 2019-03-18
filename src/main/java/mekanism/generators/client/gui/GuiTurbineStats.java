@@ -20,13 +20,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiTurbineStats extends GuiMekanism {
+public class GuiTurbineStats extends GuiMekanism<TileEntityTurbineCasing> {
 
-    public TileEntityTurbineCasing tileEntity;
-
-    public GuiTurbineStats(InventoryPlayer inventory, TileEntityTurbineCasing tentity) {
-        super(tentity, new ContainerNull(inventory.player, tentity));
-        tileEntity = tentity;
+    public GuiTurbineStats(InventoryPlayer inventory, TileEntityTurbineCasing tile) {
+        super(tile, new ContainerNull(inventory.player, tile));
         guiElements.add(new GuiTurbineTab(this, tileEntity, TurbineTab.MAIN, 6,
               MekanismUtils.getResource(ResourceType.GUI, "GuiNull.png")));
         guiElements.add(new GuiEnergyInfo(() ->

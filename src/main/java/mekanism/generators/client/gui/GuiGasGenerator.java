@@ -22,13 +22,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiGasGenerator extends GuiMekanism {
+public class GuiGasGenerator extends GuiMekanism<TileEntityGasGenerator> {
 
-    public TileEntityGasGenerator tileEntity;
-
-    public GuiGasGenerator(InventoryPlayer inventory, TileEntityGasGenerator tentity) {
-        super(new ContainerGasGenerator(inventory, tentity));
-        tileEntity = tentity;
+    public GuiGasGenerator(InventoryPlayer inventory, TileEntityGasGenerator tile) {
+        super(tile, new ContainerGasGenerator(inventory, tile));
         guiElements.add(new GuiRedstoneControl(this, tileEntity,
               MekanismUtils.getResource(ResourceType.GUI, "GuiGasGenerator.png")));
         guiElements.add(new GuiSecurityTab(this, tileEntity,

@@ -18,14 +18,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiThermalEvaporationController extends GuiMekanism {
+public class GuiThermalEvaporationController extends GuiMekanism<TileEntityThermalEvaporationController> {
 
-    public TileEntityThermalEvaporationController tileEntity;
-
-    public GuiThermalEvaporationController(InventoryPlayer inventory, TileEntityThermalEvaporationController tentity) {
-        super(tentity, new ContainerThermalEvaporationController(inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiThermalEvaporationController(InventoryPlayer inventory, TileEntityThermalEvaporationController tile) {
+        super(tile, new ContainerThermalEvaporationController(inventory, tile));
         guiElements.add(new GuiFluidGauge(() -> tileEntity.inputTank, GuiGauge.Type.STANDARD, this,
               MekanismUtils.getResource(ResourceType.GUI, "GuiThermalEvaporationController.png"), 6, 13));
         guiElements.add(new GuiFluidGauge(() -> tileEntity.outputTank, GuiGauge.Type.STANDARD, this,

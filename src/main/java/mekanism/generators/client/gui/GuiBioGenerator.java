@@ -21,13 +21,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiBioGenerator extends GuiMekanism {
+public class GuiBioGenerator extends GuiMekanism<TileEntityBioGenerator> {
 
-    public TileEntityBioGenerator tileEntity;
-
-    public GuiBioGenerator(InventoryPlayer inventory, TileEntityBioGenerator tentity) {
-        super(new ContainerBioGenerator(inventory, tentity));
-        tileEntity = tentity;
+    public GuiBioGenerator(InventoryPlayer inventory, TileEntityBioGenerator tile) {
+        super(tile, new ContainerBioGenerator(inventory, tile));
         guiElements.add(new GuiRedstoneControl(this, tileEntity,
               MekanismUtils.getResource(ResourceType.GUI, "GuiBioGenerator.png")));
         guiElements.add(new GuiSecurityTab(this, tileEntity,

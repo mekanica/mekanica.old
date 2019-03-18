@@ -32,9 +32,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 @SideOnly(Side.CLIENT)
-public class GuiTItemStackFilter extends GuiMekanism {
-
-    public TileEntityLogisticalSorter tileEntity;
+public class GuiTItemStackFilter extends GuiMekanism<TileEntityLogisticalSorter> {
 
     public boolean isNew = false;
 
@@ -49,18 +47,14 @@ public class GuiTItemStackFilter extends GuiMekanism {
     private GuiTextField minField;
     private GuiTextField maxField;
 
-    public GuiTItemStackFilter(EntityPlayer player, TileEntityLogisticalSorter tentity, int index) {
-        super(tentity, new ContainerFilter(player.inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiTItemStackFilter(EntityPlayer player, TileEntityLogisticalSorter tile, int index) {
+        super(tile, new ContainerFilter(player.inventory, tile));
         origFilter = (TItemStackFilter) tileEntity.filters.get(index);
         filter = ((TItemStackFilter) tileEntity.filters.get(index)).clone();
     }
 
-    public GuiTItemStackFilter(EntityPlayer player, TileEntityLogisticalSorter tentity) {
-        super(tentity, new ContainerFilter(player.inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiTItemStackFilter(EntityPlayer player, TileEntityLogisticalSorter tile) {
+        super(tile, new ContainerFilter(player.inventory, tile));
         isNew = true;
     }
 

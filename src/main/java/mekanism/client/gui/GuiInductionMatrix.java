@@ -16,20 +16,18 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiInductionMatrix extends GuiMekanism {
+public class GuiInductionMatrix extends GuiMekanism<TileEntityInductionCasing> {
 
-    public TileEntityInductionCasing tileEntity;
-
-    public GuiInductionMatrix(InventoryPlayer inventory, TileEntityInductionCasing tentity) {
-        super(tentity, new ContainerInductionMatrix(inventory, tentity));
-        tileEntity = tentity;
+    public GuiInductionMatrix(InventoryPlayer inventory, TileEntityInductionCasing tile) {
+        super(tile, new ContainerInductionMatrix(inventory, tile));
         guiElements.add(new GuiMatrixTab(this, tileEntity, MatrixTab.STAT, 6,
               MekanismUtils.getResource(ResourceType.GUI, "GuiInductionMatrix.png")));
         guiElements.add(new GuiEnergyInfo(() -> Arrays.asList(
               LangUtils.localize("gui.storing") + ": " + MekanismUtils
                     .getEnergyDisplay(tileEntity.getEnergy(), tileEntity.getMaxEnergy()),
               LangUtils.localize("gui.input") + ": " + MekanismUtils.getEnergyDisplay(tileEntity.structure.lastInput)
-                    + "/t", LangUtils.localize("gui.output") + ": " + MekanismUtils.getEnergyDisplay(tileEntity.structure.lastOutput)
+                    + "/t",
+              LangUtils.localize("gui.output") + ": " + MekanismUtils.getEnergyDisplay(tileEntity.structure.lastOutput)
                     + "/t"), this, MekanismUtils.getResource(ResourceType.GUI, "GuiInductionMatrix.png")));
     }
 

@@ -24,14 +24,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiChemicalInfuser extends GuiMekanism {
+public class GuiChemicalInfuser extends GuiMekanism<TileEntityChemicalInfuser> {
 
-    public TileEntityChemicalInfuser tileEntity;
-
-    public GuiChemicalInfuser(InventoryPlayer inventory, TileEntityChemicalInfuser tentity) {
-        super(tentity, new ContainerChemicalInfuser(inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiChemicalInfuser(InventoryPlayer inventory, TileEntityChemicalInfuser tile) {
+        super(tile, new ContainerChemicalInfuser(inventory, tile));
         guiElements.add(new GuiSecurityTab(this, tileEntity,
               MekanismUtils.getResource(ResourceType.GUI, "GuiChemicalInfuser.png")));
         guiElements.add(new GuiRedstoneControl(this, tileEntity,

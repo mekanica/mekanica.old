@@ -26,13 +26,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiHeatGenerator extends GuiMekanism {
+public class GuiHeatGenerator extends GuiMekanism<TileEntityHeatGenerator> {
 
-    public TileEntityHeatGenerator tileEntity;
-
-    public GuiHeatGenerator(InventoryPlayer inventory, TileEntityHeatGenerator tentity) {
-        super(new ContainerHeatGenerator(inventory, tentity));
-        tileEntity = tentity;
+    public GuiHeatGenerator(InventoryPlayer inventory, TileEntityHeatGenerator tile) {
+        super(tile, new ContainerHeatGenerator(inventory, tile));
         guiElements.add(new GuiRedstoneControl(this, tileEntity,
               MekanismUtils.getResource(ResourceType.GUI, "GuiHeatGenerator.png")));
         guiElements.add(new GuiSecurityTab(this, tileEntity,

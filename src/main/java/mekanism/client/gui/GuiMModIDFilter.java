@@ -34,9 +34,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiMModIDFilter extends GuiMekanism {
-
-    public TileEntityDigitalMiner tileEntity;
+public class GuiMModIDFilter extends GuiMekanism<TileEntityDigitalMiner> {
 
     public boolean isNew = false;
 
@@ -51,20 +49,16 @@ public class GuiMModIDFilter extends GuiMekanism {
     public String status = EnumColor.DARK_GREEN + LangUtils.localize("gui.allOK");
     private GuiTextField modIDText;
 
-    public GuiMModIDFilter(EntityPlayer player, TileEntityDigitalMiner tentity, int index) {
-        super(tentity, new ContainerFilter(player.inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiMModIDFilter(EntityPlayer player, TileEntityDigitalMiner tile, int index) {
+        super(tile, new ContainerFilter(player.inventory, tile));
         origFilter = (MModIDFilter) tileEntity.filters.get(index);
-        filter = ((MModIDFilter) tentity.filters.get(index)).clone();
+        filter = ((MModIDFilter) tileEntity.filters.get(index)).clone();
 
         updateStackList(filter.modID);
     }
 
-    public GuiMModIDFilter(EntityPlayer player, TileEntityDigitalMiner tentity) {
-        super(tentity, new ContainerFilter(player.inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiMModIDFilter(EntityPlayer player, TileEntityDigitalMiner tile) {
+        super(tile, new ContainerFilter(player.inventory, tile));
         isNew = true;
     }
 

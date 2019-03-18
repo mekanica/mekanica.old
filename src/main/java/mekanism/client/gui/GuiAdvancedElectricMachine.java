@@ -26,14 +26,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiAdvancedElectricMachine extends GuiMekanism {
+public class GuiAdvancedElectricMachine extends GuiMekanism<TileEntityAdvancedElectricMachine> {
 
-    public TileEntityAdvancedElectricMachine tileEntity;
-
-    public GuiAdvancedElectricMachine(InventoryPlayer inventory, TileEntityAdvancedElectricMachine tentity) {
-        super(tentity, new ContainerAdvancedElectricMachine(inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiAdvancedElectricMachine(InventoryPlayer inventory, TileEntityAdvancedElectricMachine tile) {
+        super(tile, new ContainerAdvancedElectricMachine(inventory, tile));
         guiElements.add(new GuiRedstoneControl(this, tileEntity, tileEntity.guiLocation));
         guiElements.add(new GuiUpgradeTab(this, tileEntity, tileEntity.guiLocation));
         guiElements.add(new GuiSecurityTab(this, tileEntity, tileEntity.guiLocation));

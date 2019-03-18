@@ -13,14 +13,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiAmbientAccumulator extends GuiMekanism {
-
-    TileEntityAmbientAccumulator tileEntity;
+public class GuiAmbientAccumulator extends GuiMekanism<TileEntityAmbientAccumulator> {
 
     public GuiAmbientAccumulator(EntityPlayer player, TileEntityAmbientAccumulator tile) {
         super(tile, new ContainerNull(player, tile));
-        tileEntity = tile;
-
         guiElements.add(new GuiGasGauge(() -> tileEntity.collectedGas, Type.WIDE, this,
               MekanismUtils.getResource(ResourceType.GUI, "GuiBlank.png"), 26, 16));
     }

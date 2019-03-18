@@ -24,18 +24,19 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 @SideOnly(Side.CLIENT)
-public abstract class GuiMekanism extends GuiContainer implements IGuiWrapper {
+public abstract class GuiMekanism<TILE extends TileEntityContainerBlock> extends GuiContainer implements IGuiWrapper {
 
     public Set<GuiElement> guiElements = new HashSet<>();
 
-    private TileEntityContainerBlock tileEntity;
+    protected TILE tileEntity;
 
     //Try not to use
+    @Deprecated
     public GuiMekanism(Container container) {
-        super(container);
+        this(null, container);
     }
 
-    public GuiMekanism(TileEntityContainerBlock tile, Container container) {
+    public GuiMekanism(TILE tile, Container container) {
         super(container);
         tileEntity = tile;
     }
@@ -116,7 +117,7 @@ public abstract class GuiMekanism extends GuiContainer implements IGuiWrapper {
         }
     }
 
-    public TileEntityContainerBlock getTileEntity() {
+    public TILE getTileEntity() {
         return tileEntity;
     }
 

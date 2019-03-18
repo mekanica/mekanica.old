@@ -23,10 +23,9 @@ import org.lwjgl.opengl.GL11;
 @SideOnly(Side.CLIENT)
 public class GuiRobitMain extends GuiMekanism {
 
-    public EntityRobit robit;
+    private final EntityRobit robit;
 
-    public boolean displayNameChange;
-
+    private boolean displayNameChange;
     private GuiTextField nameChangeField;
     private GuiButton confirmName;
 

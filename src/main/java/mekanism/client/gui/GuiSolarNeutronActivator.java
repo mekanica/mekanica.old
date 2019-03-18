@@ -22,14 +22,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiSolarNeutronActivator extends GuiMekanism {
+public class GuiSolarNeutronActivator extends GuiMekanism<TileEntitySolarNeutronActivator> {
 
-    public TileEntitySolarNeutronActivator tileEntity;
-
-    public GuiSolarNeutronActivator(InventoryPlayer inventory, TileEntitySolarNeutronActivator tentity) {
-        super(tentity, new ContainerSolarNeutronActivator(inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiSolarNeutronActivator(InventoryPlayer inventory, TileEntitySolarNeutronActivator tile) {
+        super(tile, new ContainerSolarNeutronActivator(inventory, tile));
         guiElements
               .add(new GuiSecurityTab(this, tileEntity, MekanismUtils.getResource(ResourceType.GUI, "GuiBlank.png")));
         guiElements.add(new GuiRedstoneControl(this, tileEntity,

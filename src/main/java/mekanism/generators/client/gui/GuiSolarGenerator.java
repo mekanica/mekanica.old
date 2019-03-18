@@ -20,13 +20,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiSolarGenerator extends GuiMekanism {
+public class GuiSolarGenerator extends GuiMekanism<TileEntitySolarGenerator> {
 
-    public TileEntitySolarGenerator tileEntity;
-
-    public GuiSolarGenerator(InventoryPlayer inventory, TileEntitySolarGenerator tentity) {
-        super(new ContainerSolarGenerator(inventory, tentity));
-        tileEntity = tentity;
+    public GuiSolarGenerator(InventoryPlayer inventory, TileEntitySolarGenerator tile) {
+        super(tile, new ContainerSolarGenerator(inventory, tile));
         guiElements.add(new GuiRedstoneControl(this, tileEntity,
               MekanismUtils.getResource(ResourceType.GUI, "GuiSolarGenerator.png")));
         guiElements.add(new GuiSecurityTab(this, tileEntity,

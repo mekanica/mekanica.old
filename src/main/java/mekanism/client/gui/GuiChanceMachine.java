@@ -24,14 +24,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiChanceMachine extends GuiMekanism {
+public class GuiChanceMachine extends GuiMekanism<TileEntityChanceMachine> {
 
-    public TileEntityChanceMachine tileEntity;
-
-    public GuiChanceMachine(InventoryPlayer inventory, TileEntityChanceMachine tentity) {
-        super(tentity, new ContainerChanceMachine(inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiChanceMachine(InventoryPlayer inventory, TileEntityChanceMachine tile) {
+        super(tile, new ContainerChanceMachine(inventory, tile));
         guiElements.add(new GuiRedstoneControl(this, tileEntity, tileEntity.guiLocation));
         guiElements.add(new GuiUpgradeTab(this, tileEntity, tileEntity.guiLocation));
         guiElements.add(new GuiSecurityTab(this, tileEntity, tileEntity.guiLocation));

@@ -20,14 +20,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiReactorController extends GuiMekanism {
+public class GuiReactorController extends GuiMekanism<TileEntityReactorController> {
 
-    public TileEntityReactorController tileEntity;
-
-    public GuiReactorController(InventoryPlayer inventory, final TileEntityReactorController tentity) {
-        super(new ContainerReactorController(inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiReactorController(InventoryPlayer inventory, final TileEntityReactorController tile) {
+        super(tile, new ContainerReactorController(inventory, tile));
         if (tileEntity.isFormed()) {
             guiElements.add(new GuiEnergyInfo(() -> tileEntity.isFormed() ? Arrays.asList(
                   LangUtils.localize("gui.storing") + ": " + MekanismUtils

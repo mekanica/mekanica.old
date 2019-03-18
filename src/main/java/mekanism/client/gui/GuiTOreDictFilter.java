@@ -35,9 +35,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 @SideOnly(Side.CLIENT)
-public class GuiTOreDictFilter extends GuiMekanism {
-
-    public TileEntityLogisticalSorter tileEntity;
+public class GuiTOreDictFilter extends GuiMekanism<TileEntityLogisticalSorter> {
 
     public boolean isNew = false;
 
@@ -52,20 +50,15 @@ public class GuiTOreDictFilter extends GuiMekanism {
     public String status = EnumColor.DARK_GREEN + LangUtils.localize("gui.allOK");
     private GuiTextField oreDictText;
 
-    public GuiTOreDictFilter(EntityPlayer player, TileEntityLogisticalSorter tentity, int index) {
-        super(tentity, new ContainerFilter(player.inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiTOreDictFilter(EntityPlayer player, TileEntityLogisticalSorter tile, int index) {
+        super(tile, new ContainerFilter(player.inventory, tile));
         origFilter = (TOreDictFilter) tileEntity.filters.get(index);
-        filter = ((TOreDictFilter) tentity.filters.get(index)).clone();
-
+        filter = ((TOreDictFilter) tileEntity.filters.get(index)).clone();
         updateStackList(filter.oreDictName);
     }
 
-    public GuiTOreDictFilter(EntityPlayer player, TileEntityLogisticalSorter tentity) {
-        super(tentity, new ContainerFilter(player.inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiTOreDictFilter(EntityPlayer player, TileEntityLogisticalSorter tile) {
+        super(tile, new ContainerFilter(player.inventory, tile));
         isNew = true;
     }
 

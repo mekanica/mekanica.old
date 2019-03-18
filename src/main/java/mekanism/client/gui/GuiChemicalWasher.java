@@ -27,14 +27,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiChemicalWasher extends GuiMekanism {
+public class GuiChemicalWasher extends GuiMekanism<TileEntityChemicalWasher> {
 
-    public TileEntityChemicalWasher tileEntity;
-
-    public GuiChemicalWasher(InventoryPlayer inventory, TileEntityChemicalWasher tentity) {
-        super(tentity, new ContainerChemicalWasher(inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiChemicalWasher(InventoryPlayer inventory, TileEntityChemicalWasher tile) {
+        super(tile, new ContainerChemicalWasher(inventory, tile));
         guiElements.add(new GuiSecurityTab(this, tileEntity,
               MekanismUtils.getResource(ResourceType.GUI, "GuiChemicalWasher.png")));
         guiElements.add(new GuiRedstoneControl(this, tileEntity,

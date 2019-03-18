@@ -36,9 +36,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiOredictionificator extends GuiMekanism {
-
-    public TileEntityOredictionificator tileEntity;
+public class GuiOredictionificator extends GuiMekanism<TileEntityOredictionificator> {
 
     public Map<OredictionificatorFilter, ItemStack> renderStacks = new HashMap<>();
 
@@ -48,10 +46,8 @@ public class GuiOredictionificator extends GuiMekanism {
 
     public float scroll;
 
-    public GuiOredictionificator(InventoryPlayer inventory, TileEntityOredictionificator tentity) {
-        super(tentity, new ContainerOredictionificator(inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiOredictionificator(InventoryPlayer inventory, TileEntityOredictionificator tile) {
+        super(tile, new ContainerOredictionificator(inventory, tile));
         guiElements.add(new GuiRedstoneControl(this, tileEntity,
               MekanismUtils.getResource(ResourceType.GUI, "GuiOredictionificator.png")));
         guiElements.add(new GuiSecurityTab(this, tileEntity,

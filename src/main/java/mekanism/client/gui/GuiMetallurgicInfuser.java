@@ -33,14 +33,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiMetallurgicInfuser extends GuiMekanism {
+public class GuiMetallurgicInfuser extends GuiMekanism<TileEntityMetallurgicInfuser> {
 
-    public TileEntityMetallurgicInfuser tileEntity;
-
-    public GuiMetallurgicInfuser(InventoryPlayer inventory, TileEntityMetallurgicInfuser tentity) {
-        super(tentity, new ContainerMetallurgicInfuser(inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiMetallurgicInfuser(InventoryPlayer inventory, TileEntityMetallurgicInfuser tile) {
+        super(tile, new ContainerMetallurgicInfuser(inventory, tile));
         guiElements.add(new GuiRedstoneControl(this, tileEntity,
               MekanismUtils.getResource(ResourceType.GUI, "GuiMetallurgicInfuser.png")));
         guiElements.add(new GuiUpgradeTab(this, tileEntity,

@@ -24,13 +24,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiThermoelectricBoiler extends GuiMekanism {
+public class GuiThermoelectricBoiler extends GuiMekanism<TileEntityBoilerCasing> {
 
-    public TileEntityBoilerCasing tileEntity;
-
-    public GuiThermoelectricBoiler(InventoryPlayer inventory, TileEntityBoilerCasing tentity) {
-        super(tentity, new ContainerFilter(inventory, tentity));
-        tileEntity = tentity;
+    public GuiThermoelectricBoiler(InventoryPlayer inventory, TileEntityBoilerCasing tile) {
+        super(tile, new ContainerFilter(inventory, tile));
         guiElements.add(new GuiBoilerTab(this, tileEntity, BoilerTab.STAT, 6,
               MekanismUtils.getResource(ResourceType.GUI, "GuiThermoelectricBoiler.png")));
         guiElements.add(new GuiRateBar(this, new IRateInfoHandler() {

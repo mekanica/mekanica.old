@@ -19,14 +19,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiTFilterSelect extends GuiMekanism {
+public class GuiTFilterSelect extends GuiMekanism<TileEntityLogisticalSorter> {
 
-    public TileEntityLogisticalSorter tileEntity;
-
-    public GuiTFilterSelect(EntityPlayer player, TileEntityLogisticalSorter tentity) {
-        super(tentity, new ContainerNull(player, tentity));
-
-        tileEntity = tentity;
+    public GuiTFilterSelect(EntityPlayer player, TileEntityLogisticalSorter tile) {
+        super(tile, new ContainerNull(player, tile));
     }
 
     @Override

@@ -24,14 +24,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiDoubleElectricMachine extends GuiMekanism {
+public class GuiDoubleElectricMachine extends GuiMekanism<TileEntityDoubleElectricMachine> {
 
-    public TileEntityDoubleElectricMachine tileEntity;
-
-    public GuiDoubleElectricMachine(InventoryPlayer inventory, TileEntityDoubleElectricMachine tentity) {
-        super(tentity, new ContainerDoubleElectricMachine(inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiDoubleElectricMachine(InventoryPlayer inventory, TileEntityDoubleElectricMachine tile) {
+        super(tile, new ContainerDoubleElectricMachine(inventory, tile));
         guiElements.add(new GuiRedstoneControl(this, tileEntity, tileEntity.guiLocation));
         guiElements.add(new GuiUpgradeTab(this, tileEntity, tileEntity.guiLocation));
         guiElements.add(new GuiSecurityTab(this, tileEntity, tileEntity.guiLocation));

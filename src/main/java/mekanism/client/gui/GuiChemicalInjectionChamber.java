@@ -9,8 +9,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiChemicalInjectionChamber extends GuiAdvancedElectricMachine {
 
-    public GuiChemicalInjectionChamber(InventoryPlayer inventory, TileEntityAdvancedElectricMachine tentity) {
-        super(inventory, tentity);
+    public GuiChemicalInjectionChamber(InventoryPlayer inventory, TileEntityAdvancedElectricMachine tile) {
+        super(inventory, tile);
     }
 
     @Override

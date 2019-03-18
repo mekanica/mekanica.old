@@ -29,9 +29,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiOredictionificatorFilter extends GuiMekanism {
-
-    public TileEntityOredictionificator tileEntity;
+public class GuiOredictionificatorFilter extends GuiMekanism<TileEntityOredictionificator> {
 
     public OredictionificatorFilter origFilter;
 
@@ -43,20 +41,15 @@ public class GuiOredictionificatorFilter extends GuiMekanism {
 
     public ItemStack renderStack = ItemStack.EMPTY;
 
-    public GuiOredictionificatorFilter(EntityPlayer player, TileEntityOredictionificator tentity, int index) {
-        super(tentity, new ContainerFilter(player.inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiOredictionificatorFilter(EntityPlayer player, TileEntityOredictionificator tile, int index) {
+        super(tile, new ContainerFilter(player.inventory, tile));
         origFilter = tileEntity.filters.get(index);
-        filter = tentity.filters.get(index).clone();
-
+        filter = tileEntity.filters.get(index).clone();
         updateRenderStack();
     }
 
-    public GuiOredictionificatorFilter(EntityPlayer player, TileEntityOredictionificator tentity) {
-        super(tentity, new ContainerFilter(player.inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiOredictionificatorFilter(EntityPlayer player, TileEntityOredictionificator tile) {
+        super(tile, new ContainerFilter(player.inventory, tile));
         isNew = true;
     }
 

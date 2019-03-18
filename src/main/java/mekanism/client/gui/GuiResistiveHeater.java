@@ -33,16 +33,12 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiResistiveHeater extends GuiMekanism {
-
-    public TileEntityResistiveHeater tileEntity;
+public class GuiResistiveHeater extends GuiMekanism<TileEntityResistiveHeater> {
 
     private GuiTextField energyUsageField;
 
-    public GuiResistiveHeater(InventoryPlayer inventory, TileEntityResistiveHeater tentity) {
-        super(tentity, new ContainerResistiveHeater(inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiResistiveHeater(InventoryPlayer inventory, TileEntityResistiveHeater tile) {
+        super(tile, new ContainerResistiveHeater(inventory, tile));
         guiElements.add(new GuiPowerBar(this, tileEntity,
               MekanismUtils.getResource(ResourceType.GUI, "GuiResistiveHeater.png"), 164, 15));
         guiElements.add(new GuiSlot(SlotType.POWER, this,

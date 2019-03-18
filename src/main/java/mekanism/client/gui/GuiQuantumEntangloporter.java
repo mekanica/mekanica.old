@@ -31,11 +31,9 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiQuantumEntangloporter extends GuiMekanism {
+public class GuiQuantumEntangloporter extends GuiMekanism<TileEntityQuantumEntangloporter> {
 
     public ResourceLocation resource;
-
-    public TileEntityQuantumEntangloporter tileEntity;
 
     public GuiButton publicButton;
     public GuiButton privateButton;
@@ -49,9 +47,8 @@ public class GuiQuantumEntangloporter extends GuiMekanism {
 
     public boolean privateMode;
 
-    public GuiQuantumEntangloporter(InventoryPlayer inventory, TileEntityQuantumEntangloporter tentity) {
-        super(tentity, new ContainerQuantumEntangloporter(inventory, tentity));
-        tileEntity = tentity;
+    public GuiQuantumEntangloporter(InventoryPlayer inventory, TileEntityQuantumEntangloporter tile) {
+        super(tile, new ContainerQuantumEntangloporter(inventory, tile));
         resource = MekanismUtils.getResource(ResourceType.GUI, "GuiTeleporter.png");
 
         guiElements.add(scrollList = new GuiScrollList(this, resource, 28, 37, 120, 4));

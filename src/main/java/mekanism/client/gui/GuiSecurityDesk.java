@@ -28,19 +28,17 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiSecurityDesk extends GuiMekanism {
+public class GuiSecurityDesk extends GuiMekanism<TileEntitySecurityDesk> {
 
     public static final List<Character> SPECIAL_CHARS = Arrays.asList('-', '|', '_');
     public static int MAX_LENGTH = 24;
     public ResourceLocation resource;
-    public TileEntitySecurityDesk tileEntity;
     public GuiButton removeButton;
     public GuiScrollList scrollList;
     public GuiTextField trustedField;
 
-    public GuiSecurityDesk(InventoryPlayer inventory, TileEntitySecurityDesk tentity) {
-        super(tentity, new ContainerSecurityDesk(inventory, tentity));
-        tileEntity = tentity;
+    public GuiSecurityDesk(InventoryPlayer inventory, TileEntitySecurityDesk tile) {
+        super(tile, new ContainerSecurityDesk(inventory, tile));
         resource = MekanismUtils.getResource(ResourceType.GUI, "GuiSecurityDesk.png");
 
         guiElements.add(scrollList = new GuiScrollList(this, resource, 14, 14, 120, 4));

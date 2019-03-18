@@ -38,18 +38,14 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 @SideOnly(Side.CLIENT)
-public class GuiDigitalMiner extends GuiMekanism {
-
-    public TileEntityDigitalMiner tileEntity;
+public class GuiDigitalMiner extends GuiMekanism<TileEntityDigitalMiner> {
 
     public GuiButton startButton;
     public GuiButton stopButton;
     public GuiButton configButton;
 
-    public GuiDigitalMiner(InventoryPlayer inventory, TileEntityDigitalMiner tentity) {
-        super(tentity, new ContainerDigitalMiner(inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiDigitalMiner(InventoryPlayer inventory, TileEntityDigitalMiner tile) {
+        super(tile, new ContainerDigitalMiner(inventory, tile));
         guiElements.add(new GuiRedstoneControl(this, tileEntity,
               MekanismUtils.getResource(ResourceType.GUI, "GuiDigitalMiner.png")));
         guiElements.add(new GuiSecurityTab(this, tileEntity,

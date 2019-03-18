@@ -46,13 +46,12 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiTeleporter extends GuiMekanism {
+public class GuiTeleporter extends GuiMekanism<TileEntityTeleporter> {
 
     public EnumHand currentHand;
 
     public ResourceLocation resource;
 
-    public TileEntityTeleporter tileEntity;
     public ItemStack itemStack = ItemStack.EMPTY;
 
     public EntityPlayer entityPlayer;
@@ -79,9 +78,8 @@ public class GuiTeleporter extends GuiMekanism {
 
     public boolean isInit = true;
 
-    public GuiTeleporter(InventoryPlayer inventory, TileEntityTeleporter tentity) {
-        super(tentity, new ContainerTeleporter(inventory, tentity));
-        tileEntity = tentity;
+    public GuiTeleporter(InventoryPlayer inventory, TileEntityTeleporter tile) {
+        super(tile, new ContainerTeleporter(inventory, tile));
         resource = MekanismUtils.getResource(ResourceType.GUI, "GuiTeleporter.png");
 
         guiElements.add(new GuiRedstoneControl(this, tileEntity, resource));

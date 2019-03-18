@@ -23,16 +23,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiFluidicPlenisher extends GuiMekanism {
-
-    public TileEntityFluidicPlenisher tileEntity;
+public class GuiFluidicPlenisher extends GuiMekanism<TileEntityFluidicPlenisher> {
 
     public ResourceLocation guiLocation = MekanismUtils.getResource(ResourceType.GUI, "GuiElectricPump.png");
 
-    public GuiFluidicPlenisher(InventoryPlayer inventory, TileEntityFluidicPlenisher tentity) {
-        super(tentity, new ContainerFluidicPlenisher(inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiFluidicPlenisher(InventoryPlayer inventory, TileEntityFluidicPlenisher tile) {
+        super(tile, new ContainerFluidicPlenisher(inventory, tile));
         guiElements.add(new GuiSlot(SlotType.NORMAL, this, guiLocation, 27, 19));
         guiElements.add(new GuiSlot(SlotType.NORMAL, this, guiLocation, 27, 50));
         guiElements.add(new GuiSlot(SlotType.POWER, this, guiLocation, 142, 34).with(SlotOverlay.POWER));

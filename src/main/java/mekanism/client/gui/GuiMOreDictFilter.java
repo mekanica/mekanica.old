@@ -34,9 +34,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiMOreDictFilter extends GuiMekanism {
-
-    public TileEntityDigitalMiner tileEntity;
+public class GuiMOreDictFilter extends GuiMekanism<TileEntityDigitalMiner> {
 
     public boolean isNew = false;
 
@@ -51,20 +49,15 @@ public class GuiMOreDictFilter extends GuiMekanism {
     public String status = EnumColor.DARK_GREEN + LangUtils.localize("gui.allOK");
     private GuiTextField oreDictText;
 
-    public GuiMOreDictFilter(EntityPlayer player, TileEntityDigitalMiner tentity, int index) {
-        super(tentity, new ContainerFilter(player.inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiMOreDictFilter(EntityPlayer player, TileEntityDigitalMiner tile, int index) {
+        super(tile, new ContainerFilter(player.inventory, tile));
         origFilter = (MOreDictFilter) tileEntity.filters.get(index);
-        filter = ((MOreDictFilter) tentity.filters.get(index)).clone();
-
+        filter = ((MOreDictFilter) tileEntity.filters.get(index)).clone();
         updateStackList(filter.oreDictName);
     }
 
-    public GuiMOreDictFilter(EntityPlayer player, TileEntityDigitalMiner tentity) {
-        super(tentity, new ContainerFilter(player.inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiMOreDictFilter(EntityPlayer player, TileEntityDigitalMiner tile) {
+        super(tile, new ContainerFilter(player.inventory, tile));
         isNew = true;
     }
 

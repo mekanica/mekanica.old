@@ -36,13 +36,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiReactorHeat extends GuiMekanism {
+public class GuiReactorHeat extends GuiMekanism<TileEntityReactorController> {
 
-    public TileEntityReactorController tileEntity;
-
-    public GuiReactorHeat(InventoryPlayer inventory, final TileEntityReactorController tentity) {
-        super(new ContainerNull(inventory.player, tentity));
-        tileEntity = tentity;
+    public GuiReactorHeat(InventoryPlayer inventory, TileEntityReactorController tile) {
+        super(tile, new ContainerNull(inventory.player, tile));
         guiElements.add(new GuiEnergyInfo(() -> tileEntity.isFormed() ? Arrays.asList(
               LangUtils.localize("gui.storing") + ": " + MekanismUtils
                     .getEnergyDisplay(tileEntity.getEnergy(), tileEntity.getMaxEnergy()),
@@ -110,9 +107,9 @@ public class GuiReactorHeat extends GuiMekanism {
                       && tileEntity.steamTank.getFluidAmount() < tileEntity.steamTank.getCapacity()) ? 1 : 0;
             }
         }, ProgressBar.SMALL_RIGHT, this, MekanismUtils.getResource(ResourceType.GUI, "GuiTall.png"), 81, 90));
-        guiElements.add(new GuiFluidGauge(() -> tentity.waterTank, Type.SMALL, this,
+        guiElements.add(new GuiFluidGauge(() -> tileEntity.waterTank, Type.SMALL, this,
               MekanismUtils.getResource(ResourceType.GUI, "GuiTall.png"), 115, 84));
-        guiElements.add(new GuiFluidGauge(() -> tentity.steamTank, Type.SMALL, this,
+        guiElements.add(new GuiFluidGauge(() -> tileEntity.steamTank, Type.SMALL, this,
               MekanismUtils.getResource(ResourceType.GUI, "GuiTall.png"), 151, 84));
         guiElements.add(new GuiEnergyGauge(() -> tileEntity, Type.SMALL, this,
               MekanismUtils.getResource(ResourceType.GUI, "GuiTall.png"), 115, 46));

@@ -20,16 +20,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiBoilerStats extends GuiMekanism {
-
-    public TileEntityBoilerCasing tileEntity;
+public class GuiBoilerStats extends GuiMekanism<TileEntityBoilerCasing> {
 
     public GuiGraph boilGraph;
     public GuiGraph maxGraph;
 
-    public GuiBoilerStats(InventoryPlayer inventory, TileEntityBoilerCasing tentity) {
-        super(tentity, new ContainerNull(inventory.player, tentity));
-        tileEntity = tentity;
+    public GuiBoilerStats(InventoryPlayer inventory, TileEntityBoilerCasing tile) {
+        super(tile, new ContainerNull(inventory.player, tile));
         guiElements.add(new GuiBoilerTab(this, tileEntity, BoilerTab.MAIN, 6,
               MekanismUtils.getResource(ResourceType.GUI, "GuiBoilerStats.png")));
         guiElements.add(new GuiHeatInfo(() ->
@@ -45,7 +42,7 @@ public class GuiBoilerStats extends GuiMekanism {
         guiElements
               .add(maxGraph = new GuiGraph(this, MekanismUtils.getResource(ResourceType.GUI, "GuiBoilerStats.png"), 8,
                     122, 160, 36, data -> LangUtils.localize("gui.maxBoil") + ": " + data + " mB/t"));
-        maxGraph.enableFixedScale((int) ((tentity.structure.superheatingElements * general.superheatingHeatTransfer)
+        maxGraph.enableFixedScale((int) ((tileEntity.structure.superheatingElements * general.superheatingHeatTransfer)
               / SynchronizedBoilerData.getHeatEnthalpy()));
     }
 

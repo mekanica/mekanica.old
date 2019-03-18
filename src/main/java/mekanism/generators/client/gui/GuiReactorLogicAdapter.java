@@ -25,14 +25,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiReactorLogicAdapter extends GuiMekanism {
+public class GuiReactorLogicAdapter extends GuiMekanism<TileEntityReactorLogicAdapter> {
 
-    public TileEntityReactorLogicAdapter tileEntity;
-
-    public GuiReactorLogicAdapter(InventoryPlayer inventory, final TileEntityReactorLogicAdapter tentity) {
-        super(new ContainerNull(inventory.player, tentity));
-
-        tileEntity = tentity;
+    public GuiReactorLogicAdapter(InventoryPlayer inventory, final TileEntityReactorLogicAdapter tile) {
+        super(tile, new ContainerNull(inventory.player, tile));
     }
 
     @Override

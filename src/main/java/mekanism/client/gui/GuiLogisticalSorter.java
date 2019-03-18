@@ -43,7 +43,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 @SideOnly(Side.CLIENT)
-public class GuiLogisticalSorter extends GuiMekanism {
+public class GuiLogisticalSorter extends GuiMekanism<TileEntityLogisticalSorter> {
 
     // Scrollbar dimensions
     private final int scrollX = 154;
@@ -55,7 +55,6 @@ public class GuiLogisticalSorter extends GuiMekanism {
     private final int filterY = 18;
     private final int filterW = 96;
     private final int filterH = 29;
-    public TileEntityLogisticalSorter tileEntity;
     /**
      * Amount scrolled in filter list (0 = top, 1 = bottom)
      */
@@ -75,9 +74,8 @@ public class GuiLogisticalSorter extends GuiMekanism {
      */
     private boolean wasClicking;
 
-    public GuiLogisticalSorter(EntityPlayer player, TileEntityLogisticalSorter entity) {
-        super(entity, new ContainerNull(player, entity));
-        tileEntity = entity;
+    public GuiLogisticalSorter(EntityPlayer player, TileEntityLogisticalSorter tile) {
+        super(tile, new ContainerNull(player, tile));
 
         // Set size of gui
         // xSize = 189;

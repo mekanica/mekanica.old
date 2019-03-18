@@ -26,18 +26,14 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiLaserAmplifier extends GuiMekanism {
-
-    public TileEntityLaserAmplifier tileEntity;
+public class GuiLaserAmplifier extends GuiMekanism<TileEntityLaserAmplifier> {
 
     public GuiTextField minField;
     public GuiTextField maxField;
     public GuiTextField timerField;
 
-    public GuiLaserAmplifier(InventoryPlayer inventory, TileEntityLaserAmplifier tentity) {
-        super(tentity, new ContainerLaserAmplifier(inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiLaserAmplifier(InventoryPlayer inventory, TileEntityLaserAmplifier tile) {
+        super(tile, new ContainerLaserAmplifier(inventory, tile));
         guiElements.add(new GuiNumberGauge(new INumberInfoHandler() {
             @Override
             public TextureAtlasSprite getIcon() {

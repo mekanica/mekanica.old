@@ -19,14 +19,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiMFilterSelect extends GuiMekanism {
+public class GuiMFilterSelect extends GuiMekanism<TileEntityDigitalMiner> {
 
-    public TileEntityDigitalMiner tileEntity;
-
-    public GuiMFilterSelect(EntityPlayer player, TileEntityDigitalMiner tentity) {
-        super(tentity, new ContainerNull(player, tentity));
-
-        tileEntity = tentity;
+    public GuiMFilterSelect(EntityPlayer player, TileEntityDigitalMiner tile) {
+        super(tile, new ContainerNull(player, tile));
     }
 
     @Override

@@ -21,13 +21,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiEnergyCube extends GuiMekanism {
+public class GuiEnergyCube extends GuiMekanism<TileEntityEnergyCube> {
 
-    public TileEntityEnergyCube tileEntity;
-
-    public GuiEnergyCube(InventoryPlayer inventory, TileEntityEnergyCube tentity) {
-        super(tentity, new ContainerEnergyCube(inventory, tentity));
-        tileEntity = tentity;
+    public GuiEnergyCube(InventoryPlayer inventory, TileEntityEnergyCube tile) {
+        super(tile, new ContainerEnergyCube(inventory, tile));
         guiElements.add(new GuiRedstoneControl(this, tileEntity,
               MekanismUtils.getResource(ResourceType.GUI, "GuiEnergyCube.png")));
         guiElements.add(new GuiSecurityTab(this, tileEntity,

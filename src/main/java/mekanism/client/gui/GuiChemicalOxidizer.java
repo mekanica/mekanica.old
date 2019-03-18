@@ -24,14 +24,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiChemicalOxidizer extends GuiMekanism {
+public class GuiChemicalOxidizer extends GuiMekanism<TileEntityChemicalOxidizer> {
 
-    public TileEntityChemicalOxidizer tileEntity;
-
-    public GuiChemicalOxidizer(InventoryPlayer inventory, TileEntityChemicalOxidizer tentity) {
-        super(tentity, new ContainerChemicalOxidizer(inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiChemicalOxidizer(InventoryPlayer inventory, TileEntityChemicalOxidizer tile) {
+        super(tile, new ContainerChemicalOxidizer(inventory, tile));
         guiElements.add(new GuiSecurityTab(this, tileEntity,
               MekanismUtils.getResource(ResourceType.GUI, "GuiChemicalOxidizer.png")));
         guiElements.add(new GuiRedstoneControl(this, tileEntity,

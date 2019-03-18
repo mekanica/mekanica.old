@@ -35,9 +35,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 @SideOnly(Side.CLIENT)
-public class GuiTModIDFilter extends GuiMekanism {
-
-    public TileEntityLogisticalSorter tileEntity;
+public class GuiTModIDFilter extends GuiMekanism<TileEntityLogisticalSorter> {
 
     public boolean isNew = false;
 
@@ -52,20 +50,15 @@ public class GuiTModIDFilter extends GuiMekanism {
     public String status = EnumColor.DARK_GREEN + LangUtils.localize("gui.allOK");
     private GuiTextField modIDText;
 
-    public GuiTModIDFilter(EntityPlayer player, TileEntityLogisticalSorter tentity, int index) {
-        super(tentity, new ContainerFilter(player.inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiTModIDFilter(EntityPlayer player, TileEntityLogisticalSorter tile, int index) {
+        super(tile, new ContainerFilter(player.inventory, tile));
         origFilter = (TModIDFilter) tileEntity.filters.get(index);
-        filter = ((TModIDFilter) tentity.filters.get(index)).clone();
-
+        filter = ((TModIDFilter) tileEntity.filters.get(index)).clone();
         updateStackList(filter.modID);
     }
 
-    public GuiTModIDFilter(EntityPlayer player, TileEntityLogisticalSorter tentity) {
-        super(tentity, new ContainerFilter(player.inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiTModIDFilter(EntityPlayer player, TileEntityLogisticalSorter tile) {
+        super(tile, new ContainerFilter(player.inventory, tile));
         isNew = true;
     }
 

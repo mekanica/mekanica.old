@@ -35,16 +35,11 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiFactory extends GuiMekanism {
+public class GuiFactory extends GuiMekanism<TileEntityFactory> {
 
-    public TileEntityFactory tileEntity;
-
-    public GuiFactory(InventoryPlayer inventory, TileEntityFactory tentity) {
-        super(tentity, new ContainerFactory(inventory, tentity));
-        tileEntity = tentity;
-
+    public GuiFactory(InventoryPlayer inventory, TileEntityFactory tile) {
+        super(tile, new ContainerFactory(inventory, tile));
         ySize += 11;
-
         guiElements.add(new GuiRedstoneControl(this, tileEntity, tileEntity.tier.guiLocation));
         guiElements.add(new GuiSecurityTab(this, tileEntity, tileEntity.tier.guiLocation));
         guiElements.add(new GuiUpgradeTab(this, tileEntity, tileEntity.tier.guiLocation));

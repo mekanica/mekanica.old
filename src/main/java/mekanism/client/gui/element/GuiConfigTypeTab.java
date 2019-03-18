@@ -14,9 +14,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiConfigTypeTab extends GuiElement {
 
-    public TransmissionType transmission;
-    public boolean visible;
-    public boolean left;
+    private final TransmissionType transmission;
+    private boolean visible;
+    private boolean left;
     private int yPos;
 
     public GuiConfigTypeTab(IGuiWrapper gui, TransmissionType type, ResourceLocation def) {
@@ -30,6 +30,22 @@ public class GuiConfigTypeTab extends GuiElement {
 
     public void setY(int y) {
         yPos = y;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public void setLeft(boolean left) {
+        this.left = left;
+    }
+
+    public TransmissionType getTransmissionType() {
+        return transmission;
     }
 
     @Override

@@ -23,11 +23,10 @@ import org.lwjgl.input.Keyboard;
 @SideOnly(Side.CLIENT)
 public class GuiGasGauge extends GuiGauge<Gas> {
 
-    IGasInfoHandler infoHandler;
+    private final IGasInfoHandler infoHandler;
 
     public GuiGasGauge(IGasInfoHandler handler, Type type, IGuiWrapper gui, ResourceLocation def, int x, int y) {
         super(type, gui, def, x, y);
-
         infoHandler = handler;
     }
 

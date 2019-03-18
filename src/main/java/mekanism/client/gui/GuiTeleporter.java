@@ -218,8 +218,8 @@ public class GuiTeleporter extends GuiMekanism {
         }
 
         if (scrollList.hasSelection()) {
-            Frequency freq =
-                  privateMode ? getPrivateCache().get(scrollList.selected) : getPublicCache().get(scrollList.selected);
+            Frequency freq = privateMode ? getPrivateCache().get(scrollList.getSelection())
+                  : getPublicCache().get(scrollList.getSelection());
 
             setButton.enabled = getFrequency() == null || !getFrequency().equals(freq);
 
@@ -316,7 +316,7 @@ public class GuiTeleporter extends GuiMekanism {
                           new PortableTeleporterMessage(PortableTeleporterPacketType.DATA_REQUEST, currentHand, null));
                 }
 
-                scrollList.selected = -1;
+                scrollList.clearSelection();
             }
         } else if (guibutton.id == 4) {
             if (clientFreq != null && clientStatus == 1) {

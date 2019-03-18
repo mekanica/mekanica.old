@@ -14,18 +14,15 @@ import org.lwjgl.opengl.GL11;
 @SideOnly(Side.CLIENT)
 public class GuiGraph extends GuiElement {
 
-    public int xPosition;
-    public int yPosition;
+    private final List<Integer> graphData = new ArrayList<>();
+    private final GraphDataHandler dataHandler;
+    private final int xPosition;
+    private final int yPosition;
+    private final int xSize;
+    private final int ySize;
 
-    public int xSize;
-    public int ySize;
-
-    public int currentScale = 10;
-    public boolean fixedScale = false;
-
-    public List<Integer> graphData = new ArrayList<>();
-
-    public GraphDataHandler dataHandler;
+    private int currentScale = 10;
+    private boolean fixedScale = false;
 
     public GuiGraph(IGuiWrapper gui, ResourceLocation def, int x, int y, int sizeX, int sizeY,
           GraphDataHandler handler) {

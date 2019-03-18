@@ -26,11 +26,10 @@ import org.lwjgl.input.Keyboard;
 @SideOnly(Side.CLIENT)
 public class GuiFluidGauge extends GuiGauge<Fluid> {
 
-    IFluidInfoHandler infoHandler;
+    private final IFluidInfoHandler infoHandler;
 
     public GuiFluidGauge(IFluidInfoHandler handler, Type type, IGuiWrapper gui, ResourceLocation def, int x, int y) {
         super(type, gui, def, x, y);
-
         infoHandler = handler;
     }
 

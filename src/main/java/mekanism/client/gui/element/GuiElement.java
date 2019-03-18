@@ -16,11 +16,9 @@ public abstract class GuiElement {
 
     public static Minecraft mc = Minecraft.getMinecraft();
 
-    public ResourceLocation RESOURCE;
-
-    public IGuiWrapper guiObj;
-
-    public ResourceLocation defaultLocation;
+    protected final ResourceLocation RESOURCE;
+    protected final IGuiWrapper guiObj;
+    protected final ResourceLocation defaultLocation;
 
     public GuiElement(ResourceLocation resource, IGuiWrapper gui, ResourceLocation def) {
         RESOURCE = resource;

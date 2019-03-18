@@ -191,7 +191,7 @@ public class GuiSecurityDesk extends GuiMekanism {
 
                 Mekanism.packetHandler.sendToServer(new TileEntityMessage(Coord4D.get(tileEntity), data));
 
-                scrollList.selected = -1;
+                scrollList.clearSelection();
             }
         }
 

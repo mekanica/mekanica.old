@@ -18,8 +18,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiMatrixTab extends GuiTileEntityElement<TileEntityInductionCasing> {
 
-    private MatrixTab tabType;
-    private int yPos;
+    private final MatrixTab tabType;
+    private final int yPos;
 
     public GuiMatrixTab(IGuiWrapper gui, TileEntityInductionCasing tile, MatrixTab type, int y, ResourceLocation def) {
         super(type.getResource(), gui, def, tile);

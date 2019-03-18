@@ -78,10 +78,10 @@ public class GuiSideConfiguration extends GuiMekanism {
         int rendered = 0;
 
         for (GuiConfigTypeTab tab : configTabs) {
-            tab.visible = currentType != tab.transmission;
+            tab.setVisible(currentType != tab.getTransmissionType());
 
-            if (tab.visible) {
-                tab.left = rendered >= 0 && rendered <= 2;
+            if (tab.isVisible()) {
+                tab.setLeft(rendered >= 0 && rendered <= 2);
                 tab.setY(2 + ((rendered % 3) * (26 + 2)));
             }
 

@@ -15,11 +15,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiEnergyInfo extends GuiElement {
 
-    public IInfoHandler infoHandler;
+    private final IInfoHandler infoHandler;
 
     public GuiEnergyInfo(IInfoHandler handler, IGuiWrapper gui, ResourceLocation def) {
         super(MekanismUtils.getResource(ResourceType.GUI_ELEMENT, "GuiEnergyInfo.png"), gui, def);
-
         infoHandler = handler;
     }
 

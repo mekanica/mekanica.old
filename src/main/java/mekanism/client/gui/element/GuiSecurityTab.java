@@ -28,21 +28,18 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiSecurityTab extends GuiElement {
+public class GuiSecurityTab extends GuiTileEntityElement<TileEntity> {
 
-    public boolean isItem;
-    public EnumHand currentHand;
-
-    public TileEntity tileEntity;
+    private final EnumHand currentHand;
+    private boolean isItem;
 
     public GuiSecurityTab(IGuiWrapper gui, TileEntity tile, ResourceLocation def) {
-        super(MekanismUtils.getResource(ResourceType.GUI_ELEMENT, "GuiSecurityTab.png"), gui, def);
-
-        tileEntity = tile;
+        super(MekanismUtils.getResource(ResourceType.GUI_ELEMENT, "GuiSecurityTab.png"), gui, def, tile);
+        this.currentHand = EnumHand.MAIN_HAND;
     }
 
     public GuiSecurityTab(IGuiWrapper gui, ResourceLocation def, EnumHand hand) {
-        super(MekanismUtils.getResource(ResourceType.GUI_ELEMENT, "GuiSecurityTab.png"), gui, def);
+        super(MekanismUtils.getResource(ResourceType.GUI_ELEMENT, "GuiSecurityTab.png"), gui, def, null);
 
         isItem = true;
         currentHand = hand;

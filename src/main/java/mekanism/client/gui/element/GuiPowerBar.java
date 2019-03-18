@@ -11,15 +11,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiPowerBar extends GuiElement {
 
-    private int xLocation;
-    private int yLocation;
-
-    private int width = 6;
-    private int height = 56;
-    private int innerOffsetY = 2;
-
-    private IStrictEnergyStorage tileEntity;
-    private IPowerInfoHandler handler;
+    private final IStrictEnergyStorage tileEntity;
+    private final IPowerInfoHandler handler;
+    private final int xLocation;
+    private final int yLocation;
+    private final int width = 6;
+    private final int height = 56;
 
     public GuiPowerBar(IGuiWrapper gui, IStrictEnergyStorage tile, ResourceLocation def, int x, int y) {
         super(MekanismUtils.getResource(ResourceType.GUI_ELEMENT, "GuiPowerBar.png"), gui, def);
@@ -44,7 +41,7 @@ public class GuiPowerBar extends GuiElement {
 
     public GuiPowerBar(IGuiWrapper gui, IPowerInfoHandler h, ResourceLocation def, int x, int y) {
         super(MekanismUtils.getResource(ResourceType.GUI_ELEMENT, "GuiPowerBar.png"), gui, def);
-
+        tileEntity = null;
         handler = h;
 
         xLocation = x;
@@ -63,7 +60,7 @@ public class GuiPowerBar extends GuiElement {
         guiObj.drawTexturedRect(guiWidth + xLocation, guiHeight + yLocation, 0, 0, width, height);
 
         if (handler.getLevel() > 0) {
-            int displayInt = (int) (handler.getLevel() * 52) + innerOffsetY;
+            int displayInt = (int) (handler.getLevel() * 52) + 2;
             guiObj.drawTexturedRect(guiWidth + xLocation, guiHeight + yLocation + height - displayInt, 6,
                   height - displayInt, width, displayInt);
         }

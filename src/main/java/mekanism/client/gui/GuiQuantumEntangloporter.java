@@ -139,8 +139,8 @@ public class GuiQuantumEntangloporter extends GuiMekanism {
         }
 
         if (scrollList.hasSelection()) {
-            Frequency freq = privateMode ? tileEntity.privateCache.get(scrollList.selected)
-                  : tileEntity.publicCache.get(scrollList.selected);
+            Frequency freq = privateMode ? tileEntity.privateCache.get(scrollList.getSelection())
+                  : tileEntity.publicCache.get(scrollList.getSelection());
 
             setButton.enabled = tileEntity.getFrequency(null) == null || !tileEntity.getFrequency(null).equals(freq);
 
@@ -228,7 +228,7 @@ public class GuiQuantumEntangloporter extends GuiMekanism {
 
                 Mekanism.packetHandler.sendToServer(new TileEntityMessage(Coord4D.get(tileEntity), data));
 
-                scrollList.selected = -1;
+                scrollList.clearSelection();
             }
         }
 

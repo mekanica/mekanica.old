@@ -10,19 +10,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiRateBar extends GuiElement {
 
-    private int xLocation;
-    private int yLocation;
-
-    private int width = 8;
-    private int height = 60;
-
-    private IRateInfoHandler handler;
+    private final int xLocation;
+    private final int yLocation;
+    private final int width = 8;
+    private final int height = 60;
+    private final IRateInfoHandler handler;
 
     public GuiRateBar(IGuiWrapper gui, IRateInfoHandler h, ResourceLocation def, int x, int y) {
         super(MekanismUtils.getResource(ResourceType.GUI_ELEMENT, "GuiRateBar.png"), gui, def);
-
         handler = h;
-
         xLocation = x;
         yLocation = y;
     }

@@ -422,10 +422,10 @@ public class GuiDigitalMinerConfig extends GuiMekanism<TileEntityDigitalMiner> {
                 } else if (filter instanceof MMaterialFilter) {
                     MMaterialFilter itemFilter = (MMaterialFilter) filter;
 
-                    if (!itemFilter.materialItem.isEmpty()) {
+                    if (!itemFilter.getMaterialItem().isEmpty()) {
                         GlStateManager.pushMatrix();
                         RenderHelper.enableGUIStandardItemLighting();
-                        itemRender.renderItemAndEffectIntoGUI(itemFilter.materialItem, 59, yStart + 3);
+                        itemRender.renderItemAndEffectIntoGUI(itemFilter.getMaterialItem(), 59, yStart + 3);
                         RenderHelper.disableStandardItemLighting();
                         GlStateManager.popMatrix();
                     }
@@ -611,7 +611,7 @@ public class GuiDigitalMinerConfig extends GuiMekanism<TileEntityDigitalMiner> {
             oreDictStacks.put(filter, new StackData());
         }
 
-        oreDictStacks.get(filter).iterStacks = OreDictCache.getOreDictStacks(filter.oreDictName, true);
+        oreDictStacks.get(filter).iterStacks = OreDictCache.getOreDictStacks(filter.getOreDictName(), true);
 
         stackSwitch = 0;
         updateScreen();
@@ -623,7 +623,7 @@ public class GuiDigitalMinerConfig extends GuiMekanism<TileEntityDigitalMiner> {
             modIDStacks.put(filter, new StackData());
         }
 
-        modIDStacks.get(filter).iterStacks = OreDictCache.getModIDStacks(filter.modID, true);
+        modIDStacks.get(filter).iterStacks = OreDictCache.getModIDStacks(filter.getModID(), true);
 
         stackSwitch = 0;
         updateScreen();

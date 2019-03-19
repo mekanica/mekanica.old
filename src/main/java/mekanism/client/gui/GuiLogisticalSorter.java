@@ -433,10 +433,10 @@ public class GuiLogisticalSorter extends GuiMekanism<TileEntityLogisticalSorter>
                 } else if (filter instanceof TMaterialFilter) {
                     final TMaterialFilter itemFilter = (TMaterialFilter) filter;
 
-                    if (!itemFilter.materialItem.isEmpty()) {
+                    if (!itemFilter.getMaterialItem().isEmpty()) {
                         GlStateManager.pushMatrix();
                         RenderHelper.enableGUIStandardItemLighting();
-                        itemRender.renderItemAndEffectIntoGUI(itemFilter.materialItem, 59, yStart + 3);
+                        itemRender.renderItemAndEffectIntoGUI(itemFilter.getMaterialItem(), 59, yStart + 3);
                         RenderHelper.disableStandardItemLighting();
                         GlStateManager.popMatrix();
                     }
@@ -597,7 +597,7 @@ public class GuiLogisticalSorter extends GuiMekanism<TileEntityLogisticalSorter>
             oreDictStacks.put(filter, new StackData());
         }
 
-        oreDictStacks.get(filter).iterStacks = OreDictCache.getOreDictStacks(filter.oreDictName, false);
+        oreDictStacks.get(filter).iterStacks = OreDictCache.getOreDictStacks(filter.getOreDictName(), false);
 
         stackSwitch = 0;
         updateScreen();
@@ -609,7 +609,7 @@ public class GuiLogisticalSorter extends GuiMekanism<TileEntityLogisticalSorter>
             modIDStacks.put(filter, new StackData());
         }
 
-        modIDStacks.get(filter).iterStacks = OreDictCache.getModIDStacks(filter.modID, false);
+        modIDStacks.get(filter).iterStacks = OreDictCache.getModIDStacks(filter.getModID(), false);
 
         stackSwitch = 0;
         updateScreen();

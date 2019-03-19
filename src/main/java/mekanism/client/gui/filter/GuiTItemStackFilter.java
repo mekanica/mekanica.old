@@ -1,4 +1,4 @@
-package mekanism.client.gui;
+package mekanism.client.gui.filter;
 
 import java.io.IOException;
 import mekanism.api.Coord4D;
@@ -7,8 +7,7 @@ import mekanism.client.render.MekanismRenderer;
 import mekanism.client.sound.SoundHandler;
 import mekanism.common.Mekanism;
 import mekanism.common.MekanismSounds;
-import mekanism.common.content.transporter.TMaterialFilter;
-import mekanism.common.inventory.container.ContainerFilter;
+import mekanism.common.content.transporter.TItemStackFilter;
 import mekanism.common.network.PacketEditFilter.EditFilterMessage;
 import mekanism.common.network.PacketLogisticalSorterGui.LogisticalSorterGuiMessage;
 import mekanism.common.network.PacketLogisticalSorterGui.SorterGuiPacket;
@@ -18,14 +17,12 @@ import mekanism.common.util.LangUtils;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.MekanismUtils.ResourceType;
 import mekanism.common.util.TransporterUtils;
-import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -35,23 +32,27 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 @SideOnly(Side.CLIENT)
-public class GuiTMaterialFilter extends GuiMekanism<TileEntityLogisticalSorter> {
+public class GuiTItemStackFilter extends GuiItemStackFilter<TItemStackFilter, TileEntityLogisticalSorter> {
 
-    private boolean isNew = false;
-    private TMaterialFilter origFilter;
-    private TMaterialFilter filter = new TMaterialFilter();
-    private String status = EnumColor.DARK_GREEN + LangUtils.localize("gui.allOK");
-    private int ticker;
+    private GuiTextField minField;
+    private GuiTextField maxField;
 
-    public GuiTMaterialFilter(EntityPlayer player, TileEntityLogisticalSorter tile, int index) {
-        super(tile, new ContainerFilter(player.inventory, tile));
-        origFilter = (TMaterialFilter) tileEntity.filters.get(index);
-        filter = ((TMaterialFilter) tileEntity.filters.get(index)).clone();
+    public GuiTItemStackFilter(EntityPlayer player, TileEntityLogisticalSorter tile, int index) {
+        super(player, tile);
+        origFilter = (TItemStackFilter) tileEntity.filters.get(index);
+        filter = ((TItemStackFilter) tileEntity.filters.get(index)).clone();
     }
 
-    public GuiTMaterialFilter(EntityPlayer player, TileEntityLogisticalSorter tile) {
-        super(tile, new ContainerFilter(player.inventory, tile));
+    public GuiTItemStackFilter(EntityPlayer player, TileEntityLogisticalSorter tile) {
+        super(player, tile);
         isNew = true;
+        filter = new TItemStackFilter();
+    }
+
+    @Override
+    protected void addButtons(int guiWidth, int guiHeight) {
+        buttonList.add(new GuiButton(0, guiWidth + 47, guiHeight + 62, 60, 20, LangUtils.localize("gui.save")));
+        buttonList.add(new GuiButton(1, guiWidth + 109, guiHeight + 62, 60, 20, LangUtils.localize("gui.delete")));
     }
 
     @Override
@@ -59,29 +60,45 @@ public class GuiTMaterialFilter extends GuiMekanism<TileEntityLogisticalSorter> 
         super.initGui();
         int guiWidth = (width - xSize) / 2;
         int guiHeight = (height - ySize) / 2;
-        buttonList.clear();
-        buttonList.add(new GuiButton(0, guiWidth + 47, guiHeight + 62, 60, 20, LangUtils.localize("gui.save")));
-        buttonList.add(new GuiButton(1, guiWidth + 109, guiHeight + 62, 60, 20, LangUtils.localize("gui.delete")));
-        if (isNew) {
-            buttonList.get(1).enabled = false;
-        }
+        minField = new GuiTextField(2, fontRenderer, guiWidth + 149, guiHeight + 19, 20, 11);
+        minField.setMaxStringLength(2);
+        minField.setText("" + filter.min);
+        maxField = new GuiTextField(3, fontRenderer, guiWidth + 149, guiHeight + 31, 20, 11);
+        maxField.setMaxStringLength(2);
+        maxField.setText("" + filter.max);
     }
 
     @Override
     protected void actionPerformed(GuiButton guibutton) throws IOException {
         super.actionPerformed(guibutton);
         if (guibutton.id == 0) {
-            if (!filter.materialItem.isEmpty()) {
-                if (isNew) {
-                    Mekanism.packetHandler.sendToServer(new NewFilterMessage(Coord4D.get(tileEntity), filter));
-                } else {
-                    Mekanism.packetHandler
-                          .sendToServer(new EditFilterMessage(Coord4D.get(tileEntity), false, origFilter, filter));
+            if (!filter.itemType.isEmpty() && !minField.getText().isEmpty() && !maxField.getText().isEmpty()) {
+                int min = Integer.parseInt(minField.getText());
+                int max = Integer.parseInt(maxField.getText());
+                if (max >= min && max <= 64) {
+                    filter.min = Integer.parseInt(minField.getText());
+                    filter.max = Integer.parseInt(maxField.getText());
+                    if (isNew) {
+                        Mekanism.packetHandler.sendToServer(new NewFilterMessage(Coord4D.get(tileEntity), filter));
+                    } else {
+                        Mekanism.packetHandler
+                              .sendToServer(new EditFilterMessage(Coord4D.get(tileEntity), false, origFilter, filter));
+                    }
+                    Mekanism.packetHandler.sendToServer(
+                          new LogisticalSorterGuiMessage(SorterGuiPacket.SERVER, Coord4D.get(tileEntity), 0, 0, 0));
+                } else if (min > max) {
+                    status = EnumColor.DARK_RED + "Max<min";
+                    ticker = 20;
+                } else //if(max > 64 || min > 64)
+                {
+                    status = EnumColor.DARK_RED + "Max>64";
+                    ticker = 20;
                 }
-                Mekanism.packetHandler.sendToServer(
-                      new LogisticalSorterGuiMessage(SorterGuiPacket.SERVER, Coord4D.get(tileEntity), 0, 0, 0));
-            } else {
-                status = EnumColor.DARK_RED + LangUtils.localize("gui.itemFilter.noItem");
+            } else if (filter.itemType.isEmpty()) {
+                status = EnumColor.DARK_RED + "No item";
+                ticker = 20;
+            } else if (minField.getText().isEmpty() || maxField.getText().isEmpty()) {
+                status = EnumColor.DARK_RED + "Max/min";
                 ticker = 20;
             }
         } else if (guibutton.id == 1) {
@@ -92,18 +109,32 @@ public class GuiTMaterialFilter extends GuiMekanism<TileEntityLogisticalSorter> 
     }
 
     @Override
+    public void keyTyped(char c, int i) throws IOException {
+        if ((!minField.isFocused() && !maxField.isFocused()) || i == Keyboard.KEY_ESCAPE) {
+            super.keyTyped(c, i);
+        }
+        if (Character.isDigit(c) || isTextboxKey(c, i)) {
+            minField.textboxKeyTyped(c, i);
+            maxField.textboxKeyTyped(c, i);
+        }
+    }
+
+    @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         fontRenderer.drawString(
               (isNew ? LangUtils.localize("gui.new") : LangUtils.localize("gui.edit")) + " " + LangUtils
-                    .localize("gui.materialFilter"), 43, 6, 0x404040);
+                    .localize("gui.itemFilter"), 43, 6, 0x404040);
         fontRenderer.drawString(LangUtils.localize("gui.status") + ": " + status, 35, 20, 0x00CD00);
-        fontRenderer.drawString(LangUtils.localize("gui.materialFilter.details") + ":", 35, 32, 0x00CD00);
+        fontRenderer.drawString(LangUtils.localize("gui.itemFilter.details") + ":", 35, 32, 0x00CD00);
+        fontRenderer.drawString(LangUtils.localize("gui.itemFilter.min") + ":", 128, 20, 0x404040);
+        fontRenderer.drawString(LangUtils.localize("gui.itemFilter.max") + ":", 128, 32, 0x404040);
+        fontRenderer.drawString(LangUtils.localize("gui." + (filter.sizeMode ? "on" : "off")), 141, 46, 0x404040);
         fontRenderer.drawString(LangUtils.localize("gui." + (filter.allowDefault ? "on" : "off")), 24, 66, 0x404040);
-        if (!filter.materialItem.isEmpty()) {
-            renderScaledText(filter.materialItem.getDisplayName(), 35, 41, 0x00CD00, 107);
+        if (!filter.itemType.isEmpty()) {
+            renderScaledText(filter.itemType.getDisplayName(), 35, 41, 0x00CD00, 89);
             GlStateManager.pushMatrix();
             RenderHelper.enableGUIStandardItemLighting();
-            itemRender.renderItemAndEffectIntoGUI(filter.materialItem, 12, 19);
+            itemRender.renderItemAndEffectIntoGUI(filter.itemType, 12, 19);
             RenderHelper.disableStandardItemLighting();
             GlStateManager.popMatrix();
         }
@@ -119,6 +150,9 @@ public class GuiTMaterialFilter extends GuiMekanism<TileEntityLogisticalSorter> 
         }
         int xAxis = (mouseX - (width - xSize) / 2);
         int yAxis = (mouseY - (height - ySize) / 2);
+        if (xAxis >= 128 && xAxis <= 139 && yAxis >= 44 && yAxis <= 55) {
+            drawHoveringText(LangUtils.localize("gui.sizeMode"), xAxis, yAxis);
+        }
         if (xAxis >= 11 && xAxis <= 22 && yAxis >= 64 && yAxis <= 75) {
             drawHoveringText(LangUtils.localize("gui.allowDefault"), xAxis, yAxis);
         }
@@ -135,11 +169,8 @@ public class GuiTMaterialFilter extends GuiMekanism<TileEntityLogisticalSorter> 
     @Override
     public void updateScreen() {
         super.updateScreen();
-        if (ticker > 0) {
-            ticker--;
-        } else {
-            status = EnumColor.DARK_GREEN + LangUtils.localize("gui.allOK");
-        }
+        minField.updateCursorCounter();
+        maxField.updateCursorCounter();
     }
 
     @Override
@@ -156,11 +187,18 @@ public class GuiTMaterialFilter extends GuiMekanism<TileEntityLogisticalSorter> 
         } else {
             drawTexturedModalRect(guiWidth + 5, guiHeight + 5, 176, 11, 11, 11);
         }
+        if (xAxis >= 128 && xAxis <= 139 && yAxis >= 44 && yAxis <= 55) {
+            drawTexturedModalRect(guiWidth + 128, guiHeight + 44, 187, 0, 11, 11);
+        } else {
+            drawTexturedModalRect(guiWidth + 128, guiHeight + 44, 187, 11, 11, 11);
+        }
         if (xAxis >= 11 && xAxis <= 22 && yAxis >= 64 && yAxis <= 75) {
             drawTexturedModalRect(guiWidth + 11, guiHeight + 64, 198, 0, 11, 11);
         } else {
             drawTexturedModalRect(guiWidth + 11, guiHeight + 64, 198, 11, 11, 11);
         }
+        minField.drawTextBox();
+        maxField.drawTextBox();
         if (xAxis >= 12 && xAxis <= 28 && yAxis >= 19 && yAxis <= 35) {
             GlStateManager.pushMatrix();
             GlStateManager.disableLighting();
@@ -180,6 +218,8 @@ public class GuiTMaterialFilter extends GuiMekanism<TileEntityLogisticalSorter> 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
         super.mouseClicked(mouseX, mouseY, button);
+        minField.mouseClicked(mouseX, mouseY, button);
+        maxField.mouseClicked(mouseX, mouseY, button);
         int xAxis = (mouseX - (width - xSize) / 2);
         int yAxis = (mouseY - (height - ySize) / 2);
         if (button == 0) {
@@ -192,16 +232,16 @@ public class GuiTMaterialFilter extends GuiMekanism<TileEntityLogisticalSorter> 
             if (xAxis >= 12 && xAxis <= 28 && yAxis >= 19 && yAxis <= 35) {
                 ItemStack stack = mc.player.inventory.getItemStack();
                 if (!stack.isEmpty() && !Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-                    if (stack.getItem() instanceof ItemBlock) {
-                        if (Block.getBlockFromItem(stack.getItem()) != Blocks.BEDROCK) {
-                            filter.materialItem = stack.copy();
-                            filter.materialItem.setCount(1);
-                        }
-                    }
+                    filter.itemType = stack.copy();
+                    filter.itemType.setCount(1);
                 } else if (stack.isEmpty() && Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-                    filter.materialItem = ItemStack.EMPTY;
+                    filter.itemType = ItemStack.EMPTY;
                 }
                 SoundHandler.playSound(SoundEvents.UI_BUTTON_CLICK);
+            }
+            if (xAxis >= 128 && xAxis <= 139 && yAxis >= 44 && yAxis <= 55) {
+                SoundHandler.playSound(SoundEvents.UI_BUTTON_CLICK);
+                filter.sizeMode = !filter.sizeMode;
             }
             if (xAxis >= 11 && xAxis <= 22 && yAxis >= 64 && yAxis <= 75) {
                 SoundHandler.playSound(SoundEvents.UI_BUTTON_CLICK);
@@ -225,6 +265,6 @@ public class GuiTMaterialFilter extends GuiMekanism<TileEntityLogisticalSorter> 
 
     @Override
     protected ResourceLocation getGuiLocation() {
-        return MekanismUtils.getResource(ResourceType.GUI, "GuiTMaterialFilter.png");
+        return MekanismUtils.getResource(ResourceType.GUI, "GuiTItemStackFilter.png");
     }
 }

@@ -1,26 +1,19 @@
-package mekanism.client.gui;
+package mekanism.client.gui.filter;
 
 import java.io.IOException;
-import java.util.List;
 import mekanism.api.Coord4D;
-import mekanism.api.EnumColor;
 import mekanism.client.sound.SoundHandler;
 import mekanism.common.Mekanism;
 import mekanism.common.OreDictCache;
 import mekanism.common.content.miner.MOreDictFilter;
-import mekanism.common.content.transporter.TransporterFilter;
-import mekanism.common.inventory.container.ContainerFilter;
 import mekanism.common.network.PacketDigitalMinerGui.DigitalMinerGuiMessage;
 import mekanism.common.network.PacketDigitalMinerGui.MinerGuiPacket;
-import mekanism.common.network.PacketEditFilter.EditFilterMessage;
-import mekanism.common.network.PacketNewFilter.NewFilterMessage;
 import mekanism.common.tile.TileEntityDigitalMiner;
 import mekanism.common.util.LangUtils;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.MekanismUtils.ResourceType;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -35,91 +28,31 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiMOreDictFilter extends GuiMekanism<TileEntityDigitalMiner> {
-
-    private boolean isNew = false;
-    private MOreDictFilter origFilter;
-    private MOreDictFilter filter = new MOreDictFilter();
-    private ItemStack renderStack = ItemStack.EMPTY;
-    private int ticker = 0;
-    private int stackSwitch = 0;
-    private int stackIndex = 0;
-    private List<ItemStack> iterStacks;
-    private String status = EnumColor.DARK_GREEN + LangUtils.localize("gui.allOK");
-    private GuiTextField oreDictText;
+public class GuiMOreDictFilter extends GuiOreDictFilter<MOreDictFilter, TileEntityDigitalMiner> {
 
     public GuiMOreDictFilter(EntityPlayer player, TileEntityDigitalMiner tile, int index) {
-        super(tile, new ContainerFilter(player.inventory, tile));
+        super(player, tile);
         origFilter = (MOreDictFilter) tileEntity.filters.get(index);
         filter = ((MOreDictFilter) tileEntity.filters.get(index)).clone();
-        updateStackList(filter.oreDictName);
+        updateStackList(filter.getOreDictName());
     }
 
     public GuiMOreDictFilter(EntityPlayer player, TileEntityDigitalMiner tile) {
-        super(tile, new ContainerFilter(player.inventory, tile));
+        super(player, tile);
         isNew = true;
+        filter = new MOreDictFilter();
     }
 
     @Override
-    public void initGui() {
-        super.initGui();
-
-        int guiWidth = (width - xSize) / 2;
-        int guiHeight = (height - ySize) / 2;
-
-        buttonList.clear();
+    protected void addButtons(int guiWidth, int guiHeight) {
         buttonList.add(new GuiButton(0, guiWidth + 27, guiHeight + 62, 60, 20, LangUtils.localize("gui.save")));
         buttonList.add(new GuiButton(1, guiWidth + 89, guiHeight + 62, 60, 20, LangUtils.localize("gui.delete")));
-
-        if (isNew) {
-            buttonList.get(1).enabled = false;
-        }
-
-        oreDictText = new GuiTextField(2, fontRenderer, guiWidth + 35, guiHeight + 47, 95, 12);
-        oreDictText.setMaxStringLength(TransporterFilter.MAX_LENGTH);
-        oreDictText.setFocused(true);
     }
 
     @Override
-    public void keyTyped(char c, int i) throws IOException {
-        if (!oreDictText.isFocused() || i == Keyboard.KEY_ESCAPE) {
-            super.keyTyped(c, i);
-        }
-        if (oreDictText.isFocused() && i == Keyboard.KEY_RETURN) {
-            setOreDictKey();
-            return;
-        }
-        if (Character.isLetter(c) || Character.isDigit(c) || TransporterFilter.SPECIAL_CHARS.contains(c)
-              || isTextboxKey(c, i)) {
-            oreDictText.textboxKeyTyped(c, i);
-        }
-    }
-
-    @Override
-    protected void actionPerformed(GuiButton guibutton) throws IOException {
-        super.actionPerformed(guibutton);
-        if (guibutton.id == 0) {
-            if (!oreDictText.getText().isEmpty()) {
-                setOreDictKey();
-            }
-            if (filter.oreDictName != null && !filter.oreDictName.isEmpty()) {
-                if (isNew) {
-                    Mekanism.packetHandler.sendToServer(new NewFilterMessage(Coord4D.get(tileEntity), filter));
-                } else {
-                    Mekanism.packetHandler
-                          .sendToServer(new EditFilterMessage(Coord4D.get(tileEntity), false, origFilter, filter));
-                }
-                Mekanism.packetHandler.sendToServer(
-                      new DigitalMinerGuiMessage(MinerGuiPacket.SERVER, Coord4D.get(tileEntity), 0, 0, 0));
-            } else {
-                status = EnumColor.DARK_RED + LangUtils.localize("gui.oredictFilter.noKey");
-                ticker = 20;
-            }
-        } else if (guibutton.id == 1) {
-            Mekanism.packetHandler.sendToServer(new EditFilterMessage(Coord4D.get(tileEntity), true, origFilter, null));
-            Mekanism.packetHandler
-                  .sendToServer(new DigitalMinerGuiMessage(MinerGuiPacket.SERVER, Coord4D.get(tileEntity), 0, 0, 0));
-        }
+    protected void sendPacketToServer(int guiID) {
+        Mekanism.packetHandler
+              .sendToServer(new DigitalMinerGuiMessage(MinerGuiPacket.SERVER, Coord4D.get(tileEntity), guiID, 0, 0));
     }
 
     @Override
@@ -128,7 +61,7 @@ public class GuiMOreDictFilter extends GuiMekanism<TileEntityDigitalMiner> {
               (isNew ? LangUtils.localize("gui.new") : LangUtils.localize("gui.edit")) + " " + LangUtils
                     .localize("gui.oredictFilter"), 43, 6, 0x404040);
         fontRenderer.drawString(LangUtils.localize("gui.status") + ": " + status, 35, 20, 0x00CD00);
-        renderScaledText(LangUtils.localize("gui.key") + ": " + filter.oreDictName, 35, 32, 0x00CD00, 107);
+        renderScaledText(LangUtils.localize("gui.key") + ": " + filter.getOreDictName(), 35, 32, 0x00CD00, 107);
         if (!renderStack.isEmpty()) {
             try {
                 GlStateManager.pushMatrix();
@@ -197,31 +130,6 @@ public class GuiMOreDictFilter extends GuiMekanism<TileEntityDigitalMiner> {
     }
 
     @Override
-    public void updateScreen() {
-        super.updateScreen();
-        oreDictText.updateCursorCounter();
-        if (ticker > 0) {
-            ticker--;
-        } else {
-            status = EnumColor.DARK_GREEN + LangUtils.localize("gui.allOK");
-        }
-        if (stackSwitch > 0) {
-            stackSwitch--;
-        }
-        if (stackSwitch == 0 && iterStacks != null && iterStacks.size() > 0) {
-            stackSwitch = 20;
-            if (stackIndex == -1 || stackIndex == iterStacks.size() - 1) {
-                stackIndex = 0;
-            } else if (stackIndex < iterStacks.size() - 1) {
-                stackIndex++;
-            }
-            renderStack = iterStacks.get(stackIndex);
-        } else if (iterStacks != null && iterStacks.size() == 0) {
-            renderStack = ItemStack.EMPTY;
-        }
-    }
-
-    @Override
     protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
         super.mouseClicked(mouseX, mouseY, button);
         oreDictText.mouseClicked(mouseX, mouseY, button);
@@ -268,23 +176,10 @@ public class GuiMOreDictFilter extends GuiMekanism<TileEntityDigitalMiner> {
         return MekanismUtils.getResource(ResourceType.GUI, "GuiMOreDictFilter.png");
     }
 
-    private void updateStackList(String oreName) {
+    @Override
+    protected void updateStackList(String oreName) {
         iterStacks = OreDictCache.getOreDictStacks(oreName, true);
         stackSwitch = 0;
         stackIndex = -1;
-    }
-
-    private void setOreDictKey() {
-        String oreName = oreDictText.getText();
-        if (oreName.isEmpty()) {
-            status = EnumColor.DARK_RED + LangUtils.localize("gui.oredictFilter.noKey");
-            return;
-        } else if (oreName.equals(filter.oreDictName)) {
-            status = EnumColor.DARK_RED + LangUtils.localize("gui.oredictFilter.sameKey");
-            return;
-        }
-        updateStackList(oreName);
-        filter.oreDictName = oreName;
-        oreDictText.setText("");
     }
 }

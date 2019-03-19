@@ -1,16 +1,12 @@
-package mekanism.client.gui;
+package mekanism.client.gui.filter;
 
 import java.io.IOException;
 import mekanism.api.Coord4D;
-import mekanism.api.EnumColor;
 import mekanism.client.sound.SoundHandler;
 import mekanism.common.Mekanism;
-import mekanism.common.content.miner.MItemStackFilter;
-import mekanism.common.inventory.container.ContainerFilter;
+import mekanism.common.content.miner.MMaterialFilter;
 import mekanism.common.network.PacketDigitalMinerGui.DigitalMinerGuiMessage;
 import mekanism.common.network.PacketDigitalMinerGui.MinerGuiPacket;
-import mekanism.common.network.PacketEditFilter.EditFilterMessage;
-import mekanism.common.network.PacketNewFilter.NewFilterMessage;
 import mekanism.common.tile.TileEntityDigitalMiner;
 import mekanism.common.util.LangUtils;
 import mekanism.common.util.MekanismUtils;
@@ -31,74 +27,44 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiMItemStackFilter extends GuiMekanism<TileEntityDigitalMiner> {
+public class GuiMMaterialFilter extends GuiMaterialFilter<MMaterialFilter, TileEntityDigitalMiner> {
 
-    private boolean isNew = false;
-    private MItemStackFilter origFilter;
-    private MItemStackFilter filter = new MItemStackFilter();
-    private String status = EnumColor.DARK_GREEN + LangUtils.localize("gui.allOK");
-    private int ticker;
-
-    public GuiMItemStackFilter(EntityPlayer player, TileEntityDigitalMiner tile, int index) {
-        super(tile, new ContainerFilter(player.inventory, tile));
-        origFilter = (MItemStackFilter) tileEntity.filters.get(index);
-        filter = ((MItemStackFilter) tileEntity.filters.get(index)).clone();
+    public GuiMMaterialFilter(EntityPlayer player, TileEntityDigitalMiner tile, int index) {
+        super(player, tile);
+        origFilter = (MMaterialFilter) tileEntity.filters.get(index);
+        filter = ((MMaterialFilter) tileEntity.filters.get(index)).clone();
     }
 
-    public GuiMItemStackFilter(EntityPlayer player, TileEntityDigitalMiner tile) {
-        super(tile, new ContainerFilter(player.inventory, tile));
+    public GuiMMaterialFilter(EntityPlayer player, TileEntityDigitalMiner tile) {
+        super(player, tile);
         isNew = true;
+        filter = new MMaterialFilter();
     }
 
     @Override
-    public void initGui() {
-        super.initGui();
-        int guiWidth = (width - xSize) / 2;
-        int guiHeight = (height - ySize) / 2;
-        buttonList.clear();
+    protected void addButtons(int guiWidth, int guiHeight) {
         buttonList.add(new GuiButton(0, guiWidth + 27, guiHeight + 62, 60, 20, LangUtils.localize("gui.save")));
         buttonList.add(new GuiButton(1, guiWidth + 89, guiHeight + 62, 60, 20, LangUtils.localize("gui.delete")));
-        if (isNew) {
-            buttonList.get(1).enabled = false;
-        }
     }
 
     @Override
-    protected void actionPerformed(GuiButton guibutton) throws IOException {
-        super.actionPerformed(guibutton);
-        if (guibutton.id == 0) {
-            if (!filter.itemType.isEmpty()) {
-                if (isNew) {
-                    Mekanism.packetHandler.sendToServer(new NewFilterMessage(Coord4D.get(tileEntity), filter));
-                } else {
-                    Mekanism.packetHandler
-                          .sendToServer(new EditFilterMessage(Coord4D.get(tileEntity), false, origFilter, filter));
-                }
-                Mekanism.packetHandler.sendToServer(
-                      new DigitalMinerGuiMessage(MinerGuiPacket.SERVER, Coord4D.get(tileEntity), 0, 0, 0));
-            } else {
-                status = EnumColor.DARK_RED + LangUtils.localize("gui.itemFilter.noItem");
-                ticker = 20;
-            }
-        } else if (guibutton.id == 1) {
-            Mekanism.packetHandler.sendToServer(new EditFilterMessage(Coord4D.get(tileEntity), true, origFilter, null));
-            Mekanism.packetHandler
-                  .sendToServer(new DigitalMinerGuiMessage(MinerGuiPacket.SERVER, Coord4D.get(tileEntity), 0, 0, 0));
-        }
+    protected void sendPacketToServer(int guiID) {
+        Mekanism.packetHandler
+              .sendToServer(new DigitalMinerGuiMessage(MinerGuiPacket.SERVER, Coord4D.get(tileEntity), guiID, 0, 0));
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         fontRenderer.drawString(
               (isNew ? LangUtils.localize("gui.new") : LangUtils.localize("gui.edit")) + " " + LangUtils
-                    .localize("gui.itemFilter"), 43, 6, 0x404040);
+                    .localize("gui.materialFilter"), 43, 6, 0x404040);
         fontRenderer.drawString(LangUtils.localize("gui.status") + ": " + status, 35, 20, 0x00CD00);
-        fontRenderer.drawString(LangUtils.localize("gui.itemFilter.details") + ":", 35, 32, 0x00CD00);
-        if (!filter.itemType.isEmpty()) {
-            renderScaledText(filter.itemType.getDisplayName(), 35, 41, 0x00CD00, 107);
+        fontRenderer.drawString(LangUtils.localize("gui.materialFilter.details") + ":", 35, 32, 0x00CD00);
+        if (!filter.getMaterialItem().isEmpty()) {
+            renderScaledText(filter.getMaterialItem().getDisplayName(), 35, 41, 0x00CD00, 107);
             GlStateManager.pushMatrix();
             RenderHelper.enableGUIStandardItemLighting();
-            itemRender.renderItemAndEffectIntoGUI(filter.itemType, 12, 19);
+            itemRender.renderItemAndEffectIntoGUI(filter.getMaterialItem(), 12, 19);
             RenderHelper.disableStandardItemLighting();
             GlStateManager.popMatrix();
         }
@@ -115,22 +81,7 @@ public class GuiMItemStackFilter extends GuiMekanism<TileEntityDigitalMiner> {
             drawHoveringText(LangUtils.localize("gui.digitalMiner.requireReplace") + ": " + LangUtils
                   .transYesNo(filter.requireStack), xAxis, yAxis);
         }
-        if (xAxis >= 15 && xAxis <= 29 && yAxis >= 45 && yAxis <= 59) {
-            drawHoveringText(
-                  LangUtils.localize("gui.digitalMiner.fuzzyMode") + ": " + LangUtils.transYesNo(filter.fuzzy), xAxis,
-                  yAxis);
-        }
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-    }
-
-    @Override
-    public void updateScreen() {
-        super.updateScreen();
-        if (ticker > 0) {
-            ticker--;
-        } else {
-            status = EnumColor.DARK_GREEN + LangUtils.localize("gui.allOK");
-        }
     }
 
     @Override
@@ -140,7 +91,6 @@ public class GuiMItemStackFilter extends GuiMekanism<TileEntityDigitalMiner> {
         int guiWidth = (width - xSize) / 2;
         int guiHeight = (height - ySize) / 2;
         drawTexturedModalRect(guiWidth, guiHeight, 0, 0, xSize, ySize);
-
         int xAxis = (mouseX - (width - xSize) / 2);
         int yAxis = (mouseY - (height - ySize) / 2);
         if (xAxis >= 5 && xAxis <= 16 && yAxis >= 5 && yAxis <= 16) {
@@ -153,43 +103,32 @@ public class GuiMItemStackFilter extends GuiMekanism<TileEntityDigitalMiner> {
         } else {
             drawTexturedModalRect(guiWidth + 148, guiHeight + 45, 176 + 23, 14, 14, 14);
         }
-        if (xAxis >= 15 && xAxis <= 29 && yAxis >= 45 && yAxis <= 59) {
-            drawTexturedModalRect(guiWidth + 15, guiHeight + 45, 176 + 37, 0, 14, 14);
-        } else {
-            drawTexturedModalRect(guiWidth + 15, guiHeight + 45, 176 + 37, 14, 14, 14);
-        }
         if (xAxis >= 12 && xAxis <= 28 && yAxis >= 19 && yAxis <= 35) {
             GlStateManager.pushMatrix();
             GlStateManager.disableLighting();
             GlStateManager.disableDepth();
             GlStateManager.colorMask(true, true, true, false);
-
             int x = guiWidth + 12;
             int y = guiHeight + 19;
             drawGradientRect(x, y, x + 16, y + 16, -2130706433, -2130706433);
-
             GlStateManager.colorMask(true, true, true, true);
             GlStateManager.enableLighting();
             GlStateManager.enableDepth();
             GlStateManager.popMatrix();
         }
-
         if (xAxis >= 149 && xAxis <= 165 && yAxis >= 19 && yAxis <= 35) {
             GlStateManager.pushMatrix();
             GlStateManager.disableLighting();
             GlStateManager.disableDepth();
             GlStateManager.colorMask(true, true, true, false);
-
             int x = guiWidth + 149;
             int y = guiHeight + 19;
             drawGradientRect(x, y, x + 16, y + 16, -2130706433, -2130706433);
-
             GlStateManager.colorMask(true, true, true, true);
             GlStateManager.enableLighting();
             GlStateManager.enableDepth();
             GlStateManager.popMatrix();
         }
-
         super.drawGuiContainerBackgroundLayer(partialTick, mouseX, mouseY);
     }
 
@@ -208,22 +147,17 @@ public class GuiMItemStackFilter extends GuiMekanism<TileEntityDigitalMiner> {
                 SoundHandler.playSound(SoundEvents.UI_BUTTON_CLICK);
                 filter.requireStack = !filter.requireStack;
             }
-            if (xAxis >= 15 && xAxis <= 29 && yAxis >= 45 && yAxis <= 59) {
-                SoundHandler.playSound(SoundEvents.UI_BUTTON_CLICK);
-                filter.fuzzy = !filter.fuzzy;
-            }
             if (xAxis >= 12 && xAxis <= 28 && yAxis >= 19 && yAxis <= 35) {
                 ItemStack stack = mc.player.inventory.getItemStack();
-
                 if (!stack.isEmpty() && !Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                     if (stack.getItem() instanceof ItemBlock) {
                         if (Block.getBlockFromItem(stack.getItem()) != Blocks.BEDROCK) {
-                            filter.itemType = stack.copy();
-                            filter.itemType.setCount(1);
+                            filter.setMaterialItem(stack.copy());
+                            filter.getMaterialItem().setCount(1);
                         }
                     }
                 } else if (stack.isEmpty() && Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-                    filter.itemType = ItemStack.EMPTY;
+                    filter.setMaterialItem(ItemStack.EMPTY);
                 }
                 SoundHandler.playSound(SoundEvents.UI_BUTTON_CLICK);
             }
@@ -251,6 +185,6 @@ public class GuiMItemStackFilter extends GuiMekanism<TileEntityDigitalMiner> {
 
     @Override
     protected ResourceLocation getGuiLocation() {
-        return MekanismUtils.getResource(ResourceType.GUI, "GuiMItemStackFilter.png");
+        return MekanismUtils.getResource(ResourceType.GUI, "GuiMMaterialFilter.png");
     }
 }

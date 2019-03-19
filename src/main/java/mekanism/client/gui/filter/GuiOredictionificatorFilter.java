@@ -1,8 +1,9 @@
-package mekanism.client.gui;
+package mekanism.client.gui.filter;
 
 import java.io.IOException;
 import java.util.List;
 import mekanism.api.Coord4D;
+import mekanism.client.gui.GuiMekanism;
 import mekanism.client.sound.SoundHandler;
 import mekanism.common.Mekanism;
 import mekanism.common.inventory.container.ContainerFilter;

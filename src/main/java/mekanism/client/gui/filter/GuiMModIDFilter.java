@@ -1,16 +1,13 @@
-package mekanism.client.gui;
+package mekanism.client.gui.filter;
 
 import java.io.IOException;
 import mekanism.api.Coord4D;
-import mekanism.api.EnumColor;
 import mekanism.client.sound.SoundHandler;
 import mekanism.common.Mekanism;
-import mekanism.common.content.miner.MMaterialFilter;
-import mekanism.common.inventory.container.ContainerFilter;
+import mekanism.common.OreDictCache;
+import mekanism.common.content.miner.MModIDFilter;
 import mekanism.common.network.PacketDigitalMinerGui.DigitalMinerGuiMessage;
 import mekanism.common.network.PacketDigitalMinerGui.MinerGuiPacket;
-import mekanism.common.network.PacketEditFilter.EditFilterMessage;
-import mekanism.common.network.PacketNewFilter.NewFilterMessage;
 import mekanism.common.tile.TileEntityDigitalMiner;
 import mekanism.common.util.LangUtils;
 import mekanism.common.util.MekanismUtils;
@@ -31,76 +28,37 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiMMaterialFilter extends GuiMekanism<TileEntityDigitalMiner> {
+public class GuiMModIDFilter extends GuiModIDFilter<MModIDFilter, TileEntityDigitalMiner> {
 
-    private boolean isNew = false;
-    private MMaterialFilter origFilter;
-    private MMaterialFilter filter = new MMaterialFilter();
-    private String status = EnumColor.DARK_GREEN + LangUtils.localize("gui.allOK");
-    private int ticker;
-
-    public GuiMMaterialFilter(EntityPlayer player, TileEntityDigitalMiner tile, int index) {
-        super(tile, new ContainerFilter(player.inventory, tile));
-        origFilter = (MMaterialFilter) tileEntity.filters.get(index);
-        filter = ((MMaterialFilter) tileEntity.filters.get(index)).clone();
+    public GuiMModIDFilter(EntityPlayer player, TileEntityDigitalMiner tile, int index) {
+        super(player, tile);
+        origFilter = (MModIDFilter) tileEntity.filters.get(index);
+        filter = ((MModIDFilter) tileEntity.filters.get(index)).clone();
+        updateStackList(filter.getModID());
     }
 
-    public GuiMMaterialFilter(EntityPlayer player, TileEntityDigitalMiner tile) {
-        super(tile, new ContainerFilter(player.inventory, tile));
+    public GuiMModIDFilter(EntityPlayer player, TileEntityDigitalMiner tile) {
+        super(player, tile);
         isNew = true;
-    }
-
-    @Override
-    public void initGui() {
-        super.initGui();
-        int guiWidth = (width - xSize) / 2;
-        int guiHeight = (height - ySize) / 2;
-        buttonList.clear();
-        buttonList.add(new GuiButton(0, guiWidth + 27, guiHeight + 62, 60, 20, LangUtils.localize("gui.save")));
-        buttonList.add(new GuiButton(1, guiWidth + 89, guiHeight + 62, 60, 20, LangUtils.localize("gui.delete")));
-        if (isNew) {
-            buttonList.get(1).enabled = false;
-        }
-    }
-
-    @Override
-    protected void actionPerformed(GuiButton guibutton) throws IOException {
-        super.actionPerformed(guibutton);
-        if (guibutton.id == 0) {
-            if (!filter.materialItem.isEmpty()) {
-                if (isNew) {
-                    Mekanism.packetHandler.sendToServer(new NewFilterMessage(Coord4D.get(tileEntity), filter));
-                } else {
-                    Mekanism.packetHandler
-                          .sendToServer(new EditFilterMessage(Coord4D.get(tileEntity), false, origFilter, filter));
-                }
-                Mekanism.packetHandler.sendToServer(
-                      new DigitalMinerGuiMessage(MinerGuiPacket.SERVER, Coord4D.get(tileEntity), 0, 0, 0));
-            } else {
-                status = EnumColor.DARK_RED + LangUtils.localize("gui.itemFilter.noItem");
-                ticker = 20;
-            }
-        } else if (guibutton.id == 1) {
-            Mekanism.packetHandler.sendToServer(new EditFilterMessage(Coord4D.get(tileEntity), true, origFilter, null));
-            Mekanism.packetHandler
-                  .sendToServer(new DigitalMinerGuiMessage(MinerGuiPacket.SERVER, Coord4D.get(tileEntity), 0, 0, 0));
-        }
+        filter = new MModIDFilter();
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         fontRenderer.drawString(
               (isNew ? LangUtils.localize("gui.new") : LangUtils.localize("gui.edit")) + " " + LangUtils
-                    .localize("gui.materialFilter"), 43, 6, 0x404040);
+                    .localize("gui.modIDFilter"), 43, 6, 0x404040);
         fontRenderer.drawString(LangUtils.localize("gui.status") + ": " + status, 35, 20, 0x00CD00);
-        fontRenderer.drawString(LangUtils.localize("gui.materialFilter.details") + ":", 35, 32, 0x00CD00);
-        if (!filter.materialItem.isEmpty()) {
-            renderScaledText(filter.materialItem.getDisplayName(), 35, 41, 0x00CD00, 107);
-            GlStateManager.pushMatrix();
-            RenderHelper.enableGUIStandardItemLighting();
-            itemRender.renderItemAndEffectIntoGUI(filter.materialItem, 12, 19);
-            RenderHelper.disableStandardItemLighting();
-            GlStateManager.popMatrix();
+        renderScaledText(LangUtils.localize("gui.id") + ": " + filter.getModID(), 35, 32, 0x00CD00, 107);
+        if (!renderStack.isEmpty()) {
+            try {
+                GlStateManager.pushMatrix();
+                RenderHelper.enableGUIStandardItemLighting();
+                itemRender.renderItemAndEffectIntoGUI(renderStack, 12, 19);
+                RenderHelper.disableStandardItemLighting();
+                GlStateManager.popMatrix();
+            } catch (Exception ignored) {
+            }
         }
         if (!filter.replaceStack.isEmpty()) {
             GlStateManager.pushMatrix();
@@ -119,16 +77,6 @@ public class GuiMMaterialFilter extends GuiMekanism<TileEntityDigitalMiner> {
     }
 
     @Override
-    public void updateScreen() {
-        super.updateScreen();
-        if (ticker > 0) {
-            ticker--;
-        } else {
-            status = EnumColor.DARK_GREEN + LangUtils.localize("gui.allOK");
-        }
-    }
-
-    @Override
     protected void drawGuiContainerBackgroundLayer(float partialTick, int mouseX, int mouseY) {
         mc.renderEngine.bindTexture(getGuiLocation());
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -142,24 +90,17 @@ public class GuiMMaterialFilter extends GuiMekanism<TileEntityDigitalMiner> {
         } else {
             drawTexturedModalRect(guiWidth + 5, guiHeight + 5, 176, 11, 11, 11);
         }
+        if (xAxis >= 131 && xAxis <= 143 && yAxis >= 47 && yAxis <= 59) {
+            drawTexturedModalRect(guiWidth + 131, guiHeight + 47, 176 + 11, 0, 12, 12);
+        } else {
+            drawTexturedModalRect(guiWidth + 131, guiHeight + 47, 176 + 11, 12, 12, 12);
+        }
         if (xAxis >= 148 && xAxis <= 162 && yAxis >= 45 && yAxis <= 59) {
             drawTexturedModalRect(guiWidth + 148, guiHeight + 45, 176 + 23, 0, 14, 14);
         } else {
             drawTexturedModalRect(guiWidth + 148, guiHeight + 45, 176 + 23, 14, 14, 14);
         }
-        if (xAxis >= 12 && xAxis <= 28 && yAxis >= 19 && yAxis <= 35) {
-            GlStateManager.pushMatrix();
-            GlStateManager.disableLighting();
-            GlStateManager.disableDepth();
-            GlStateManager.colorMask(true, true, true, false);
-            int x = guiWidth + 12;
-            int y = guiHeight + 19;
-            drawGradientRect(x, y, x + 16, y + 16, -2130706433, -2130706433);
-            GlStateManager.colorMask(true, true, true, true);
-            GlStateManager.enableLighting();
-            GlStateManager.enableDepth();
-            GlStateManager.popMatrix();
-        }
+        modIDText.drawTextBox();
         if (xAxis >= 149 && xAxis <= 165 && yAxis >= 19 && yAxis <= 35) {
             GlStateManager.pushMatrix();
             GlStateManager.disableLighting();
@@ -179,6 +120,7 @@ public class GuiMMaterialFilter extends GuiMekanism<TileEntityDigitalMiner> {
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
         super.mouseClicked(mouseX, mouseY, button);
+        modIDText.mouseClicked(mouseX, mouseY, button);
         if (button == 0) {
             int xAxis = (mouseX - (width - xSize) / 2);
             int yAxis = (mouseY - (height - ySize) / 2);
@@ -187,23 +129,13 @@ public class GuiMMaterialFilter extends GuiMekanism<TileEntityDigitalMiner> {
                 Mekanism.packetHandler.sendToServer(
                       new DigitalMinerGuiMessage(MinerGuiPacket.SERVER, Coord4D.get(tileEntity), isNew ? 5 : 0, 0, 0));
             }
+            if (xAxis >= 131 && xAxis <= 143 && yAxis >= 47 && yAxis <= 59) {
+                SoundHandler.playSound(SoundEvents.UI_BUTTON_CLICK);
+                setModID();
+            }
             if (xAxis >= 148 && xAxis <= 162 && yAxis >= 45 && yAxis <= 59) {
                 SoundHandler.playSound(SoundEvents.UI_BUTTON_CLICK);
                 filter.requireStack = !filter.requireStack;
-            }
-            if (xAxis >= 12 && xAxis <= 28 && yAxis >= 19 && yAxis <= 35) {
-                ItemStack stack = mc.player.inventory.getItemStack();
-                if (!stack.isEmpty() && !Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-                    if (stack.getItem() instanceof ItemBlock) {
-                        if (Block.getBlockFromItem(stack.getItem()) != Blocks.BEDROCK) {
-                            filter.materialItem = stack.copy();
-                            filter.materialItem.setCount(1);
-                        }
-                    }
-                } else if (stack.isEmpty() && Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-                    filter.materialItem = ItemStack.EMPTY;
-                }
-                SoundHandler.playSound(SoundEvents.UI_BUTTON_CLICK);
             }
             if (xAxis >= 149 && xAxis <= 165 && yAxis >= 19 && yAxis <= 35) {
                 boolean doNull = false;
@@ -229,6 +161,25 @@ public class GuiMMaterialFilter extends GuiMekanism<TileEntityDigitalMiner> {
 
     @Override
     protected ResourceLocation getGuiLocation() {
-        return MekanismUtils.getResource(ResourceType.GUI, "GuiMMaterialFilter.png");
+        return MekanismUtils.getResource(ResourceType.GUI, "GuiMModIDFilter.png");
+    }
+
+    @Override
+    protected void updateStackList(String modName) {
+        iterStacks = OreDictCache.getModIDStacks(modName, true);
+        stackSwitch = 0;
+        stackIndex = -1;
+    }
+
+    @Override
+    protected void addButtons(int guiWidth, int guiHeight) {
+        buttonList.add(new GuiButton(0, guiWidth + 27, guiHeight + 62, 60, 20, LangUtils.localize("gui.save")));
+        buttonList.add(new GuiButton(1, guiWidth + 89, guiHeight + 62, 60, 20, LangUtils.localize("gui.delete")));
+    }
+
+    @Override
+    protected void sendPacketToServer(int guiID) {
+        Mekanism.packetHandler.sendToServer(
+              new DigitalMinerGuiMessage(MinerGuiPacket.SERVER, Coord4D.get(tileEntity), guiID, 0, 0));
     }
 }

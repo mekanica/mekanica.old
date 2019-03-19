@@ -1,7 +1,7 @@
 package mekanism.generators.client.gui;
 
 import java.util.Arrays;
-import mekanism.client.gui.GuiMekanism;
+import mekanism.client.gui.GuiMekanismTile;
 import mekanism.client.gui.element.GuiEnergyInfo;
 import mekanism.client.gui.element.GuiFluidGauge;
 import mekanism.client.gui.element.GuiGauge.Type;
@@ -27,7 +27,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiHeatGenerator extends GuiMekanism<TileEntityHeatGenerator> {
+public class GuiHeatGenerator extends GuiMekanismTile<TileEntityHeatGenerator> {
 
     public GuiHeatGenerator(InventoryPlayer inventory, TileEntityHeatGenerator tile) {
         super(tile, new ContainerHeatGenerator(inventory, tile));

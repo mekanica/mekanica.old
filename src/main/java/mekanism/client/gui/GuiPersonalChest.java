@@ -14,7 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiPersonalChest extends GuiMekanism<TileEntityPersonalChest> {
+public class GuiPersonalChest extends GuiMekanismTile<TileEntityPersonalChest> {
 
     public GuiPersonalChest(InventoryPlayer inventory, TileEntityPersonalChest tile) {
         super(tile, new ContainerPersonalChest(inventory, tile, null, true));
@@ -24,7 +24,7 @@ public class GuiPersonalChest extends GuiMekanism<TileEntityPersonalChest> {
     }
 
     public GuiPersonalChest(InventoryPlayer inventory, InventoryPersonalChest inv) {
-        super(new ContainerPersonalChest(inventory, null, inv, false));
+        super(null, new ContainerPersonalChest(inventory, null, inv, false));
         xSize += 26;
         ySize += 64;
         addGuiElement(new GuiSecurityTab(this, getGuiLocation(), inv.currentHand));

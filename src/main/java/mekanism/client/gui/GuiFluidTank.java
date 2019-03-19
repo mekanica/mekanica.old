@@ -18,7 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiFluidTank extends GuiMekanism<TileEntityFluidTank> {
+public class GuiFluidTank extends GuiMekanismTile<TileEntityFluidTank> {
 
     public GuiFluidTank(InventoryPlayer inventory, TileEntityFluidTank tile) {
         super(tile, new ContainerFluidTank(inventory, tile));

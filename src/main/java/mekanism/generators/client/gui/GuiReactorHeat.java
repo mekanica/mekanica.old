@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import mekanism.api.Coord4D;
-import mekanism.client.gui.GuiMekanism;
+import mekanism.client.gui.GuiMekanismTile;
 import mekanism.client.gui.element.GuiEnergyGauge;
 import mekanism.client.gui.element.GuiEnergyInfo;
 import mekanism.client.gui.element.GuiFluidGauge;
@@ -37,7 +37,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiReactorHeat extends GuiMekanism<TileEntityReactorController> {
+public class GuiReactorHeat extends GuiMekanismTile<TileEntityReactorController> {
 
     public GuiReactorHeat(InventoryPlayer inventory, TileEntityReactorController tile) {
         super(tile, new ContainerNull(inventory.player, tile));

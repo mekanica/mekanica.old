@@ -34,7 +34,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiSideConfiguration extends GuiMekanism<TileEntityContainerBlock> {
+public class GuiSideConfiguration extends GuiMekanismTile<TileEntityContainerBlock> {
 
     private Map<Integer, GuiPos> slotPosMap = new HashMap<>();
     private ISideConfiguration configurable;

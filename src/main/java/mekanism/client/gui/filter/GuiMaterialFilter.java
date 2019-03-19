@@ -11,7 +11,10 @@ import mekanism.common.tile.prefab.TileEntityContainerBlock;
 import mekanism.common.util.LangUtils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public abstract class GuiMaterialFilter<FILTER extends IMaterialFilter, TILE extends TileEntityContainerBlock> extends
       GuiFilter<TILE> {
 

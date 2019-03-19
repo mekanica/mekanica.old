@@ -29,7 +29,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiPRC extends GuiMekanism<TileEntityPRC> {
+public class GuiPRC extends GuiMekanismTile<TileEntityPRC> {
 
     public GuiPRC(InventoryPlayer inventory, TileEntityPRC tile) {
         super(tile, new ContainerPRC(inventory, tile));

@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiLaserTractorBeam extends GuiMekanism<TileEntityLaserTractorBeam> {
+public class GuiLaserTractorBeam extends GuiMekanismTile<TileEntityLaserTractorBeam> {
 
     public GuiLaserTractorBeam(InventoryPlayer inventory, TileEntityLaserTractorBeam tile) {
         super(tile, new ContainerLaserTractorBeam(inventory, tile));

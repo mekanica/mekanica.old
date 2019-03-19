@@ -19,7 +19,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiThermalEvaporationController extends GuiMekanism<TileEntityThermalEvaporationController> {
+public class GuiThermalEvaporationController extends GuiMekanismTile<TileEntityThermalEvaporationController> {
 
     public GuiThermalEvaporationController(InventoryPlayer inventory, TileEntityThermalEvaporationController tile) {
         super(tile, new ContainerThermalEvaporationController(inventory, tile));

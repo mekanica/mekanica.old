@@ -23,7 +23,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiFluidicPlenisher extends GuiMekanism<TileEntityFluidicPlenisher> {
+public class GuiFluidicPlenisher extends GuiMekanismTile<TileEntityFluidicPlenisher> {
 
     public GuiFluidicPlenisher(InventoryPlayer inventory, TileEntityFluidicPlenisher tile) {
         super(tile, new ContainerFluidicPlenisher(inventory, tile));

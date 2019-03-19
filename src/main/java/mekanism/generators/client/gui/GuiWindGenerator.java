@@ -3,7 +3,7 @@ package mekanism.generators.client.gui;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import mekanism.api.EnumColor;
-import mekanism.client.gui.GuiMekanism;
+import mekanism.client.gui.GuiMekanismTile;
 import mekanism.client.gui.element.GuiEnergyInfo;
 import mekanism.client.gui.element.GuiPowerBar;
 import mekanism.client.gui.element.GuiRedstoneControl;
@@ -24,7 +24,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiWindGenerator extends GuiMekanism<TileEntityWindGenerator> {
+public class GuiWindGenerator extends GuiMekanismTile<TileEntityWindGenerator> {
 
     private DecimalFormat powerFormat = new DecimalFormat("0.##");
 

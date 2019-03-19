@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import mekanism.api.Coord4D;
-import mekanism.client.gui.GuiMekanism;
+import mekanism.client.gui.GuiMekanismTile;
 import mekanism.client.gui.element.GuiEnergyInfo;
 import mekanism.client.gui.element.GuiGasGauge;
 import mekanism.client.gui.element.GuiGauge.Type;
@@ -33,7 +33,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiReactorFuel extends GuiMekanism<TileEntityReactorController> {
+public class GuiReactorFuel extends GuiMekanismTile<TileEntityReactorController> {
 
     private GuiTextField injectionRateField;
 

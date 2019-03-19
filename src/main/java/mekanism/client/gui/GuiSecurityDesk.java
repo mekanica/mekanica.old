@@ -28,7 +28,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiSecurityDesk extends GuiMekanism<TileEntitySecurityDesk> {
+public class GuiSecurityDesk extends GuiMekanismTile<TileEntitySecurityDesk> {
 
     private static final List<Character> SPECIAL_CHARS = Arrays.asList('-', '|', '_');
     private static int MAX_LENGTH = 24;

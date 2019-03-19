@@ -41,7 +41,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiDigitalMinerConfig extends GuiMekanism<TileEntityDigitalMiner> {
+public class GuiDigitalMinerConfig extends GuiMekanismTile<TileEntityDigitalMiner> {
 
     // Scrollbar dimensions
     private final int scrollX = 154;

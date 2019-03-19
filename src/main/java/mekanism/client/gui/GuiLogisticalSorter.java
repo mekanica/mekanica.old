@@ -44,7 +44,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 @SideOnly(Side.CLIENT)
-public class GuiLogisticalSorter extends GuiMekanism<TileEntityLogisticalSorter> {
+public class GuiLogisticalSorter extends GuiMekanismTile<TileEntityLogisticalSorter> {
 
     // Scrollbar dimensions
     private final int scrollX = 154;

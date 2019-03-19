@@ -17,7 +17,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiInductionMatrix extends GuiMekanism<TileEntityInductionCasing> {
+public class GuiInductionMatrix extends GuiMekanismTile<TileEntityInductionCasing> {
 
     public GuiInductionMatrix(InventoryPlayer inventory, TileEntityInductionCasing tile) {
         super(tile, new ContainerInductionMatrix(inventory, tile));

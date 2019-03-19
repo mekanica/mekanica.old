@@ -22,7 +22,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiEnergyCube extends GuiMekanism<TileEntityEnergyCube> {
+public class GuiEnergyCube extends GuiMekanismTile<TileEntityEnergyCube> {
 
     public GuiEnergyCube(InventoryPlayer inventory, TileEntityEnergyCube tile) {
         super(tile, new ContainerEnergyCube(inventory, tile));

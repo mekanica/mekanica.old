@@ -3,7 +3,7 @@ package mekanism.client.gui.filter;
 import java.io.IOException;
 import java.util.List;
 import mekanism.api.Coord4D;
-import mekanism.client.gui.GuiMekanism;
+import mekanism.client.gui.GuiMekanismTile;
 import mekanism.client.sound.SoundHandler;
 import mekanism.common.Mekanism;
 import mekanism.common.inventory.container.ContainerFilter;
@@ -31,7 +31,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiOredictionificatorFilter extends GuiMekanism<TileEntityOredictionificator> {
+public class GuiOredictionificatorFilter extends GuiMekanismTile<TileEntityOredictionificator> {
 
     private OredictionificatorFilter origFilter;
     private OredictionificatorFilter filter = new OredictionificatorFilter();

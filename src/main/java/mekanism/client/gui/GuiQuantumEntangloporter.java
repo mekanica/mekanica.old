@@ -31,7 +31,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiQuantumEntangloporter extends GuiMekanism<TileEntityQuantumEntangloporter> {
+public class GuiQuantumEntangloporter extends GuiMekanismTile<TileEntityQuantumEntangloporter> {
 
     private GuiButton publicButton;
     private GuiButton privateButton;

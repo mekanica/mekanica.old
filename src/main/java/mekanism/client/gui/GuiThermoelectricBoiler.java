@@ -25,7 +25,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiThermoelectricBoiler extends GuiMekanism<TileEntityBoilerCasing> {
+public class GuiThermoelectricBoiler extends GuiMekanismTile<TileEntityBoilerCasing> {
 
     public GuiThermoelectricBoiler(InventoryPlayer inventory, TileEntityBoilerCasing tile) {
         super(tile, new ContainerFilter(inventory, tile));

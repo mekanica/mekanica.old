@@ -23,7 +23,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiElectricPump extends GuiMekanism<TileEntityElectricPump> {
+public class GuiElectricPump extends GuiMekanismTile<TileEntityElectricPump> {
 
 
     public GuiElectricPump(InventoryPlayer inventory, TileEntityElectricPump tile) {

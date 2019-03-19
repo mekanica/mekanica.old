@@ -4,7 +4,6 @@ import java.io.IOException;
 import mekanism.client.gui.element.GuiScrollList;
 import mekanism.client.sound.SoundHandler;
 import mekanism.common.inventory.container.ContainerDictionary;
-import mekanism.common.tile.prefab.TileEntityContainerBlock;
 import mekanism.common.util.LangUtils;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.MekanismUtils.ResourceType;
@@ -21,7 +20,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiDictionary extends GuiMekanism<TileEntityContainerBlock> {
+public class GuiDictionary extends GuiMekanism {
 
     public ItemStack itemType = ItemStack.EMPTY;
 

@@ -33,7 +33,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiRotaryCondensentrator extends GuiMekanism<TileEntityRotaryCondensentrator> {
+public class GuiRotaryCondensentrator extends GuiMekanismTile<TileEntityRotaryCondensentrator> {
 
     public GuiRotaryCondensentrator(InventoryPlayer inventory, TileEntityRotaryCondensentrator tile) {
         super(tile, new ContainerRotaryCondensentrator(inventory, tile));

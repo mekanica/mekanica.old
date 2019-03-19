@@ -34,7 +34,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiResistiveHeater extends GuiMekanism<TileEntityResistiveHeater> {
+public class GuiResistiveHeater extends GuiMekanismTile<TileEntityResistiveHeater> {
 
     private GuiTextField energyUsageField;
 

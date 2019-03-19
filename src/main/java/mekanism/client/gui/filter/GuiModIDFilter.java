@@ -15,8 +15,11 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
+@SideOnly(Side.CLIENT)
 public abstract class GuiModIDFilter<FILTER extends IModIDFilter, TILE extends TileEntityContainerBlock> extends
       GuiFilter<TILE> {
 

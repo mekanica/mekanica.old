@@ -20,7 +20,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiFuelwoodHeater extends GuiMekanism<TileEntityFuelwoodHeater> {
+public class GuiFuelwoodHeater extends GuiMekanismTile<TileEntityFuelwoodHeater> {
 
     public GuiFuelwoodHeater(InventoryPlayer inventory, TileEntityFuelwoodHeater tile) {
         super(tile, new ContainerFuelwoodHeater(inventory, tile));

@@ -33,7 +33,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 @SideOnly(Side.CLIENT)
-public class GuiTransporterConfig extends GuiMekanism<TileEntityContainerBlock> {
+public class GuiTransporterConfig extends GuiMekanismTile<TileEntityContainerBlock> {
 
     private Map<Integer, GuiPos> slotPosMap = new HashMap<>();
     private ISideConfiguration configurable;

@@ -3,7 +3,6 @@ package mekanism.client.jei;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import mekanism.client.gui.GuiMekanism;
 import mekanism.client.gui.element.GuiElement;
 import mezz.jei.api.gui.IAdvancedGuiHandler;
@@ -22,9 +21,8 @@ public class GuiElementHandler implements IAdvancedGuiHandler {
             List<Rectangle> list = new ArrayList<>();
 
             GuiMekanism guiMek = (GuiMekanism) gui;
-            Set<GuiElement> guiElements = guiMek.getGuiElements();
 
-            for (GuiElement element : guiElements) {
+            for (GuiElement element : guiMek.getGuiElements()) {
                 list.add(element.getBounds(guiMek.getXPos(), guiMek.getYPos()).toRectangle());
             }
 

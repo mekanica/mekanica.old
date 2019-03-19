@@ -5,7 +5,10 @@ import mekanism.common.content.filter.IItemStackFilter;
 import mekanism.common.tile.prefab.TileEntityContainerBlock;
 import mekanism.common.util.LangUtils;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public abstract class GuiItemStackFilter<FILTER extends IItemStackFilter, TILE extends TileEntityContainerBlock> extends
       GuiFilter<TILE> {
 

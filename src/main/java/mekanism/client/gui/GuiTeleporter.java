@@ -46,7 +46,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiTeleporter extends GuiMekanism<TileEntityTeleporter> {
+public class GuiTeleporter extends GuiMekanismTile<TileEntityTeleporter> {
 
     private EnumHand currentHand;
     private ItemStack itemStack = ItemStack.EMPTY;
@@ -92,7 +92,7 @@ public class GuiTeleporter extends GuiMekanism<TileEntityTeleporter> {
     }
 
     public GuiTeleporter(EntityPlayer player, EnumHand hand, ItemStack stack) {
-        super(new ContainerNull());
+        super(null, new ContainerNull());
         isPortable = true;
         currentHand = hand;
         itemStack = stack;

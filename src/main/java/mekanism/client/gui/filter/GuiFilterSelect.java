@@ -8,8 +8,11 @@ import mekanism.common.util.LangUtils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
+@SideOnly(Side.CLIENT)
 public abstract class GuiFilterSelect<TILE extends TileEntityContainerBlock> extends GuiFilter<TILE> {
 
     protected GuiFilterSelect(EntityPlayer player, TILE tile) {

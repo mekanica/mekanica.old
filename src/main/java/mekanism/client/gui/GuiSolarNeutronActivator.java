@@ -23,7 +23,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiSolarNeutronActivator extends GuiMekanism<TileEntitySolarNeutronActivator> {
+public class GuiSolarNeutronActivator extends GuiMekanismTile<TileEntitySolarNeutronActivator> {
 
     public GuiSolarNeutronActivator(InventoryPlayer inventory, TileEntitySolarNeutronActivator tile) {
         super(tile, new ContainerSolarNeutronActivator(inventory, tile));

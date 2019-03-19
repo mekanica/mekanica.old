@@ -25,7 +25,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiChanceMachine extends GuiMekanism<TileEntityChanceMachine> {
+public class GuiChanceMachine extends GuiMekanismTile<TileEntityChanceMachine> {
 
     public GuiChanceMachine(InventoryPlayer inventory, TileEntityChanceMachine tile) {
         super(tile, new ContainerChanceMachine(inventory, tile));

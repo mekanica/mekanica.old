@@ -2,7 +2,7 @@ package mekanism.generators.client.gui;
 
 import java.util.Arrays;
 import mekanism.api.EnumColor;
-import mekanism.client.gui.GuiMekanism;
+import mekanism.client.gui.GuiMekanismTile;
 import mekanism.client.gui.element.GuiEnergyInfo;
 import mekanism.common.config.MekanismConfig.general;
 import mekanism.common.config.MekanismConfig.generators;
@@ -21,7 +21,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiTurbineStats extends GuiMekanism<TileEntityTurbineCasing> {
+public class GuiTurbineStats extends GuiMekanismTile<TileEntityTurbineCasing> {
 
     public GuiTurbineStats(InventoryPlayer inventory, TileEntityTurbineCasing tile) {
         super(tile, new ContainerNull(inventory.player, tile));

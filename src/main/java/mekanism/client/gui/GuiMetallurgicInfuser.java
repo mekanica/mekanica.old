@@ -34,7 +34,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiMetallurgicInfuser extends GuiMekanism<TileEntityMetallurgicInfuser> {
+public class GuiMetallurgicInfuser extends GuiMekanismTile<TileEntityMetallurgicInfuser> {
 
     public GuiMetallurgicInfuser(InventoryPlayer inventory, TileEntityMetallurgicInfuser tile) {
         super(tile, new ContainerMetallurgicInfuser(inventory, tile));

@@ -2,7 +2,7 @@ package mekanism.generators.client.gui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import mekanism.client.gui.GuiMekanism;
+import mekanism.client.gui.GuiMekanismTile;
 import mekanism.client.gui.element.GuiEnergyInfo;
 import mekanism.client.gui.element.GuiSlot;
 import mekanism.client.gui.element.GuiSlot.SlotType;
@@ -21,7 +21,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiReactorController extends GuiMekanism<TileEntityReactorController> {
+public class GuiReactorController extends GuiMekanismTile<TileEntityReactorController> {
 
     public GuiReactorController(InventoryPlayer inventory, final TileEntityReactorController tile) {
         super(tile, new ContainerReactorController(inventory, tile));

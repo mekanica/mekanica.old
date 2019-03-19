@@ -1,7 +1,7 @@
 package mekanism.generators.client.gui;
 
 import java.util.Arrays;
-import mekanism.client.gui.GuiMekanism;
+import mekanism.client.gui.GuiMekanismTile;
 import mekanism.client.gui.element.GuiEnergyInfo;
 import mekanism.client.gui.element.GuiGasGauge;
 import mekanism.client.gui.element.GuiGauge.Type;
@@ -23,7 +23,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiGasGenerator extends GuiMekanism<TileEntityGasGenerator> {
+public class GuiGasGenerator extends GuiMekanismTile<TileEntityGasGenerator> {
 
     public GuiGasGenerator(InventoryPlayer inventory, TileEntityGasGenerator tile) {
         super(tile, new ContainerGasGenerator(inventory, tile));

@@ -14,7 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiAmbientAccumulator extends GuiMekanism<TileEntityAmbientAccumulator> {
+public class GuiAmbientAccumulator extends GuiMekanismTile<TileEntityAmbientAccumulator> {
 
     public GuiAmbientAccumulator(EntityPlayer player, TileEntityAmbientAccumulator tile) {
         super(tile, new ContainerNull(player, tile));

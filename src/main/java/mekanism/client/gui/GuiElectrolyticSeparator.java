@@ -35,7 +35,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiElectrolyticSeparator extends GuiMekanism<TileEntityElectrolyticSeparator> {
+public class GuiElectrolyticSeparator extends GuiMekanismTile<TileEntityElectrolyticSeparator> {
 
     public GuiElectrolyticSeparator(InventoryPlayer inventory, TileEntityElectrolyticSeparator tile) {
         super(tile, new ContainerElectrolyticSeparator(inventory, tile));

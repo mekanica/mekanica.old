@@ -3,7 +3,7 @@ package mekanism.generators.client.gui;
 import java.io.IOException;
 import java.util.Arrays;
 import mekanism.api.Coord4D;
-import mekanism.client.gui.GuiMekanism;
+import mekanism.client.gui.GuiMekanismTile;
 import mekanism.client.gui.element.GuiEnergyInfo;
 import mekanism.client.gui.element.GuiPowerBar;
 import mekanism.client.gui.element.GuiRateBar;
@@ -34,7 +34,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiIndustrialTurbine extends GuiMekanism<TileEntityTurbineCasing> {
+public class GuiIndustrialTurbine extends GuiMekanismTile<TileEntityTurbineCasing> {
 
     public GuiIndustrialTurbine(InventoryPlayer inventory, TileEntityTurbineCasing tile) {
         super(tile, new ContainerFilter(inventory, tile));

@@ -37,7 +37,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiOredictionificator extends GuiMekanism<TileEntityOredictionificator> {
+public class GuiOredictionificator extends GuiMekanismTile<TileEntityOredictionificator> {
 
     private Map<OredictionificatorFilter, ItemStack> renderStacks = new HashMap<>();
     private boolean isDragging = false;

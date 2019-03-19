@@ -3,7 +3,7 @@ package mekanism.generators.client.gui;
 import java.io.IOException;
 import mekanism.api.Coord4D;
 import mekanism.api.EnumColor;
-import mekanism.client.gui.GuiMekanism;
+import mekanism.client.gui.GuiMekanismTile;
 import mekanism.client.render.MekanismRenderer;
 import mekanism.client.sound.SoundHandler;
 import mekanism.common.Mekanism;
@@ -26,7 +26,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiReactorLogicAdapter extends GuiMekanism<TileEntityReactorLogicAdapter> {
+public class GuiReactorLogicAdapter extends GuiMekanismTile<TileEntityReactorLogicAdapter> {
 
     public GuiReactorLogicAdapter(InventoryPlayer inventory, final TileEntityReactorLogicAdapter tile) {
         super(tile, new ContainerNull(inventory.player, tile));

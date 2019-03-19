@@ -25,7 +25,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiDoubleElectricMachine extends GuiMekanism<TileEntityDoubleElectricMachine> {
+public class GuiDoubleElectricMachine extends GuiMekanismTile<TileEntityDoubleElectricMachine> {
 
     public GuiDoubleElectricMachine(InventoryPlayer inventory, TileEntityDoubleElectricMachine tile) {
         super(tile, new ContainerDoubleElectricMachine(inventory, tile));

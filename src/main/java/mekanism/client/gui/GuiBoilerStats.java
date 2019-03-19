@@ -21,7 +21,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiBoilerStats extends GuiMekanism<TileEntityBoilerCasing> {
+public class GuiBoilerStats extends GuiMekanismTile<TileEntityBoilerCasing> {
 
     private final GuiGraph boilGraph;
     private final GuiGraph maxGraph;

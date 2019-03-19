@@ -36,7 +36,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiFactory extends GuiMekanism<TileEntityFactory> {
+public class GuiFactory extends GuiMekanismTile<TileEntityFactory> {
 
     public GuiFactory(InventoryPlayer inventory, TileEntityFactory tile) {
         super(tile, new ContainerFactory(inventory, tile));

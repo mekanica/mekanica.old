@@ -21,7 +21,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class GuiSeismicVibrator extends GuiMekanism<TileEntitySeismicVibrator> {
+public class GuiSeismicVibrator extends GuiMekanismTile<TileEntitySeismicVibrator> {
 
     public GuiSeismicVibrator(InventoryPlayer inventory, TileEntitySeismicVibrator tile) {
         super(tile, new ContainerSeismicVibrator(inventory, tile));

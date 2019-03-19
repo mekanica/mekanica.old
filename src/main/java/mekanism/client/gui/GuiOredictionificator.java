@@ -39,13 +39,10 @@ import org.lwjgl.opengl.GL11;
 @SideOnly(Side.CLIENT)
 public class GuiOredictionificator extends GuiMekanism<TileEntityOredictionificator> {
 
-    public Map<OredictionificatorFilter, ItemStack> renderStacks = new HashMap<>();
-
-    public boolean isDragging = false;
-
-    public int dragOffset = 0;
-
-    public float scroll;
+    private Map<OredictionificatorFilter, ItemStack> renderStacks = new HashMap<>();
+    private boolean isDragging = false;
+    private int dragOffset = 0;
+    private float scroll;
 
     public GuiOredictionificator(InventoryPlayer inventory, TileEntityOredictionificator tile) {
         super(tile, new ContainerOredictionificator(inventory, tile));

@@ -59,17 +59,17 @@ public class GuiLogisticalSorter extends GuiMekanism<TileEntityLogisticalSorter>
     /**
      * Amount scrolled in filter list (0 = top, 1 = bottom)
      */
-    public float scroll;
+    private float scroll;
     /**
      * True if the scrollbar is being dragged
      */
-    public boolean isDragging = false;
-    public int dragOffset = 0;
-    public int stackSwitch = 0;
-    public Map<TOreDictFilter, StackData> oreDictStacks = new HashMap<>();
-    public Map<TModIDFilter, StackData> modIDStacks = new HashMap<>();
+    private boolean isDragging = false;
+    private int dragOffset = 0;
+    private int stackSwitch = 0;
+    private Map<TOreDictFilter, StackData> oreDictStacks = new HashMap<>();
+    private Map<TModIDFilter, StackData> modIDStacks = new HashMap<>();
     // Buttons
-    int BUTTON_NEW = 0;
+    private final int BUTTON_NEW = 0;
     /**
      * True if the left mouse button was held down last time drawScreen was called.
      */

@@ -33,15 +33,11 @@ import org.lwjgl.opengl.GL11;
 @SideOnly(Side.CLIENT)
 public class GuiMItemStackFilter extends GuiMekanism<TileEntityDigitalMiner> {
 
-    public boolean isNew = false;
-
-    public MItemStackFilter origFilter;
-
-    public MItemStackFilter filter = new MItemStackFilter();
-
-    public String status = EnumColor.DARK_GREEN + LangUtils.localize("gui.allOK");
-
-    public int ticker;
+    private boolean isNew = false;
+    private MItemStackFilter origFilter;
+    private MItemStackFilter filter = new MItemStackFilter();
+    private String status = EnumColor.DARK_GREEN + LangUtils.localize("gui.allOK");
+    private int ticker;
 
     public GuiMItemStackFilter(EntityPlayer player, TileEntityDigitalMiner tile, int index) {
         super(tile, new ContainerFilter(player.inventory, tile));

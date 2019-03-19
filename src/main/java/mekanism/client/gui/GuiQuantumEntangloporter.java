@@ -33,17 +33,13 @@ import org.lwjgl.opengl.GL11;
 @SideOnly(Side.CLIENT)
 public class GuiQuantumEntangloporter extends GuiMekanism<TileEntityQuantumEntangloporter> {
 
-    public GuiButton publicButton;
-    public GuiButton privateButton;
-
-    public GuiButton setButton;
-    public GuiButton deleteButton;
-
-    public GuiScrollList scrollList;
-
-    public GuiTextField frequencyField;
-
-    public boolean privateMode;
+    private GuiButton publicButton;
+    private GuiButton privateButton;
+    private GuiButton setButton;
+    private GuiButton deleteButton;
+    private GuiScrollList scrollList;
+    private GuiTextField frequencyField;
+    private boolean privateMode;
 
     public GuiQuantumEntangloporter(InventoryPlayer inventory, TileEntityQuantumEntangloporter tile) {
         super(tile, new ContainerQuantumEntangloporter(inventory, tile));

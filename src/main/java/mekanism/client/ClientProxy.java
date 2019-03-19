@@ -956,13 +956,13 @@ public class ClientProxy extends CommonProxy {
     public void handleTeleporterUpdate(PortableTeleporterMessage message) {
         GuiScreen screen = Minecraft.getMinecraft().currentScreen;
 
-        if (screen instanceof GuiTeleporter && !((GuiTeleporter) screen).itemStack.isEmpty()) {
+        if (screen instanceof GuiTeleporter && !((GuiTeleporter) screen).isStackEmpty()) {
             GuiTeleporter teleporter = (GuiTeleporter) screen;
 
-            teleporter.clientStatus = message.status;
-            teleporter.clientFreq = message.frequency;
-            teleporter.clientPublicCache = message.publicCache;
-            teleporter.clientPrivateCache = message.privateCache;
+            teleporter.setStatus(message.status);
+            teleporter.setFrequency(message.frequency);
+            teleporter.setPublicCache(message.publicCache);
+            teleporter.setPrivateCache(message.privateCache);
 
             teleporter.updateButtons();
         }

@@ -100,7 +100,7 @@ public class GuiConfigTypeTab extends GuiElement {
             return;
         }
         if (button == 0 && inBounds(xAxis, yAxis)) {
-            ((GuiSideConfiguration) guiObj).currentType = transmission;
+            ((GuiSideConfiguration) guiObj).setCurrentType(transmission);
             ((GuiSideConfiguration) guiObj).updateTabs();
             SoundHandler.playSound(SoundEvents.UI_BUTTON_CLICK);
         }

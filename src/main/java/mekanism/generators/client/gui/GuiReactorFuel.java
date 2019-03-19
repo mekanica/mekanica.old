@@ -35,7 +35,7 @@ import org.lwjgl.opengl.GL11;
 @SideOnly(Side.CLIENT)
 public class GuiReactorFuel extends GuiMekanism<TileEntityReactorController> {
 
-    public GuiTextField injectionRateField;
+    private GuiTextField injectionRateField;
 
     public GuiReactorFuel(InventoryPlayer inventory, final TileEntityReactorController tile) {
         super(tile, new ContainerNull(inventory.player, tile));

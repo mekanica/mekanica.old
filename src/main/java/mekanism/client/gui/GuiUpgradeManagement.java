@@ -28,19 +28,13 @@ import org.lwjgl.opengl.GL11;
 @SideOnly(Side.CLIENT)
 public class GuiUpgradeManagement extends GuiMekanism {
 
-    public IUpgradeTile tileEntity;
-
-    public Upgrade selectedType;
-
-    public boolean isDragging = false;
-
-    public int dragOffset = 0;
-
-    public int supportedIndex;
-
-    public int delay;
-
-    public float scroll;
+    private IUpgradeTile tileEntity;
+    private Upgrade selectedType;
+    private boolean isDragging = false;
+    private int dragOffset = 0;
+    private int supportedIndex;
+    private int delay;
+    private float scroll;
 
     public GuiUpgradeManagement(InventoryPlayer inventory, IUpgradeTile tile) {
         super(new ContainerUpgradeManagement(inventory, tile));

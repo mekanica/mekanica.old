@@ -30,11 +30,11 @@ import org.lwjgl.opengl.GL11;
 @SideOnly(Side.CLIENT)
 public class GuiSecurityDesk extends GuiMekanism<TileEntitySecurityDesk> {
 
-    public static final List<Character> SPECIAL_CHARS = Arrays.asList('-', '|', '_');
-    public static int MAX_LENGTH = 24;
-    public GuiButton removeButton;
-    public GuiScrollList scrollList;
-    public GuiTextField trustedField;
+    private static final List<Character> SPECIAL_CHARS = Arrays.asList('-', '|', '_');
+    private static int MAX_LENGTH = 24;
+    private GuiButton removeButton;
+    private GuiScrollList scrollList;
+    private GuiTextField trustedField;
 
     public GuiSecurityDesk(InventoryPlayer inventory, TileEntitySecurityDesk tile) {
         super(tile, new ContainerSecurityDesk(inventory, tile));

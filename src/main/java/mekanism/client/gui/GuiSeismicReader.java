@@ -24,10 +24,10 @@ import org.lwjgl.util.Rectangle;
 @SideOnly(Side.CLIENT)
 public class GuiSeismicReader extends GuiScreen {
 
-    public ItemStack itemStack;
-    public Coord4D pos;
-    protected int xSize = 137;
-    protected int ySize = 182;
+    private ItemStack itemStack;
+    private Coord4D pos;
+    private int xSize = 137;
+    private int ySize = 182;
     private World worldObj;
     private ArrayList<Pair<Integer, Block>> blockList = new ArrayList<>();
     private Rectangle upButton, downButton, tooltip;

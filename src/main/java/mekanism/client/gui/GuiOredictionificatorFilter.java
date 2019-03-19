@@ -32,15 +32,11 @@ import org.lwjgl.opengl.GL11;
 @SideOnly(Side.CLIENT)
 public class GuiOredictionificatorFilter extends GuiMekanism<TileEntityOredictionificator> {
 
-    public OredictionificatorFilter origFilter;
-
-    public OredictionificatorFilter filter = new OredictionificatorFilter();
-
-    public GuiTextField filterText;
-
-    public boolean isNew;
-
-    public ItemStack renderStack = ItemStack.EMPTY;
+    private OredictionificatorFilter origFilter;
+    private OredictionificatorFilter filter = new OredictionificatorFilter();
+    private GuiTextField filterText;
+    private boolean isNew;
+    private ItemStack renderStack = ItemStack.EMPTY;
 
     public GuiOredictionificatorFilter(EntityPlayer player, TileEntityOredictionificator tile, int index) {
         super(tile, new ContainerFilter(player.inventory, tile));

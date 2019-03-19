@@ -37,17 +37,15 @@ import org.lwjgl.opengl.GL11;
 @SideOnly(Side.CLIENT)
 public class GuiMOreDictFilter extends GuiMekanism<TileEntityDigitalMiner> {
 
-    public boolean isNew = false;
-
-    public MOreDictFilter origFilter;
-
-    public MOreDictFilter filter = new MOreDictFilter();
-    public ItemStack renderStack = ItemStack.EMPTY;
-    public int ticker = 0;
-    public int stackSwitch = 0;
-    public int stackIndex = 0;
-    public List<ItemStack> iterStacks;
-    public String status = EnumColor.DARK_GREEN + LangUtils.localize("gui.allOK");
+    private boolean isNew = false;
+    private MOreDictFilter origFilter;
+    private MOreDictFilter filter = new MOreDictFilter();
+    private ItemStack renderStack = ItemStack.EMPTY;
+    private int ticker = 0;
+    private int stackSwitch = 0;
+    private int stackIndex = 0;
+    private List<ItemStack> iterStacks;
+    private String status = EnumColor.DARK_GREEN + LangUtils.localize("gui.allOK");
     private GuiTextField oreDictText;
 
     public GuiMOreDictFilter(EntityPlayer player, TileEntityDigitalMiner tile, int index) {

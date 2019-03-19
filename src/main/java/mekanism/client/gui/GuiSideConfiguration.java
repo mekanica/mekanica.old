@@ -36,13 +36,10 @@ import org.lwjgl.opengl.GL11;
 @SideOnly(Side.CLIENT)
 public class GuiSideConfiguration extends GuiMekanism<TileEntityContainerBlock> {
 
-    public Map<Integer, GuiPos> slotPosMap = new HashMap<>();
-
-    public ISideConfiguration configurable;
-
-    public TransmissionType currentType;
-
-    public List<GuiConfigTypeTab> configTabs = new ArrayList<>();
+    private Map<Integer, GuiPos> slotPosMap = new HashMap<>();
+    private ISideConfiguration configurable;
+    private TransmissionType currentType;
+    private List<GuiConfigTypeTab> configTabs = new ArrayList<>();
 
     public GuiSideConfiguration(EntityPlayer player, ISideConfiguration tile) {
         super((TileEntityContainerBlock) tile, new ContainerNull(player, (TileEntityContainerBlock) tile));
@@ -66,6 +63,10 @@ public class GuiSideConfiguration extends GuiMekanism<TileEntityContainerBlock> 
 
     public TransmissionType getTopTransmission() {
         return configurable.getConfig().transmissions.get(0);
+    }
+
+    public void setCurrentType(TransmissionType type) {
+        currentType = type;
     }
 
     public void updateTabs() {

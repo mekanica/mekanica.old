@@ -37,17 +37,15 @@ import org.lwjgl.opengl.GL11;
 @SideOnly(Side.CLIENT)
 public class GuiMModIDFilter extends GuiMekanism<TileEntityDigitalMiner> {
 
-    public boolean isNew = false;
-
-    public MModIDFilter origFilter;
-
-    public MModIDFilter filter = new MModIDFilter();
-    public ItemStack renderStack = ItemStack.EMPTY;
-    public int ticker = 0;
-    public int stackSwitch = 0;
-    public int stackIndex = 0;
-    public List<ItemStack> iterStacks;
-    public String status = EnumColor.DARK_GREEN + LangUtils.localize("gui.allOK");
+    private boolean isNew = false;
+    private MModIDFilter origFilter;
+    private MModIDFilter filter = new MModIDFilter();
+    private ItemStack renderStack = ItemStack.EMPTY;
+    private int ticker = 0;
+    private int stackSwitch = 0;
+    private int stackIndex = 0;
+    private List<ItemStack> iterStacks;
+    private String status = EnumColor.DARK_GREEN + LangUtils.localize("gui.allOK");
     private GuiTextField modIDText;
 
     public GuiMModIDFilter(EntityPlayer player, TileEntityDigitalMiner tile, int index) {

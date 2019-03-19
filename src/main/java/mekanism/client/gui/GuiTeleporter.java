@@ -48,34 +48,22 @@ import org.lwjgl.opengl.GL11;
 @SideOnly(Side.CLIENT)
 public class GuiTeleporter extends GuiMekanism<TileEntityTeleporter> {
 
-    public EnumHand currentHand;
-
-    public ItemStack itemStack = ItemStack.EMPTY;
-
-    public EntityPlayer entityPlayer;
-
-    public GuiButton publicButton;
-    public GuiButton privateButton;
-
-    public GuiButton setButton;
-    public GuiButton deleteButton;
-
-    public GuiButton teleportButton;
-
-    public GuiScrollList scrollList;
-
-    public GuiTextField frequencyField;
-
-    public boolean privateMode;
-
-    public Frequency clientFreq;
-    public byte clientStatus;
-
-    public List<Frequency> clientPublicCache = new ArrayList<>();
-    public List<Frequency> clientPrivateCache = new ArrayList<>();
-
-    public boolean isInit = true;
-
+    private EnumHand currentHand;
+    private ItemStack itemStack = ItemStack.EMPTY;
+    private EntityPlayer entityPlayer;
+    private GuiButton publicButton;
+    private GuiButton privateButton;
+    private GuiButton setButton;
+    private GuiButton deleteButton;
+    private GuiButton teleportButton;
+    private GuiScrollList scrollList;
+    private GuiTextField frequencyField;
+    private boolean privateMode;
+    private Frequency clientFreq;
+    private byte clientStatus;
+    private List<Frequency> clientPublicCache = new ArrayList<>();
+    private List<Frequency> clientPrivateCache = new ArrayList<>();
+    private boolean isInit = true;
     private boolean isPortable;
 
     public GuiTeleporter(InventoryPlayer inventory, TileEntityTeleporter tile) {
@@ -165,6 +153,22 @@ public class GuiTeleporter extends GuiMekanism<TileEntityTeleporter> {
                 isInit = false;
             }
         }
+    }
+
+    public void setFrequency(Frequency newFrequency) {
+        clientFreq = newFrequency;
+    }
+
+    public void setPublicCache(List<Frequency> cache) {
+        clientPublicCache = cache;
+    }
+
+    public void setPrivateCache(List<Frequency> cache) {
+        clientPrivateCache = cache;
+    }
+
+    public void setStatus(byte status) {
+        clientStatus = status;
     }
 
     public String getSecurity(Frequency freq) {
@@ -417,5 +421,9 @@ public class GuiTeleporter extends GuiMekanism<TileEntityTeleporter> {
             return ((ItemPortableTeleporter) itemStack.getItem()).getMaxEnergy(itemStack);
         }
         return tileEntity.getMaxEnergy();
+    }
+
+    public boolean isStackEmpty() {
+        return itemStack.isEmpty();
     }
 }

@@ -1,6 +1,6 @@
 package mekanism.generators.client.gui;
 
-import java.util.Arrays;
+import java.util.Collections;
 import mekanism.client.gui.GuiMekanism;
 import mekanism.client.gui.element.GuiEnergyInfo;
 import mekanism.client.gui.element.GuiPowerBar;
@@ -28,11 +28,9 @@ public class GuiSolarGenerator extends GuiMekanism<TileEntitySolarGenerator> {
         ResourceLocation resource = getGuiLocation();
         guiElements.add(new GuiRedstoneControl(this, tileEntity, resource));
         guiElements.add(new GuiSecurityTab(this, tileEntity, resource));
-        guiElements.add(new GuiEnergyInfo(() -> Arrays.asList(
+        guiElements.add(new GuiEnergyInfo(() -> Collections.singletonList(
               LangUtils.localize("gui.producing") + ": " + MekanismUtils
-                    .getEnergyDisplay(tileEntity.isActive ? tileEntity.getProduction() : 0) + "/t",
-              LangUtils.localize("gui.maxOutput") + ": " + MekanismUtils.getEnergyDisplay(tileEntity.getMaxOutput())
-                    + "/t"), this, resource));
+                    .getEnergyDisplay(tileEntity.isActive ? tileEntity.getProduction() : 0)), this, resource));
         guiElements.add(new GuiPowerBar(this, tileEntity, resource, 164, 15));
         guiElements.add(new GuiSlot(SlotType.NORMAL, this, resource, 142, 34).with(SlotOverlay.POWER));
     }
@@ -45,9 +43,10 @@ public class GuiSolarGenerator extends GuiMekanism<TileEntitySolarGenerator> {
               .drawString(MekanismUtils.getEnergyDisplay(tileEntity.getEnergy(), tileEntity.getMaxEnergy()), 51, 26,
                     0x00CD00);
         fontRenderer
-              .drawString(LangUtils.localize("gui.solarGenerator.sun") + ": " + tileEntity.seesSun, 51, 35, 0x00CD00);
+              .drawString(LangUtils.localize("gui.solarGenerator.sun") + ": " + tileEntity.canSeeSun(), 51, 35,
+                    0x00CD00);
         fontRenderer.drawString(
-              LangUtils.localize("gui.out") + ": " + MekanismUtils.getEnergyDisplay(tileEntity.getMaxOutput()) + "/t",
+              LangUtils.localize("gui.out") + ": " + MekanismUtils.getEnergyDisplay(tileEntity.getProduction()) + "/t",
               51, 44, 0x00CD00);
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
     }
@@ -59,7 +58,7 @@ public class GuiSolarGenerator extends GuiMekanism<TileEntitySolarGenerator> {
         int guiWidth = (width - xSize) / 2;
         int guiHeight = (height - ySize) / 2;
         drawTexturedModalRect(guiWidth, guiHeight, 0, 0, xSize, ySize);
-        drawTexturedModalRect(guiWidth + 20, guiHeight + 37, 176, (tileEntity.seesSun ? 52 : 64), 12, 12);
+        drawTexturedModalRect(guiWidth + 20, guiHeight + 37, 176, (tileEntity.canSeeSun() ? 52 : 64), 12, 12);
         super.drawGuiContainerBackgroundLayer(partialTick, mouseX, mouseY);
     }
 

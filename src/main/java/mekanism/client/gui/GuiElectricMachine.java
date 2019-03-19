@@ -30,22 +30,22 @@ public class GuiElectricMachine extends GuiMekanism<TileEntityElectricMachine> {
     public GuiElectricMachine(InventoryPlayer inventory, TileEntityElectricMachine tile) {
         super(tile, new ContainerElectricMachine(inventory, tile));
         ResourceLocation resource = tileEntity.guiLocation;
-        guiElements.add(new GuiRedstoneControl(this, tileEntity, resource));
-        guiElements.add(new GuiUpgradeTab(this, tileEntity, resource));
-        guiElements.add(new GuiSecurityTab(this, tileEntity, resource));
-        guiElements.add(new GuiSideConfigurationTab(this, tileEntity, resource));
-        guiElements.add(new GuiTransporterConfigTab(this, 34, tileEntity, resource));
-        guiElements.add(new GuiPowerBar(this, tileEntity, resource, 164, 15));
-        guiElements.add(new GuiEnergyInfo(() -> {
+        addGuiElement(new GuiRedstoneControl(this, tileEntity, resource));
+        addGuiElement(new GuiUpgradeTab(this, tileEntity, resource));
+        addGuiElement(new GuiSecurityTab(this, tileEntity, resource));
+        addGuiElement(new GuiSideConfigurationTab(this, tileEntity, resource));
+        addGuiElement(new GuiTransporterConfigTab(this, 34, tileEntity, resource));
+        addGuiElement(new GuiPowerBar(this, tileEntity, resource, 164, 15));
+        addGuiElement(new GuiEnergyInfo(() -> {
             String multiplier = MekanismUtils.getEnergyDisplay(tileEntity.energyPerTick);
             return Arrays.asList(LangUtils.localize("gui.using") + ": " + multiplier + "/t",
                   LangUtils.localize("gui.needed") + ": " + MekanismUtils
                         .getEnergyDisplay(tileEntity.getMaxEnergy() - tileEntity.getEnergy()));
         }, this, resource));
-        guiElements.add(new GuiSlot(SlotType.INPUT, this, resource, 55, 16));
-        guiElements.add(new GuiSlot(SlotType.POWER, this, resource, 55, 52).with(SlotOverlay.POWER));
-        guiElements.add(new GuiSlot(SlotType.OUTPUT_LARGE, this, resource, 111, 30));
-        guiElements.add(new GuiProgress(new IProgressInfoHandler() {
+        addGuiElement(new GuiSlot(SlotType.INPUT, this, resource, 55, 16));
+        addGuiElement(new GuiSlot(SlotType.POWER, this, resource, 55, 52).with(SlotOverlay.POWER));
+        addGuiElement(new GuiSlot(SlotType.OUTPUT_LARGE, this, resource, 111, 30));
+        addGuiElement(new GuiProgress(new IProgressInfoHandler() {
             @Override
             public double getProgress() {
                 return tileEntity.getScaledProgress();

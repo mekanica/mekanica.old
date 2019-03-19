@@ -40,29 +40,29 @@ public class GuiReactorFuel extends GuiMekanism<TileEntityReactorController> {
     public GuiReactorFuel(InventoryPlayer inventory, final TileEntityReactorController tile) {
         super(tile, new ContainerNull(inventory.player, tile));
         ResourceLocation resource = getGuiLocation();
-        guiElements.add(new GuiEnergyInfo(() -> tileEntity.isFormed() ? Arrays.asList(
+        addGuiElement(new GuiEnergyInfo(() -> tileEntity.isFormed() ? Arrays.asList(
               LangUtils.localize("gui.storing") + ": " + MekanismUtils
                     .getEnergyDisplay(tileEntity.getEnergy(), tileEntity.getMaxEnergy()),
               LangUtils.localize("gui.producing") + ": " + MekanismUtils
                     .getEnergyDisplay(tileEntity.getReactor().getPassiveGeneration(false, true)) + "/t")
               : new ArrayList<>(), this, resource));
-        guiElements.add(new GuiGasGauge(() -> tileEntity.deuteriumTank, Type.SMALL, this, resource, 25, 64));
-        guiElements.add(new GuiGasGauge(() -> tileEntity.fuelTank, Type.STANDARD, this, resource, 79, 50));
-        guiElements.add(new GuiGasGauge(() -> tileEntity.tritiumTank, Type.SMALL, this, resource, 133, 64));
-        guiElements.add(new GuiProgress(new IProgressInfoHandler() {
+        addGuiElement(new GuiGasGauge(() -> tileEntity.deuteriumTank, Type.SMALL, this, resource, 25, 64));
+        addGuiElement(new GuiGasGauge(() -> tileEntity.fuelTank, Type.STANDARD, this, resource, 79, 50));
+        addGuiElement(new GuiGasGauge(() -> tileEntity.tritiumTank, Type.SMALL, this, resource, 133, 64));
+        addGuiElement(new GuiProgress(new IProgressInfoHandler() {
             @Override
             public double getProgress() {
                 return tileEntity.getActive() ? 1 : 0;
             }
         }, ProgressBar.SMALL_RIGHT, this, resource, 45, 75));
-        guiElements.add(new GuiProgress(new IProgressInfoHandler() {
+        addGuiElement(new GuiProgress(new IProgressInfoHandler() {
             @Override
             public double getProgress() {
                 return tileEntity.getActive() ? 1 : 0;
             }
         }, ProgressBar.SMALL_LEFT, this, resource, 99, 75));
-        guiElements.add(new GuiHeatTab(this, tileEntity, resource));
-        guiElements.add(new GuiStatTab(this, tileEntity, resource));
+        addGuiElement(new GuiHeatTab(this, tileEntity, resource));
+        addGuiElement(new GuiStatTab(this, tileEntity, resource));
     }
 
     @Override

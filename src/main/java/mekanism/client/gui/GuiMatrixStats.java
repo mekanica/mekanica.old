@@ -24,9 +24,9 @@ public class GuiMatrixStats extends GuiMekanism<TileEntityInductionCasing> {
     public GuiMatrixStats(InventoryPlayer inventory, TileEntityInductionCasing tile) {
         super(tile, new ContainerNull(inventory.player, tile));
         ResourceLocation resource = getGuiLocation();
-        guiElements.add(new GuiMatrixTab(this, tileEntity, MatrixTab.MAIN, 6, resource));
-        guiElements.add(new GuiEnergyGauge(() -> tileEntity, GuiEnergyGauge.Type.STANDARD, this, resource, 6, 13));
-        guiElements.add(new GuiRateBar(this, new IRateInfoHandler() {
+        addGuiElement(new GuiMatrixTab(this, tileEntity, MatrixTab.MAIN, 6, resource));
+        addGuiElement(new GuiEnergyGauge(() -> tileEntity, GuiEnergyGauge.Type.STANDARD, this, resource, 6, 13));
+        addGuiElement(new GuiRateBar(this, new IRateInfoHandler() {
             @Override
             public String getTooltip() {
                 return LangUtils.localize("gui.receiving") + ": " + MekanismUtils
@@ -38,7 +38,7 @@ public class GuiMatrixStats extends GuiMekanism<TileEntityInductionCasing> {
                 return tileEntity.structure.lastInput / tileEntity.structure.transferCap;
             }
         }, resource, 30, 13));
-        guiElements.add(new GuiRateBar(this, new IRateInfoHandler() {
+        addGuiElement(new GuiRateBar(this, new IRateInfoHandler() {
             @Override
             public String getTooltip() {
                 return LangUtils.localize("gui.outputting") + ": " + MekanismUtils
@@ -50,7 +50,7 @@ public class GuiMatrixStats extends GuiMekanism<TileEntityInductionCasing> {
                 return tileEntity.structure.lastOutput / tileEntity.structure.transferCap;
             }
         }, resource, 38, 13));
-        guiElements.add(new GuiEnergyInfo(() -> Arrays.asList(
+        addGuiElement(new GuiEnergyInfo(() -> Arrays.asList(
               LangUtils.localize("gui.storing") + ": " + MekanismUtils
                     .getEnergyDisplay(tileEntity.getEnergy(), tileEntity.getMaxEnergy()),
               LangUtils.localize("gui.input") + ": " + MekanismUtils.getEnergyDisplay(tileEntity.structure.lastInput)

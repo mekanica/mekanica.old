@@ -27,17 +27,17 @@ public class GuiEnergyCube extends GuiMekanism<TileEntityEnergyCube> {
     public GuiEnergyCube(InventoryPlayer inventory, TileEntityEnergyCube tile) {
         super(tile, new ContainerEnergyCube(inventory, tile));
         ResourceLocation resource = getGuiLocation();
-        guiElements.add(new GuiRedstoneControl(this, tileEntity, resource));
-        guiElements.add(new GuiSecurityTab(this, tileEntity, resource));
-        guiElements.add(new GuiSideConfigurationTab(this, tileEntity, resource));
-        guiElements.add(new GuiTransporterConfigTab(this, 34, tileEntity, resource));
-        guiElements.add(new GuiEnergyGauge(() -> tileEntity, GuiEnergyGauge.Type.WIDE, this, resource, 55, 18));
-        guiElements.add(new GuiEnergyInfo(() -> Arrays.asList(LangUtils.localize("gui.storing") + ": " + MekanismUtils
+        addGuiElement(new GuiRedstoneControl(this, tileEntity, resource));
+        addGuiElement(new GuiSecurityTab(this, tileEntity, resource));
+        addGuiElement(new GuiSideConfigurationTab(this, tileEntity, resource));
+        addGuiElement(new GuiTransporterConfigTab(this, 34, tileEntity, resource));
+        addGuiElement(new GuiEnergyGauge(() -> tileEntity, GuiEnergyGauge.Type.WIDE, this, resource, 55, 18));
+        addGuiElement(new GuiEnergyInfo(() -> Arrays.asList(LangUtils.localize("gui.storing") + ": " + MekanismUtils
                     .getEnergyDisplay(tileEntity.getEnergy(), tileEntity.getMaxEnergy()),
               LangUtils.localize("gui.maxOutput") + ": " + MekanismUtils.getEnergyDisplay(tileEntity.getMaxOutput())
                     + "/t"), this, resource));
-        guiElements.add(new GuiSlot(SlotType.INPUT, this, resource, 16, 34).with(SlotOverlay.MINUS));
-        guiElements.add(new GuiSlot(SlotType.OUTPUT, this, resource, 142, 34).with(SlotOverlay.PLUS));
+        addGuiElement(new GuiSlot(SlotType.INPUT, this, resource, 16, 34).with(SlotOverlay.MINUS));
+        addGuiElement(new GuiSlot(SlotType.OUTPUT, this, resource, 142, 34).with(SlotOverlay.PLUS));
     }
 
     @Override

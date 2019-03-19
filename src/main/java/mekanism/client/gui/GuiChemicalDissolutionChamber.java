@@ -30,22 +30,22 @@ public class GuiChemicalDissolutionChamber extends GuiMekanism<TileEntityChemica
     public GuiChemicalDissolutionChamber(InventoryPlayer inventory, TileEntityChemicalDissolutionChamber tile) {
         super(tile, new ContainerChemicalDissolutionChamber(inventory, tile));
         ResourceLocation resource = getGuiLocation();
-        guiElements.add(new GuiSecurityTab(this, tileEntity, resource));
-        guiElements.add(new GuiRedstoneControl(this, tileEntity, resource));
-        guiElements.add(new GuiUpgradeTab(this, tileEntity, resource));
-        guiElements.add(new GuiEnergyInfo(() -> {
+        addGuiElement(new GuiSecurityTab(this, tileEntity, resource));
+        addGuiElement(new GuiRedstoneControl(this, tileEntity, resource));
+        addGuiElement(new GuiUpgradeTab(this, tileEntity, resource));
+        addGuiElement(new GuiEnergyInfo(() -> {
             String multiplier = MekanismUtils.getEnergyDisplay(tileEntity.energyPerTick);
             return Arrays.asList(LangUtils.localize("gui.using") + ": " + multiplier + "/t",
                   LangUtils.localize("gui.needed") + ": " + MekanismUtils
                         .getEnergyDisplay(tileEntity.getMaxEnergy() - tileEntity.getEnergy()));
         }, this, resource));
-        guiElements.add(new GuiGasGauge(() -> tileEntity.injectTank, GuiGauge.Type.STANDARD, this, resource, 5, 4));
-        guiElements.add(new GuiGasGauge(() -> tileEntity.outputTank, GuiGauge.Type.STANDARD, this, resource, 133, 13));
-        guiElements.add(new GuiSlot(SlotType.NORMAL, this, resource, 154, 4).with(SlotOverlay.POWER));
-        guiElements.add(new GuiSlot(SlotType.NORMAL, this, resource, 25, 35));
-        guiElements.add(new GuiSlot(SlotType.NORMAL, this, resource, 154, 24).with(SlotOverlay.PLUS));
-        guiElements.add(new GuiSlot(SlotType.NORMAL, this, resource, 5, 64).with(SlotOverlay.MINUS));
-        guiElements.add(new GuiProgress(new IProgressInfoHandler() {
+        addGuiElement(new GuiGasGauge(() -> tileEntity.injectTank, GuiGauge.Type.STANDARD, this, resource, 5, 4));
+        addGuiElement(new GuiGasGauge(() -> tileEntity.outputTank, GuiGauge.Type.STANDARD, this, resource, 133, 13));
+        addGuiElement(new GuiSlot(SlotType.NORMAL, this, resource, 154, 4).with(SlotOverlay.POWER));
+        addGuiElement(new GuiSlot(SlotType.NORMAL, this, resource, 25, 35));
+        addGuiElement(new GuiSlot(SlotType.NORMAL, this, resource, 154, 24).with(SlotOverlay.PLUS));
+        addGuiElement(new GuiSlot(SlotType.NORMAL, this, resource, 5, 64).with(SlotOverlay.MINUS));
+        addGuiElement(new GuiProgress(new IProgressInfoHandler() {
             @Override
             public double getProgress() {
                 return tileEntity.getScaledProgress();

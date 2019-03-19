@@ -41,17 +41,17 @@ public class GuiResistiveHeater extends GuiMekanism<TileEntityResistiveHeater> {
     public GuiResistiveHeater(InventoryPlayer inventory, TileEntityResistiveHeater tile) {
         super(tile, new ContainerResistiveHeater(inventory, tile));
         ResourceLocation resource = getGuiLocation();
-        guiElements.add(new GuiPowerBar(this, tileEntity, resource, 164, 15));
-        guiElements.add(new GuiSlot(SlotType.POWER, this, resource, 14, 34).with(SlotOverlay.POWER));
-        guiElements.add(new GuiSecurityTab(this, tileEntity, resource));
-        guiElements.add(new GuiRedstoneControl(this, tileEntity, resource));
-        guiElements.add(new GuiEnergyInfo(() -> {
+        addGuiElement(new GuiPowerBar(this, tileEntity, resource, 164, 15));
+        addGuiElement(new GuiSlot(SlotType.POWER, this, resource, 14, 34).with(SlotOverlay.POWER));
+        addGuiElement(new GuiSecurityTab(this, tileEntity, resource));
+        addGuiElement(new GuiRedstoneControl(this, tileEntity, resource));
+        addGuiElement(new GuiEnergyInfo(() -> {
             String multiplier = MekanismUtils.getEnergyDisplay(tileEntity.energyUsage);
             return Arrays.asList(LangUtils.localize("gui.using") + ": " + multiplier + "/t",
                   LangUtils.localize("gui.needed") + ": " + MekanismUtils
                         .getEnergyDisplay(tileEntity.getMaxEnergy() - tileEntity.getEnergy()));
         }, this, resource));
-        guiElements.add(new GuiHeatInfo(() -> {
+        addGuiElement(new GuiHeatInfo(() -> {
             TemperatureUnit unit = TemperatureUnit.values()[general.tempUnit.ordinal()];
             String environment = UnitDisplayUtils
                   .getDisplayShort(tileEntity.lastEnvironmentLoss * unit.intervalSize, false, unit);

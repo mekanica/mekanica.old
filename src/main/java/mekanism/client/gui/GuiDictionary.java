@@ -29,7 +29,7 @@ public class GuiDictionary extends GuiMekanism<TileEntityContainerBlock> {
 
     public GuiDictionary(InventoryPlayer inventory) {
         super(new ContainerDictionary(inventory));
-        guiElements.add(scrollList = new GuiScrollList(this, getGuiLocation(), 8, 30, 160, 4));
+        addGuiElement(scrollList = new GuiScrollList(this, getGuiLocation(), 8, 30, 160, 4));
     }
 
     @Override

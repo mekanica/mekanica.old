@@ -29,20 +29,20 @@ public class GuiElectricPump extends GuiMekanism<TileEntityElectricPump> {
     public GuiElectricPump(InventoryPlayer inventory, TileEntityElectricPump tile) {
         super(tile, new ContainerElectricPump(inventory, tile));
         ResourceLocation resource = getGuiLocation();
-        guiElements.add(new GuiSlot(SlotType.NORMAL, this, resource, 27, 19));
-        guiElements.add(new GuiSlot(SlotType.NORMAL, this, resource, 27, 50));
-        guiElements.add(new GuiSlot(SlotType.POWER, this, resource, 142, 34).with(SlotOverlay.POWER));
-        guiElements.add(new GuiPowerBar(this, tileEntity, resource, 164, 15));
-        guiElements.add(new GuiFluidGauge(() -> tileEntity.fluidTank, GuiGauge.Type.STANDARD, this, resource, 6, 13));
-        guiElements.add(new GuiEnergyInfo(() -> {
+        addGuiElement(new GuiSlot(SlotType.NORMAL, this, resource, 27, 19));
+        addGuiElement(new GuiSlot(SlotType.NORMAL, this, resource, 27, 50));
+        addGuiElement(new GuiSlot(SlotType.POWER, this, resource, 142, 34).with(SlotOverlay.POWER));
+        addGuiElement(new GuiPowerBar(this, tileEntity, resource, 164, 15));
+        addGuiElement(new GuiFluidGauge(() -> tileEntity.fluidTank, GuiGauge.Type.STANDARD, this, resource, 6, 13));
+        addGuiElement(new GuiEnergyInfo(() -> {
             String multiplier = MekanismUtils.getEnergyDisplay(tileEntity.energyPerTick);
             return Arrays.asList(LangUtils.localize("gui.using") + ": " + multiplier + "/t",
                   LangUtils.localize("gui.needed") + ": " + MekanismUtils
                         .getEnergyDisplay(tileEntity.getMaxEnergy() - tileEntity.getEnergy()));
         }, this, resource));
-        guiElements.add(new GuiSecurityTab(this, tileEntity, resource));
-        guiElements.add(new GuiRedstoneControl(this, tileEntity, resource));
-        guiElements.add(new GuiUpgradeTab(this, tileEntity, resource));
+        addGuiElement(new GuiSecurityTab(this, tileEntity, resource));
+        addGuiElement(new GuiRedstoneControl(this, tileEntity, resource));
+        addGuiElement(new GuiUpgradeTab(this, tileEntity, resource));
     }
 
     @Override

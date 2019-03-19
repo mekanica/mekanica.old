@@ -42,14 +42,14 @@ public class GuiFactory extends GuiMekanism<TileEntityFactory> {
         super(tile, new ContainerFactory(inventory, tile));
         ySize += 11;
         ResourceLocation resource = tileEntity.tier.guiLocation;
-        guiElements.add(new GuiRedstoneControl(this, tileEntity, resource));
-        guiElements.add(new GuiSecurityTab(this, tileEntity, resource));
-        guiElements.add(new GuiUpgradeTab(this, tileEntity, resource));
-        guiElements.add(new GuiRecipeType(this, tileEntity, resource));
-        guiElements.add(new GuiSideConfigurationTab(this, tileEntity, resource));
-        guiElements.add(new GuiTransporterConfigTab(this, 34, tileEntity, resource));
-        guiElements.add(new GuiSortingTab(this, tileEntity, resource));
-        guiElements.add(new GuiEnergyInfo(() -> {
+        addGuiElement(new GuiRedstoneControl(this, tileEntity, resource));
+        addGuiElement(new GuiSecurityTab(this, tileEntity, resource));
+        addGuiElement(new GuiUpgradeTab(this, tileEntity, resource));
+        addGuiElement(new GuiRecipeType(this, tileEntity, resource));
+        addGuiElement(new GuiSideConfigurationTab(this, tileEntity, resource));
+        addGuiElement(new GuiTransporterConfigTab(this, 34, tileEntity, resource));
+        addGuiElement(new GuiSortingTab(this, tileEntity, resource));
+        addGuiElement(new GuiEnergyInfo(() -> {
             String multiplier = MekanismUtils.getEnergyDisplay(tileEntity.lastUsage);
             return Arrays.asList(LangUtils.localize("gui.using") + ": " + multiplier + "/t",
                   LangUtils.localize("gui.needed") + ": " + MekanismUtils

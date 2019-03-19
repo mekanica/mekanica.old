@@ -42,13 +42,13 @@ public class GuiReactorHeat extends GuiMekanism<TileEntityReactorController> {
     public GuiReactorHeat(InventoryPlayer inventory, TileEntityReactorController tile) {
         super(tile, new ContainerNull(inventory.player, tile));
         ResourceLocation resource = getGuiLocation();
-        guiElements.add(new GuiEnergyInfo(() -> tileEntity.isFormed() ? Arrays.asList(
+        addGuiElement(new GuiEnergyInfo(() -> tileEntity.isFormed() ? Arrays.asList(
               LangUtils.localize("gui.storing") + ": " + MekanismUtils
                     .getEnergyDisplay(tileEntity.getEnergy(), tileEntity.getMaxEnergy()),
               LangUtils.localize("gui.producing") + ": " + MekanismUtils
                     .getEnergyDisplay(tileEntity.getReactor().getPassiveGeneration(false, true)) + "/t")
               : new ArrayList<>(), this, resource));
-        guiElements.add(new GuiNumberGauge(new INumberInfoHandler() {
+        addGuiElement(new GuiNumberGauge(new INumberInfoHandler() {
             @Override
             public TextureAtlasSprite getIcon() {
                 return MekanismRenderer.getFluidTexture(FluidRegistry.LAVA, FluidType.STILL);
@@ -69,13 +69,13 @@ public class GuiReactorHeat extends GuiMekanism<TileEntityReactorController> {
                 return "Plasma: " + MekanismUtils.getTemperatureDisplay(level, TemperatureUnit.KELVIN);
             }
         }, Type.STANDARD, this, resource, 7, 50));
-        guiElements.add(new GuiProgress(new IProgressInfoHandler() {
+        addGuiElement(new GuiProgress(new IProgressInfoHandler() {
             @Override
             public double getProgress() {
                 return tileEntity.getPlasmaTemp() > tileEntity.getCaseTemp() ? 1 : 0;
             }
         }, ProgressBar.SMALL_RIGHT, this, resource, 27, 75));
-        guiElements.add(new GuiNumberGauge(new INumberInfoHandler() {
+        addGuiElement(new GuiNumberGauge(new INumberInfoHandler() {
             @Override
             public TextureAtlasSprite getIcon() {
                 return MekanismRenderer.getFluidTexture(FluidRegistry.LAVA, FluidType.STILL);
@@ -96,24 +96,24 @@ public class GuiReactorHeat extends GuiMekanism<TileEntityReactorController> {
                 return "Case: " + MekanismUtils.getTemperatureDisplay(level, TemperatureUnit.KELVIN);
             }
         }, Type.STANDARD, this, resource, 61, 50));
-        guiElements.add(new GuiProgress(new IProgressInfoHandler() {
+        addGuiElement(new GuiProgress(new IProgressInfoHandler() {
             @Override
             public double getProgress() {
                 return tileEntity.getCaseTemp() > 0 ? 1 : 0;
             }
         }, ProgressBar.SMALL_RIGHT, this, resource, 81, 60));
-        guiElements.add(new GuiProgress(new IProgressInfoHandler() {
+        addGuiElement(new GuiProgress(new IProgressInfoHandler() {
             @Override
             public double getProgress() {
                 return (tileEntity.getCaseTemp() > 0 && tileEntity.waterTank.getFluidAmount() > 0
                       && tileEntity.steamTank.getFluidAmount() < tileEntity.steamTank.getCapacity()) ? 1 : 0;
             }
         }, ProgressBar.SMALL_RIGHT, this, resource, 81, 90));
-        guiElements.add(new GuiFluidGauge(() -> tileEntity.waterTank, Type.SMALL, this, resource, 115, 84));
-        guiElements.add(new GuiFluidGauge(() -> tileEntity.steamTank, Type.SMALL, this, resource, 151, 84));
-        guiElements.add(new GuiEnergyGauge(() -> tileEntity, Type.SMALL, this, resource, 115, 46));
-        guiElements.add(new GuiFuelTab(this, tileEntity, resource));
-        guiElements.add(new GuiStatTab(this, tileEntity, resource));
+        addGuiElement(new GuiFluidGauge(() -> tileEntity.waterTank, Type.SMALL, this, resource, 115, 84));
+        addGuiElement(new GuiFluidGauge(() -> tileEntity.steamTank, Type.SMALL, this, resource, 151, 84));
+        addGuiElement(new GuiEnergyGauge(() -> tileEntity, Type.SMALL, this, resource, 115, 46));
+        addGuiElement(new GuiFuelTab(this, tileEntity, resource));
+        addGuiElement(new GuiStatTab(this, tileEntity, resource));
     }
 
     @Override

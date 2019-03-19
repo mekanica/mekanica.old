@@ -27,16 +27,16 @@ public class GuiBioGenerator extends GuiMekanism<TileEntityBioGenerator> {
     public GuiBioGenerator(InventoryPlayer inventory, TileEntityBioGenerator tile) {
         super(tile, new ContainerBioGenerator(inventory, tile));
         ResourceLocation resource = getGuiLocation();
-        guiElements.add(new GuiRedstoneControl(this, tileEntity, resource));
-        guiElements.add(new GuiSecurityTab(this, tileEntity, resource));
-        guiElements.add(new GuiEnergyInfo(() -> Arrays.asList(
+        addGuiElement(new GuiRedstoneControl(this, tileEntity, resource));
+        addGuiElement(new GuiSecurityTab(this, tileEntity, resource));
+        addGuiElement(new GuiEnergyInfo(() -> Arrays.asList(
               LangUtils.localize("gui.producing") + ": " + MekanismUtils
                     .getEnergyDisplay(tileEntity.isActive ? generators.bioGeneration : 0) + "/t",
               LangUtils.localize("gui.maxOutput") + ": " + MekanismUtils.getEnergyDisplay(tileEntity.getMaxOutput())
                     + "/t"), this, resource));
-        guiElements.add(new GuiPowerBar(this, tileEntity, resource, 164, 15));
-        guiElements.add(new GuiSlot(SlotType.NORMAL, this, resource, 16, 34));
-        guiElements.add(new GuiSlot(SlotType.NORMAL, this, resource, 142, 34).with(SlotOverlay.POWER));
+        addGuiElement(new GuiPowerBar(this, tileEntity, resource, 164, 15));
+        addGuiElement(new GuiSlot(SlotType.NORMAL, this, resource, 16, 34));
+        addGuiElement(new GuiSlot(SlotType.NORMAL, this, resource, 142, 34).with(SlotOverlay.POWER));
     }
 
     @Override

@@ -34,12 +34,12 @@ public class GuiPRC extends GuiMekanism<TileEntityPRC> {
     public GuiPRC(InventoryPlayer inventory, TileEntityPRC tile) {
         super(tile, new ContainerPRC(inventory, tile));
         ResourceLocation resource = getGuiLocation();
-        guiElements.add(new GuiRedstoneControl(this, tileEntity, resource));
-        guiElements.add(new GuiSecurityTab(this, tileEntity, resource));
-        guiElements.add(new GuiSideConfigurationTab(this, tileEntity, resource));
-        guiElements.add(new GuiTransporterConfigTab(this, 34, tileEntity, resource));
-        guiElements.add(new GuiUpgradeTab(this, tileEntity, resource));
-        guiElements.add(new GuiEnergyInfo(() -> {
+        addGuiElement(new GuiRedstoneControl(this, tileEntity, resource));
+        addGuiElement(new GuiSecurityTab(this, tileEntity, resource));
+        addGuiElement(new GuiSideConfigurationTab(this, tileEntity, resource));
+        addGuiElement(new GuiTransporterConfigTab(this, 34, tileEntity, resource));
+        addGuiElement(new GuiUpgradeTab(this, tileEntity, resource));
+        addGuiElement(new GuiEnergyInfo(() -> {
             double extra = tileEntity.getRecipe() != null ? tileEntity.getRecipe().extraEnergy : 0;
             String multiplier = MekanismUtils.getEnergyDisplay(
                   MekanismUtils.getEnergyPerTick(tileEntity, tileEntity.BASE_ENERGY_PER_TICK + extra));
@@ -47,17 +47,17 @@ public class GuiPRC extends GuiMekanism<TileEntityPRC> {
                   LangUtils.localize("gui.needed") + ": " + MekanismUtils
                         .getEnergyDisplay(tileEntity.getMaxEnergy() - tileEntity.getEnergy()));
         }, this, resource));
-        guiElements.add(new GuiFluidGauge(() ->
+        addGuiElement(new GuiFluidGauge(() ->
               tileEntity.inputFluidTank, GuiGauge.Type.STANDARD_YELLOW, this, resource, 5, 10));
-        guiElements.add(new GuiGasGauge(() ->
+        addGuiElement(new GuiGasGauge(() ->
               tileEntity.inputGasTank, GuiGauge.Type.STANDARD_RED, this, resource, 28, 10));
-        guiElements.add(new GuiGasGauge(() ->
+        addGuiElement(new GuiGasGauge(() ->
               tileEntity.outputGasTank, GuiGauge.Type.SMALL_BLUE, this, resource, 140, 40));
-        guiElements.add(new GuiPowerBar(this, tileEntity, resource, 164, 15));
-        guiElements.add(new GuiSlot(SlotType.INPUT, this, resource, 53, 34));
-        guiElements.add(new GuiSlot(SlotType.POWER, this, resource, 140, 18).with(SlotOverlay.POWER));
-        guiElements.add(new GuiSlot(SlotType.OUTPUT, this, resource, 115, 34));
-        guiElements.add(new GuiProgress(new IProgressInfoHandler() {
+        addGuiElement(new GuiPowerBar(this, tileEntity, resource, 164, 15));
+        addGuiElement(new GuiSlot(SlotType.INPUT, this, resource, 53, 34));
+        addGuiElement(new GuiSlot(SlotType.POWER, this, resource, 140, 18).with(SlotOverlay.POWER));
+        addGuiElement(new GuiSlot(SlotType.OUTPUT, this, resource, 115, 34));
+        addGuiElement(new GuiProgress(new IProgressInfoHandler() {
             @Override
             public double getProgress() {
                 return tileEntity.getScaledProgress();

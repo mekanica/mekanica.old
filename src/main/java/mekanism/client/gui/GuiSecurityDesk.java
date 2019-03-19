@@ -38,7 +38,7 @@ public class GuiSecurityDesk extends GuiMekanism<TileEntitySecurityDesk> {
 
     public GuiSecurityDesk(InventoryPlayer inventory, TileEntitySecurityDesk tile) {
         super(tile, new ContainerSecurityDesk(inventory, tile));
-        guiElements.add(scrollList = new GuiScrollList(this, getGuiLocation(), 14, 14, 120, 4));
+        addGuiElement(scrollList = new GuiScrollList(this, getGuiLocation(), 14, 14, 120, 4));
         ySize += 64;
     }
 

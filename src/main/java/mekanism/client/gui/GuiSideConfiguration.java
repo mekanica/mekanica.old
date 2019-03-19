@@ -51,7 +51,7 @@ public class GuiSideConfiguration extends GuiMekanism<TileEntityContainerBlock> 
         ResourceLocation resource = getGuiLocation();
         for (TransmissionType type : configurable.getConfig().transmissions) {
             GuiConfigTypeTab tab = new GuiConfigTypeTab(this, type, resource);
-            guiElements.add(tab);
+            addGuiElement(tab);
             configTabs.add(tab);
         }
         currentType = getTopTransmission();

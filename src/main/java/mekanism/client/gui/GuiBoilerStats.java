@@ -29,16 +29,16 @@ public class GuiBoilerStats extends GuiMekanism<TileEntityBoilerCasing> {
     public GuiBoilerStats(InventoryPlayer inventory, TileEntityBoilerCasing tile) {
         super(tile, new ContainerNull(inventory.player, tile));
         ResourceLocation resource = getGuiLocation();
-        guiElements.add(new GuiBoilerTab(this, tileEntity, BoilerTab.MAIN, 6, resource));
-        guiElements.add(new GuiHeatInfo(() -> {
+        addGuiElement(new GuiBoilerTab(this, tileEntity, BoilerTab.MAIN, 6, resource));
+        addGuiElement(new GuiHeatInfo(() -> {
             TemperatureUnit unit = TemperatureUnit.values()[general.tempUnit.ordinal()];
             String environment = UnitDisplayUtils
                   .getDisplayShort(tileEntity.structure.lastEnvironmentLoss * unit.intervalSize, false, unit);
             return Collections.singletonList(LangUtils.localize("gui.dissipated") + ": " + environment + "/t");
         }, this, resource));
-        guiElements.add(boilGraph = new GuiGraph(this, resource, 8, 83, 160, 36,
+        addGuiElement(boilGraph = new GuiGraph(this, resource, 8, 83, 160, 36,
               data -> LangUtils.localize("gui.boilRate") + ": " + data + " mB/t"));
-        guiElements.add(maxGraph = new GuiGraph(this, resource, 8, 122, 160, 36,
+        addGuiElement(maxGraph = new GuiGraph(this, resource, 8, 122, 160, 36,
               data -> LangUtils.localize("gui.maxBoil") + ": " + data + " mB/t"));
         maxGraph.enableFixedScale((int) ((tileEntity.structure.superheatingElements * general.superheatingHeatTransfer)
               / SynchronizedBoilerData.getHeatEnthalpy()));

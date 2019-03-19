@@ -36,7 +36,7 @@ public class GuiLaserAmplifier extends GuiMekanism<TileEntityLaserAmplifier> {
     public GuiLaserAmplifier(InventoryPlayer inventory, TileEntityLaserAmplifier tile) {
         super(tile, new ContainerLaserAmplifier(inventory, tile));
         ResourceLocation resource = getGuiLocation();
-        guiElements.add(new GuiNumberGauge(new INumberInfoHandler() {
+        addGuiElement(new GuiNumberGauge(new INumberInfoHandler() {
             @Override
             public TextureAtlasSprite getIcon() {
                 return MekanismRenderer.energyIcon;
@@ -58,9 +58,9 @@ public class GuiLaserAmplifier extends GuiMekanism<TileEntityLaserAmplifier> {
                       .getEnergyDisplay(level, tileEntity.getMaxEnergy());
             }
         }, Type.STANDARD, this, resource, 6, 10));
-        guiElements.add(new GuiSecurityTab(this, tileEntity, resource));
-        guiElements.add(new GuiRedstoneControl(this, tileEntity, resource));
-        guiElements.add(new GuiAmplifierTab(this, tileEntity, resource));
+        addGuiElement(new GuiSecurityTab(this, tileEntity, resource));
+        addGuiElement(new GuiRedstoneControl(this, tileEntity, resource));
+        addGuiElement(new GuiAmplifierTab(this, tileEntity, resource));
     }
 
     @Override

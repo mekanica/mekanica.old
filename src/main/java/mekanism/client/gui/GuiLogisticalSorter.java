@@ -84,8 +84,8 @@ public class GuiLogisticalSorter extends GuiMekanism<TileEntityLogisticalSorter>
 
         // Add common Mekanism gui elements
         ResourceLocation resource = getGuiLocation();
-        guiElements.add(new GuiRedstoneControl(this, tileEntity, resource));
-        guiElements.add(new GuiSecurityTab(this, tileEntity, resource));
+        addGuiElement(new GuiRedstoneControl(this, tileEntity, resource));
+        addGuiElement(new GuiSecurityTab(this, tileEntity, resource));
     }
 
     public int getScroll() {

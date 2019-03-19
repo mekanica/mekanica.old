@@ -82,9 +82,9 @@ public class GuiTeleporter extends GuiMekanism<TileEntityTeleporter> {
         super(tile, new ContainerTeleporter(inventory, tile));
         isPortable = false;
         ResourceLocation resource = getGuiLocation();
-        guiElements.add(new GuiRedstoneControl(this, tileEntity, resource));
-        guiElements.add(new GuiUpgradeTab(this, tileEntity, resource));
-        guiElements.add(new GuiPowerBar(this, new IPowerInfoHandler() {
+        addGuiElement(new GuiRedstoneControl(this, tileEntity, resource));
+        addGuiElement(new GuiUpgradeTab(this, tileEntity, resource));
+        addGuiElement(new GuiPowerBar(this, new IPowerInfoHandler() {
             @Override
             public String getTooltip() {
                 return MekanismUtils.getEnergyDisplay(getEnergy(), getMaxEnergy());
@@ -95,8 +95,8 @@ public class GuiTeleporter extends GuiMekanism<TileEntityTeleporter> {
                 return getEnergy() / getMaxEnergy();
             }
         }, resource, 158, 26));
-        guiElements.add(new GuiSlot(SlotType.NORMAL, this, resource, 152, 6).with(SlotOverlay.POWER));
-        guiElements.add(scrollList = new GuiScrollList(this, resource, 28, 37, 120, 4));
+        addGuiElement(new GuiSlot(SlotType.NORMAL, this, resource, 152, 6).with(SlotOverlay.POWER));
+        addGuiElement(scrollList = new GuiScrollList(this, resource, 28, 37, 120, 4));
         if (tileEntity.frequency != null) {
             privateMode = !tileEntity.frequency.publicFreq;
         }
@@ -110,7 +110,7 @@ public class GuiTeleporter extends GuiMekanism<TileEntityTeleporter> {
         itemStack = stack;
         entityPlayer = player;
         ResourceLocation resource = getGuiLocation();
-        guiElements.add(new GuiPowerBar(this, new IPowerInfoHandler() {
+        addGuiElement(new GuiPowerBar(this, new IPowerInfoHandler() {
             @Override
             public String getTooltip() {
                 return MekanismUtils.getEnergyDisplay(getEnergy(), getMaxEnergy());
@@ -121,7 +121,7 @@ public class GuiTeleporter extends GuiMekanism<TileEntityTeleporter> {
                 return getEnergy() / getMaxEnergy();
             }
         }, resource, 158, 26));
-        guiElements.add(scrollList = new GuiScrollList(this, resource, 28, 37, 120, 4));
+        addGuiElement(scrollList = new GuiScrollList(this, resource, 28, 37, 120, 4));
         ItemPortableTeleporter item = (ItemPortableTeleporter) itemStack.getItem();
         if (item.getFrequency(stack) != null) {
             privateMode = !item.getFrequency(stack).publicFreq;

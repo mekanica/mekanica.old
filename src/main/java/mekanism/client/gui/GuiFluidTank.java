@@ -23,11 +23,11 @@ public class GuiFluidTank extends GuiMekanism<TileEntityFluidTank> {
     public GuiFluidTank(InventoryPlayer inventory, TileEntityFluidTank tile) {
         super(tile, new ContainerFluidTank(inventory, tile));
         ResourceLocation resource = getGuiLocation();
-        guiElements.add(new GuiContainerEditMode(this, tileEntity, resource));
-        guiElements.add(new GuiSecurityTab(this, tileEntity, resource));
-        guiElements.add(new GuiFluidGauge(() -> tileEntity.fluidTank, GuiFluidGauge.Type.WIDE, this, resource, 48, 18));
-        guiElements.add(new GuiSlot(SlotType.NORMAL, this, resource, 145, 18).with(SlotOverlay.INPUT));
-        guiElements.add(new GuiSlot(SlotType.NORMAL, this, resource, 145, 50).with(SlotOverlay.OUTPUT));
+        addGuiElement(new GuiContainerEditMode(this, tileEntity, resource));
+        addGuiElement(new GuiSecurityTab(this, tileEntity, resource));
+        addGuiElement(new GuiFluidGauge(() -> tileEntity.fluidTank, GuiFluidGauge.Type.WIDE, this, resource, 48, 18));
+        addGuiElement(new GuiSlot(SlotType.NORMAL, this, resource, 145, 18).with(SlotOverlay.INPUT));
+        addGuiElement(new GuiSlot(SlotType.NORMAL, this, resource, 145, 50).with(SlotOverlay.OUTPUT));
     }
 
     @Override

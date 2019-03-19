@@ -30,8 +30,8 @@ public class GuiThermoelectricBoiler extends GuiMekanism<TileEntityBoilerCasing>
     public GuiThermoelectricBoiler(InventoryPlayer inventory, TileEntityBoilerCasing tile) {
         super(tile, new ContainerFilter(inventory, tile));
         ResourceLocation resource = getGuiLocation();
-        guiElements.add(new GuiBoilerTab(this, tileEntity, BoilerTab.STAT, 6, resource));
-        guiElements.add(new GuiRateBar(this, new IRateInfoHandler() {
+        addGuiElement(new GuiBoilerTab(this, tileEntity, BoilerTab.STAT, 6, resource));
+        addGuiElement(new GuiRateBar(this, new IRateInfoHandler() {
             @Override
             public String getTooltip() {
                 return LangUtils.localize("gui.boilRate") + ": " + tileEntity.structure.lastBoilRate + " mB/t";
@@ -42,7 +42,7 @@ public class GuiThermoelectricBoiler extends GuiMekanism<TileEntityBoilerCasing>
                 return (double) tileEntity.structure.lastBoilRate / (double) tileEntity.structure.lastMaxBoil;
             }
         }, resource, 24, 13));
-        guiElements.add(new GuiRateBar(this, new IRateInfoHandler() {
+        addGuiElement(new GuiRateBar(this, new IRateInfoHandler() {
             @Override
             public String getTooltip() {
                 return LangUtils.localize("gui.maxBoil") + ": " + tileEntity.structure.lastMaxBoil + " mB/t";
@@ -55,7 +55,7 @@ public class GuiThermoelectricBoiler extends GuiMekanism<TileEntityBoilerCasing>
                 return (double) tileEntity.structure.lastMaxBoil / cap;
             }
         }, resource, 144, 13));
-        guiElements.add(new GuiHeatInfo(() -> {
+        addGuiElement(new GuiHeatInfo(() -> {
             TemperatureUnit unit = TemperatureUnit.values()[general.tempUnit.ordinal()];
             String environment = UnitDisplayUtils
                   .getDisplayShort(tileEntity.structure.lastEnvironmentLoss * unit.intervalSize, false, unit);

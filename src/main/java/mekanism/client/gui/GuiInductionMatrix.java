@@ -22,8 +22,8 @@ public class GuiInductionMatrix extends GuiMekanism<TileEntityInductionCasing> {
     public GuiInductionMatrix(InventoryPlayer inventory, TileEntityInductionCasing tile) {
         super(tile, new ContainerInductionMatrix(inventory, tile));
         ResourceLocation resource = getGuiLocation();
-        guiElements.add(new GuiMatrixTab(this, tileEntity, MatrixTab.STAT, 6, resource));
-        guiElements.add(new GuiEnergyInfo(() -> Arrays.asList(
+        addGuiElement(new GuiMatrixTab(this, tileEntity, MatrixTab.STAT, 6, resource));
+        addGuiElement(new GuiEnergyInfo(() -> Arrays.asList(
               LangUtils.localize("gui.storing") + ": " + MekanismUtils
                     .getEnergyDisplay(tileEntity.getEnergy(), tileEntity.getMaxEnergy()),
               LangUtils.localize("gui.input") + ": " + MekanismUtils.getEnergyDisplay(tileEntity.structure.lastInput)

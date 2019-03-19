@@ -24,10 +24,10 @@ public class GuiThermalEvaporationController extends GuiMekanism<TileEntityTherm
     public GuiThermalEvaporationController(InventoryPlayer inventory, TileEntityThermalEvaporationController tile) {
         super(tile, new ContainerThermalEvaporationController(inventory, tile));
         ResourceLocation resource = getGuiLocation();
-        guiElements.add(new GuiFluidGauge(() -> tileEntity.inputTank, GuiGauge.Type.STANDARD, this, resource, 6, 13));
-        guiElements.add(new GuiFluidGauge(() ->
+        addGuiElement(new GuiFluidGauge(() -> tileEntity.inputTank, GuiGauge.Type.STANDARD, this, resource, 6, 13));
+        addGuiElement(new GuiFluidGauge(() ->
               tileEntity.outputTank, GuiGauge.Type.STANDARD, this, resource, 152, 13));
-        guiElements.add(new GuiHeatInfo(() -> {
+        addGuiElement(new GuiHeatInfo(() -> {
             TemperatureUnit unit = TemperatureUnit.values()[general.tempUnit.ordinal()];
             String environment = UnitDisplayUtils
                   .getDisplayShort(tileEntity.totalLoss * unit.intervalSize, false, unit);

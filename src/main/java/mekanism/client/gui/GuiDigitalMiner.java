@@ -48,12 +48,12 @@ public class GuiDigitalMiner extends GuiMekanism<TileEntityDigitalMiner> {
     public GuiDigitalMiner(InventoryPlayer inventory, TileEntityDigitalMiner tile) {
         super(tile, new ContainerDigitalMiner(inventory, tile));
         ResourceLocation resource = getGuiLocation();
-        guiElements.add(new GuiRedstoneControl(this, tileEntity, resource));
-        guiElements.add(new GuiSecurityTab(this, tileEntity, resource));
-        guiElements.add(new GuiUpgradeTab(this, tileEntity, resource));
-        guiElements.add(new GuiPowerBar(this, tileEntity, resource, 163, 23));
-        guiElements.add(new GuiVisualsTab(this, tileEntity, resource));
-        guiElements.add(new GuiEnergyInfo(() -> {
+        addGuiElement(new GuiRedstoneControl(this, tileEntity, resource));
+        addGuiElement(new GuiSecurityTab(this, tileEntity, resource));
+        addGuiElement(new GuiUpgradeTab(this, tileEntity, resource));
+        addGuiElement(new GuiPowerBar(this, tileEntity, resource, 163, 23));
+        addGuiElement(new GuiVisualsTab(this, tileEntity, resource));
+        addGuiElement(new GuiEnergyInfo(() -> {
             double perTick = tileEntity.getPerTick();
             String multiplier = MekanismUtils.getEnergyDisplay(perTick);
             ArrayList<String> ret = new ArrayList<>(4);
@@ -67,8 +67,8 @@ public class GuiDigitalMiner extends GuiMekanism<TileEntityDigitalMiner> {
                   .getEnergyDisplay(tileEntity.getMaxEnergy() - tileEntity.getEnergy()));
             return ret;
         }, this, resource));
-        guiElements.add(new GuiSlot(SlotType.NORMAL, this, resource, 151, 5).with(SlotOverlay.POWER));
-        guiElements.add(new GuiSlot(SlotType.NORMAL, this, resource, 143, 26));
+        addGuiElement(new GuiSlot(SlotType.NORMAL, this, resource, 151, 5).with(SlotOverlay.POWER));
+        addGuiElement(new GuiSlot(SlotType.NORMAL, this, resource, 143, 26));
         ySize += 64;
     }
 

@@ -26,7 +26,7 @@ import org.lwjgl.input.Mouse;
 @SideOnly(Side.CLIENT)
 public abstract class GuiMekanism<TILE extends TileEntityContainerBlock> extends GuiContainer implements IGuiWrapper {
 
-    protected Set<GuiElement> guiElements = new HashSet<>();
+    private Set<GuiElement> guiElements = new HashSet<>();
     protected TILE tileEntity;
 
     //Try not to use
@@ -52,6 +52,10 @@ public abstract class GuiMekanism<TILE extends TileEntityContainerBlock> extends
     protected float getNeededScale(String text, int maxX) {
         int length = fontRenderer.getStringWidth(text);
         return length <= maxX ? 1 : (float) maxX / length;
+    }
+
+    protected void addGuiElement(GuiElement element) {
+        guiElements.add(element);
     }
 
     /**

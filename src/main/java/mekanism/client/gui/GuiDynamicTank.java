@@ -21,7 +21,7 @@ public class GuiDynamicTank extends GuiMekanism<TileEntityDynamicTank> {
 
     public GuiDynamicTank(InventoryPlayer inventory, TileEntityDynamicTank tile) {
         super(tile, new ContainerDynamicTank(inventory, tile));
-        guiElements.add(new GuiContainerEditMode(this, tileEntity, getGuiLocation()));
+        addGuiElement(new GuiContainerEditMode(this, tileEntity, getGuiLocation()));
     }
 
     @Override

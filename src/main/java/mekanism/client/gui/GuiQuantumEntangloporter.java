@@ -48,10 +48,10 @@ public class GuiQuantumEntangloporter extends GuiMekanism<TileEntityQuantumEntan
     public GuiQuantumEntangloporter(InventoryPlayer inventory, TileEntityQuantumEntangloporter tile) {
         super(tile, new ContainerQuantumEntangloporter(inventory, tile));
         ResourceLocation resource = getGuiLocation();
-        guiElements.add(scrollList = new GuiScrollList(this, resource, 28, 37, 120, 4));
-        guiElements.add(new GuiSideConfigurationTab(this, tileEntity, resource));
-        guiElements.add(new GuiTransporterConfigTab(this, 34, tileEntity, resource));
-        guiElements.add(new GuiUpgradeTab(this, tileEntity, resource));
+        addGuiElement(scrollList = new GuiScrollList(this, resource, 28, 37, 120, 4));
+        addGuiElement(new GuiSideConfigurationTab(this, tileEntity, resource));
+        addGuiElement(new GuiTransporterConfigTab(this, 34, tileEntity, resource));
+        addGuiElement(new GuiUpgradeTab(this, tileEntity, resource));
         if (tileEntity.frequency != null) {
             privateMode = !tileEntity.frequency.publicFreq;
         }

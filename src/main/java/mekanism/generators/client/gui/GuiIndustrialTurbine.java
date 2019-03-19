@@ -39,9 +39,9 @@ public class GuiIndustrialTurbine extends GuiMekanism<TileEntityTurbineCasing> {
     public GuiIndustrialTurbine(InventoryPlayer inventory, TileEntityTurbineCasing tile) {
         super(tile, new ContainerFilter(inventory, tile));
         ResourceLocation resource = getGuiLocation();
-        guiElements.add(new GuiTurbineTab(this, tileEntity, TurbineTab.STAT, 6, resource));
-        guiElements.add(new GuiPowerBar(this, tileEntity, resource, 164, 16));
-        guiElements.add(new GuiRateBar(this, new IRateInfoHandler() {
+        addGuiElement(new GuiTurbineTab(this, tileEntity, TurbineTab.STAT, 6, resource));
+        addGuiElement(new GuiPowerBar(this, tileEntity, resource, 164, 16));
+        addGuiElement(new GuiRateBar(this, new IRateInfoHandler() {
             @Override
             public String getTooltip() {
                 return LangUtils.localize("gui.steamInput") + ": " + tileEntity.structure.lastSteamInput + " mB/t";
@@ -60,7 +60,7 @@ public class GuiIndustrialTurbine extends GuiMekanism<TileEntityTurbineCasing> {
                 return (double) tileEntity.structure.lastSteamInput / rate;
             }
         }, resource, 40, 13));
-        guiElements.add(new GuiEnergyInfo(() -> {
+        addGuiElement(new GuiEnergyInfo(() -> {
             double energyMultiplier = (general.maxEnergyPerSteam / TurbineUpdateProtocol.MAX_BLADES) * Math
                   .min(tileEntity.structure.blades, tileEntity.structure.coils * generators.turbineBladesPerCoil);
             return Arrays.asList(

@@ -34,14 +34,14 @@ public class GuiReactorStats extends GuiMekanism<TileEntityReactorController> {
     public GuiReactorStats(InventoryPlayer inventory, final TileEntityReactorController tile) {
         super(tile, new ContainerNull(inventory.player, tile));
         ResourceLocation resource = getGuiLocation();
-        guiElements.add(new GuiEnergyInfo(() -> tileEntity.isFormed() ? Arrays.asList(
+        addGuiElement(new GuiEnergyInfo(() -> tileEntity.isFormed() ? Arrays.asList(
               LangUtils.localize("gui.storing") + ": " + MekanismUtils
                     .getEnergyDisplay(tileEntity.getEnergy(), tileEntity.getMaxEnergy()),
               LangUtils.localize("gui.producing") + ": " + MekanismUtils
                     .getEnergyDisplay(tileEntity.getReactor().getPassiveGeneration(false, true)) + "/t")
               : new ArrayList<>(), this, resource));
-        guiElements.add(new GuiHeatTab(this, tileEntity, resource));
-        guiElements.add(new GuiFuelTab(this, tileEntity, resource));
+        addGuiElement(new GuiHeatTab(this, tileEntity, resource));
+        addGuiElement(new GuiFuelTab(this, tileEntity, resource));
     }
 
     @Override

@@ -14,10 +14,10 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
@@ -26,12 +26,10 @@ import org.lwjgl.input.Mouse;
 @SideOnly(Side.CLIENT)
 public abstract class GuiMekanism<TILE extends TileEntityContainerBlock> extends GuiContainer implements IGuiWrapper {
 
-    public Set<GuiElement> guiElements = new HashSet<>();
-
+    protected Set<GuiElement> guiElements = new HashSet<>();
     protected TILE tileEntity;
 
     //Try not to use
-    @Deprecated
     public GuiMekanism(Container container) {
         this(null, container);
     }
@@ -43,20 +41,17 @@ public abstract class GuiMekanism<TILE extends TileEntityContainerBlock> extends
 
     public static boolean isTextboxKey(char c, int i) {
         return i == Keyboard.KEY_BACK || i == Keyboard.KEY_DELETE || i == Keyboard.KEY_LEFT || i == Keyboard.KEY_RIGHT
-              ||
-              i == Keyboard.KEY_END || i == Keyboard.KEY_HOME || isKeyComboCtrlA(i) ||
-              isKeyComboCtrlC(i) || isKeyComboCtrlV(i) || isKeyComboCtrlX(i);
-
+              || i == Keyboard.KEY_END || i == Keyboard.KEY_HOME || isKeyComboCtrlA(i) || isKeyComboCtrlC(i)
+              || isKeyComboCtrlV(i) || isKeyComboCtrlX(i);
     }
 
-    public float getNeededScale(String text, int maxX) {
-        int length = fontRenderer.getStringWidth(text);
+    public Set<GuiElement> getGuiElements() {
+        return guiElements;
+    }
 
-        if (length <= maxX) {
-            return 1;
-        } else {
-            return (float) maxX / length;
-        }
+    protected float getNeededScale(String text, int maxX) {
+        int length = fontRenderer.getStringWidth(text);
+        return length <= maxX ? 1 : (float) maxX / length;
     }
 
     /**
@@ -73,10 +68,8 @@ public abstract class GuiMekanism<TILE extends TileEntityContainerBlock> extends
             float yAdd = 4 - (scale * 8) / 2F;
 
             GlStateManager.pushMatrix();
-
             GlStateManager.scale(scale, scale, scale);
             fontRenderer.drawString(text, (int) (x * reverse), (int) ((y * reverse) + yAdd), color);
-
             GlStateManager.popMatrix();
         }
     }
@@ -84,20 +77,13 @@ public abstract class GuiMekanism<TILE extends TileEntityContainerBlock> extends
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-
         int xAxis = (mouseX - (width - xSize) / 2);
         int yAxis = (mouseY - (height - ySize) / 2);
-
-        for (GuiElement element : guiElements) {
-            element.renderForeground(xAxis, yAxis);
-        }
-
+        guiElements.forEach(element -> element.renderForeground(xAxis, yAxis));
         if (tileEntity instanceof ISideConfiguration) {
             Slot hovering = null;
-
             for (int i = 0; i < inventorySlots.inventorySlots.size(); i++) {
                 Slot slot = inventorySlots.inventorySlots.get(i);
-
                 if (isMouseOverSlot(slot, mouseX, mouseY)) {
                     hovering = slot;
                     break;
@@ -105,10 +91,8 @@ public abstract class GuiMekanism<TILE extends TileEntityContainerBlock> extends
             }
 
             ItemStack stack = mc.player.inventory.getItemStack();
-
             if (!stack.isEmpty() && stack.getItem() instanceof ItemConfigurator && hovering != null) {
                 SideData data = getFromSlot(hovering);
-
                 if (data != null) {
                     drawHoveringText(data.color + data.localize() + " (" + data.color.getColoredName() + ")", xAxis,
                           yAxis);
@@ -124,7 +108,6 @@ public abstract class GuiMekanism<TILE extends TileEntityContainerBlock> extends
     private SideData getFromSlot(Slot slot) {
         if (slot.slotNumber < tileEntity.getSizeInventory()) {
             ISideConfiguration config = (ISideConfiguration) tileEntity;
-
             List<SideData> datas = config.getConfig().getOutputs(TransmissionType.ITEM);
             if (datas != null) {
                 for (SideData data : datas) {
@@ -148,29 +131,18 @@ public abstract class GuiMekanism<TILE extends TileEntityContainerBlock> extends
     protected void drawGuiContainerBackgroundLayer(float partialTick, int mouseX, int mouseY) {
         int guiWidth = (width - xSize) / 2;
         int guiHeight = (height - ySize) / 2;
-
         int xAxis = mouseX - guiWidth;
         int yAxis = mouseY - guiHeight;
-
-        for (GuiElement element : guiElements) {
-            element.renderBackground(xAxis, yAxis, guiWidth, guiHeight);
-        }
+        guiElements.forEach(element -> element.renderBackground(xAxis, yAxis, guiWidth, guiHeight));
     }
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
         int xAxis = (mouseX - (width - xSize) / 2);
         int yAxis = (mouseY - (height - ySize) / 2);
-
-        for (GuiElement element : guiElements) {
-            element.preMouseClicked(xAxis, yAxis, button);
-        }
-
+        guiElements.forEach(element -> element.preMouseClicked(xAxis, yAxis, button));
         super.mouseClicked(mouseX, mouseY, button);
-
-        for (GuiElement element : guiElements) {
-            element.mouseClicked(xAxis, yAxis, button);
-        }
+        guiElements.forEach(element -> element.mouseClicked(xAxis, yAxis, button));
     }
 
     @Override
@@ -201,48 +173,32 @@ public abstract class GuiMekanism<TILE extends TileEntityContainerBlock> extends
     @Override
     protected void mouseClickMove(int mouseX, int mouseY, int button, long ticks) {
         super.mouseClickMove(mouseX, mouseY, button, ticks);
-
         int xAxis = (mouseX - (width - xSize) / 2);
         int yAxis = (mouseY - (height - ySize) / 2);
-
-        for (GuiElement element : guiElements) {
-            element.mouseClickMove(xAxis, yAxis, button, ticks);
-        }
+        guiElements.forEach(element -> element.mouseClickMove(xAxis, yAxis, button, ticks));
     }
 
     @Override
     protected void mouseReleased(int mouseX, int mouseY, int type) {
         super.mouseReleased(mouseX, mouseY, type);
-
         int xAxis = (mouseX - (width - xSize) / 2);
         int yAxis = (mouseY - (height - ySize) / 2);
-
-        for (GuiElement element : guiElements) {
-            element.mouseReleased(xAxis, yAxis, type);
-        }
-    }
-
-    public void handleMouse(Slot slot, int slotIndex, int button, ClickType modifier) {
-        handleMouseClick(slot, slotIndex, button, modifier);
+        guiElements.forEach(element -> element.mouseReleased(xAxis, yAxis, type));
     }
 
     @Override
     public void handleMouseInput() throws java.io.IOException {
         super.handleMouseInput();
-
-        int xAxis = Mouse.getEventX() * width / mc.displayWidth - getXPos();
-        int yAxis = height - Mouse.getEventY() * height / mc.displayHeight - 1 - getYPos();
         int delta = Mouse.getEventDWheel();
-
         if (delta != 0) {
+            int xAxis = Mouse.getEventX() * width / mc.displayWidth - getXPos();
+            int yAxis = height - Mouse.getEventY() * height / mc.displayHeight - 1 - getYPos();
             mouseWheel(xAxis, yAxis, delta);
         }
     }
 
     public void mouseWheel(int xAxis, int yAxis, int delta) {
-        for (GuiElement element : guiElements) {
-            element.mouseWheel(xAxis, yAxis, delta);
-        }
+        guiElements.forEach(element -> element.mouseWheel(xAxis, yAxis, delta));
     }
 
     public int getXPos() {
@@ -263,4 +219,6 @@ public abstract class GuiMekanism<TILE extends TileEntityContainerBlock> extends
         super.drawScreen(mouseX, mouseY, partialTicks);
         this.renderHoveredToolTip(mouseX, mouseY);
     }
+
+    protected abstract ResourceLocation getGuiLocation();
 }

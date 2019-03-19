@@ -24,6 +24,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
@@ -56,14 +57,11 @@ public class GuiMItemStackFilter extends GuiMekanism<TileEntityDigitalMiner> {
     @Override
     public void initGui() {
         super.initGui();
-
         int guiWidth = (width - xSize) / 2;
         int guiHeight = (height - ySize) / 2;
-
         buttonList.clear();
         buttonList.add(new GuiButton(0, guiWidth + 27, guiHeight + 62, 60, 20, LangUtils.localize("gui.save")));
         buttonList.add(new GuiButton(1, guiWidth + 89, guiHeight + 62, 60, 20, LangUtils.localize("gui.delete")));
-
         if (isNew) {
             buttonList.get(1).enabled = false;
         }
@@ -72,7 +70,6 @@ public class GuiMItemStackFilter extends GuiMekanism<TileEntityDigitalMiner> {
     @Override
     protected void actionPerformed(GuiButton guibutton) throws IOException {
         super.actionPerformed(guibutton);
-
         if (guibutton.id == 0) {
             if (!filter.itemType.isEmpty()) {
                 if (isNew) {
@@ -81,7 +78,6 @@ public class GuiMItemStackFilter extends GuiMekanism<TileEntityDigitalMiner> {
                     Mekanism.packetHandler
                           .sendToServer(new EditFilterMessage(Coord4D.get(tileEntity), false, origFilter, filter));
                 }
-
                 Mekanism.packetHandler.sendToServer(
                       new DigitalMinerGuiMessage(MinerGuiPacket.SERVER, Coord4D.get(tileEntity), 0, 0, 0));
             } else {
@@ -97,15 +93,11 @@ public class GuiMItemStackFilter extends GuiMekanism<TileEntityDigitalMiner> {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        int xAxis = (mouseX - (width - xSize) / 2);
-        int yAxis = (mouseY - (height - ySize) / 2);
-
         fontRenderer.drawString(
               (isNew ? LangUtils.localize("gui.new") : LangUtils.localize("gui.edit")) + " " + LangUtils
                     .localize("gui.itemFilter"), 43, 6, 0x404040);
         fontRenderer.drawString(LangUtils.localize("gui.status") + ": " + status, 35, 20, 0x00CD00);
         fontRenderer.drawString(LangUtils.localize("gui.itemFilter.details") + ":", 35, 32, 0x00CD00);
-
         if (!filter.itemType.isEmpty()) {
             renderScaledText(filter.itemType.getDisplayName(), 35, 41, 0x00CD00, 107);
             GlStateManager.pushMatrix();
@@ -114,7 +106,6 @@ public class GuiMItemStackFilter extends GuiMekanism<TileEntityDigitalMiner> {
             RenderHelper.disableStandardItemLighting();
             GlStateManager.popMatrix();
         }
-
         if (!filter.replaceStack.isEmpty()) {
             GlStateManager.pushMatrix();
             RenderHelper.enableGUIStandardItemLighting();
@@ -122,25 +113,23 @@ public class GuiMItemStackFilter extends GuiMekanism<TileEntityDigitalMiner> {
             RenderHelper.disableStandardItemLighting();
             GlStateManager.popMatrix();
         }
-
+        int xAxis = (mouseX - (width - xSize) / 2);
+        int yAxis = (mouseY - (height - ySize) / 2);
         if (xAxis >= 148 && xAxis <= 162 && yAxis >= 45 && yAxis <= 59) {
             drawHoveringText(LangUtils.localize("gui.digitalMiner.requireReplace") + ": " + LangUtils
                   .transYesNo(filter.requireStack), xAxis, yAxis);
         }
-
         if (xAxis >= 15 && xAxis <= 29 && yAxis >= 45 && yAxis <= 59) {
             drawHoveringText(
                   LangUtils.localize("gui.digitalMiner.fuzzyMode") + ": " + LangUtils.transYesNo(filter.fuzzy), xAxis,
                   yAxis);
         }
-
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
     }
 
     @Override
     public void updateScreen() {
         super.updateScreen();
-
         if (ticker > 0) {
             ticker--;
         } else {
@@ -150,7 +139,7 @@ public class GuiMItemStackFilter extends GuiMekanism<TileEntityDigitalMiner> {
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTick, int mouseX, int mouseY) {
-        mc.renderEngine.bindTexture(MekanismUtils.getResource(ResourceType.GUI, "GuiMItemStackFilter.png"));
+        mc.renderEngine.bindTexture(getGuiLocation());
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         int guiWidth = (width - xSize) / 2;
         int guiHeight = (height - ySize) / 2;
@@ -158,25 +147,21 @@ public class GuiMItemStackFilter extends GuiMekanism<TileEntityDigitalMiner> {
 
         int xAxis = (mouseX - (width - xSize) / 2);
         int yAxis = (mouseY - (height - ySize) / 2);
-
         if (xAxis >= 5 && xAxis <= 16 && yAxis >= 5 && yAxis <= 16) {
             drawTexturedModalRect(guiWidth + 5, guiHeight + 5, 176, 0, 11, 11);
         } else {
             drawTexturedModalRect(guiWidth + 5, guiHeight + 5, 176, 11, 11, 11);
         }
-
         if (xAxis >= 148 && xAxis <= 162 && yAxis >= 45 && yAxis <= 59) {
             drawTexturedModalRect(guiWidth + 148, guiHeight + 45, 176 + 23, 0, 14, 14);
         } else {
             drawTexturedModalRect(guiWidth + 148, guiHeight + 45, 176 + 23, 14, 14, 14);
         }
-
         if (xAxis >= 15 && xAxis <= 29 && yAxis >= 45 && yAxis <= 59) {
             drawTexturedModalRect(guiWidth + 15, guiHeight + 45, 176 + 37, 0, 14, 14);
         } else {
             drawTexturedModalRect(guiWidth + 15, guiHeight + 45, 176 + 37, 14, 14, 14);
         }
-
         if (xAxis >= 12 && xAxis <= 28 && yAxis >= 19 && yAxis <= 35) {
             GlStateManager.pushMatrix();
             GlStateManager.disableLighting();
@@ -215,27 +200,22 @@ public class GuiMItemStackFilter extends GuiMekanism<TileEntityDigitalMiner> {
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
         super.mouseClicked(mouseX, mouseY, button);
-
         if (button == 0) {
             int xAxis = (mouseX - (width - xSize) / 2);
             int yAxis = (mouseY - (height - ySize) / 2);
-
             if (xAxis >= 5 && xAxis <= 16 && yAxis >= 5 && yAxis <= 16) {
                 SoundHandler.playSound(SoundEvents.UI_BUTTON_CLICK);
                 Mekanism.packetHandler.sendToServer(
                       new DigitalMinerGuiMessage(MinerGuiPacket.SERVER, Coord4D.get(tileEntity), isNew ? 5 : 0, 0, 0));
             }
-
             if (xAxis >= 148 && xAxis <= 162 && yAxis >= 45 && yAxis <= 59) {
                 SoundHandler.playSound(SoundEvents.UI_BUTTON_CLICK);
                 filter.requireStack = !filter.requireStack;
             }
-
             if (xAxis >= 15 && xAxis <= 29 && yAxis >= 45 && yAxis <= 59) {
                 SoundHandler.playSound(SoundEvents.UI_BUTTON_CLICK);
                 filter.fuzzy = !filter.fuzzy;
             }
-
             if (xAxis >= 12 && xAxis <= 28 && yAxis >= 19 && yAxis <= 35) {
                 ItemStack stack = mc.player.inventory.getItemStack();
 
@@ -249,15 +229,12 @@ public class GuiMItemStackFilter extends GuiMekanism<TileEntityDigitalMiner> {
                 } else if (stack.isEmpty() && Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                     filter.itemType = ItemStack.EMPTY;
                 }
-
                 SoundHandler.playSound(SoundEvents.UI_BUTTON_CLICK);
             }
-
             if (xAxis >= 149 && xAxis <= 165 && yAxis >= 19 && yAxis <= 35) {
                 boolean doNull = false;
                 ItemStack stack = mc.player.inventory.getItemStack();
                 ItemStack toUse = ItemStack.EMPTY;
-
                 if (!stack.isEmpty() && !Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                     if (stack.getItem() instanceof ItemBlock) {
                         if (Block.getBlockFromItem(stack.getItem()) != Blocks.BEDROCK) {
@@ -268,13 +245,16 @@ public class GuiMItemStackFilter extends GuiMekanism<TileEntityDigitalMiner> {
                 } else if (stack.isEmpty() && Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                     doNull = true;
                 }
-
                 if (!toUse.isEmpty() || doNull) {
                     filter.replaceStack = toUse;
                 }
-
                 SoundHandler.playSound(SoundEvents.UI_BUTTON_CLICK);
             }
         }
+    }
+
+    @Override
+    protected ResourceLocation getGuiLocation() {
+        return MekanismUtils.getResource(ResourceType.GUI, "GuiMItemStackFilter.png");
     }
 }

@@ -8,6 +8,7 @@ import mekanism.common.util.LangUtils;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.MekanismUtils.ResourceType;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -19,18 +20,14 @@ public class GuiPersonalChest extends GuiMekanism<TileEntityPersonalChest> {
         super(tile, new ContainerPersonalChest(inventory, tile, null, true));
         xSize += 26;
         ySize += 64;
-        guiElements.add(new GuiSecurityTab(this, tileEntity,
-              MekanismUtils.getResource(ResourceType.GUI, "GuiPersonalChest.png")));
+        guiElements.add(new GuiSecurityTab(this, tileEntity, getGuiLocation()));
     }
 
     public GuiPersonalChest(InventoryPlayer inventory, InventoryPersonalChest inv) {
         super(new ContainerPersonalChest(inventory, null, inv, false));
-
         xSize += 26;
         ySize += 64;
-
-        guiElements.add(new GuiSecurityTab(this, MekanismUtils.getResource(ResourceType.GUI, "GuiPersonalChest.png"),
-              inv.currentHand));
+        guiElements.add(new GuiSecurityTab(this, getGuiLocation(), inv.currentHand));
     }
 
     @Override
@@ -42,11 +39,16 @@ public class GuiPersonalChest extends GuiMekanism<TileEntityPersonalChest> {
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTick, int mouseX, int mouseY) {
-        mc.renderEngine.bindTexture(MekanismUtils.getResource(ResourceType.GUI, "GuiPersonalChest.png"));
+        mc.renderEngine.bindTexture(getGuiLocation());
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         int guiWidth = (width - xSize) / 2;
         int guiHeight = (height - ySize) / 2;
         drawTexturedModalRect(guiWidth, guiHeight, 0, 0, xSize, ySize);
         super.drawGuiContainerBackgroundLayer(partialTick, mouseX, mouseY);
+    }
+
+    @Override
+    protected ResourceLocation getGuiLocation() {
+        return MekanismUtils.getResource(ResourceType.GUI, "GuiPersonalChest.png");
     }
 }

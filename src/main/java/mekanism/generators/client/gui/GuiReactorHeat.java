@@ -30,6 +30,7 @@ import mekanism.generators.common.tile.reactor.TileEntityReactorController;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -40,12 +41,13 @@ public class GuiReactorHeat extends GuiMekanism<TileEntityReactorController> {
 
     public GuiReactorHeat(InventoryPlayer inventory, TileEntityReactorController tile) {
         super(tile, new ContainerNull(inventory.player, tile));
+        ResourceLocation resource = getGuiLocation();
         guiElements.add(new GuiEnergyInfo(() -> tileEntity.isFormed() ? Arrays.asList(
               LangUtils.localize("gui.storing") + ": " + MekanismUtils
                     .getEnergyDisplay(tileEntity.getEnergy(), tileEntity.getMaxEnergy()),
               LangUtils.localize("gui.producing") + ": " + MekanismUtils
                     .getEnergyDisplay(tileEntity.getReactor().getPassiveGeneration(false, true)) + "/t")
-              : new ArrayList<>(), this, MekanismUtils.getResource(ResourceType.GUI, "GuiTall.png")));
+              : new ArrayList<>(), this, resource));
         guiElements.add(new GuiNumberGauge(new INumberInfoHandler() {
             @Override
             public TextureAtlasSprite getIcon() {
@@ -66,13 +68,13 @@ public class GuiReactorHeat extends GuiMekanism<TileEntityReactorController> {
             public String getText(double level) {
                 return "Plasma: " + MekanismUtils.getTemperatureDisplay(level, TemperatureUnit.KELVIN);
             }
-        }, Type.STANDARD, this, MekanismUtils.getResource(ResourceType.GUI, "GuiTall.png"), 7, 50));
+        }, Type.STANDARD, this, resource, 7, 50));
         guiElements.add(new GuiProgress(new IProgressInfoHandler() {
             @Override
             public double getProgress() {
                 return tileEntity.getPlasmaTemp() > tileEntity.getCaseTemp() ? 1 : 0;
             }
-        }, ProgressBar.SMALL_RIGHT, this, MekanismUtils.getResource(ResourceType.GUI, "GuiTall.png"), 27, 75));
+        }, ProgressBar.SMALL_RIGHT, this, resource, 27, 75));
         guiElements.add(new GuiNumberGauge(new INumberInfoHandler() {
             @Override
             public TextureAtlasSprite getIcon() {
@@ -93,69 +95,65 @@ public class GuiReactorHeat extends GuiMekanism<TileEntityReactorController> {
             public String getText(double level) {
                 return "Case: " + MekanismUtils.getTemperatureDisplay(level, TemperatureUnit.KELVIN);
             }
-        }, Type.STANDARD, this, MekanismUtils.getResource(ResourceType.GUI, "GuiTall.png"), 61, 50));
+        }, Type.STANDARD, this, resource, 61, 50));
         guiElements.add(new GuiProgress(new IProgressInfoHandler() {
             @Override
             public double getProgress() {
                 return tileEntity.getCaseTemp() > 0 ? 1 : 0;
             }
-        }, ProgressBar.SMALL_RIGHT, this, MekanismUtils.getResource(ResourceType.GUI, "GuiTall.png"), 81, 60));
+        }, ProgressBar.SMALL_RIGHT, this, resource, 81, 60));
         guiElements.add(new GuiProgress(new IProgressInfoHandler() {
             @Override
             public double getProgress() {
                 return (tileEntity.getCaseTemp() > 0 && tileEntity.waterTank.getFluidAmount() > 0
                       && tileEntity.steamTank.getFluidAmount() < tileEntity.steamTank.getCapacity()) ? 1 : 0;
             }
-        }, ProgressBar.SMALL_RIGHT, this, MekanismUtils.getResource(ResourceType.GUI, "GuiTall.png"), 81, 90));
-        guiElements.add(new GuiFluidGauge(() -> tileEntity.waterTank, Type.SMALL, this,
-              MekanismUtils.getResource(ResourceType.GUI, "GuiTall.png"), 115, 84));
-        guiElements.add(new GuiFluidGauge(() -> tileEntity.steamTank, Type.SMALL, this,
-              MekanismUtils.getResource(ResourceType.GUI, "GuiTall.png"), 151, 84));
-        guiElements.add(new GuiEnergyGauge(() -> tileEntity, Type.SMALL, this,
-              MekanismUtils.getResource(ResourceType.GUI, "GuiTall.png"), 115, 46));
-        guiElements.add(new GuiFuelTab(this, tileEntity, MekanismUtils.getResource(ResourceType.GUI, "GuiTall.png")));
-        guiElements.add(new GuiStatTab(this, tileEntity, MekanismUtils.getResource(ResourceType.GUI, "GuiTall.png")));
+        }, ProgressBar.SMALL_RIGHT, this, resource, 81, 90));
+        guiElements.add(new GuiFluidGauge(() -> tileEntity.waterTank, Type.SMALL, this, resource, 115, 84));
+        guiElements.add(new GuiFluidGauge(() -> tileEntity.steamTank, Type.SMALL, this, resource, 151, 84));
+        guiElements.add(new GuiEnergyGauge(() -> tileEntity, Type.SMALL, this, resource, 115, 46));
+        guiElements.add(new GuiFuelTab(this, tileEntity, resource));
+        guiElements.add(new GuiStatTab(this, tileEntity, resource));
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-
         fontRenderer.drawString(tileEntity.getName(), 46, 6, 0x404040);
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTick, int mouseX, int mouseY) {
-        mc.renderEngine.bindTexture(MekanismUtils.getResource(ResourceType.GUI, "GuiTall.png"));
+        mc.renderEngine.bindTexture(getGuiLocation());
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         int guiWidth = (width - xSize) / 2;
         int guiHeight = (height - ySize) / 2;
         drawTexturedModalRect(guiWidth, guiHeight, 0, 0, xSize, ySize);
-
         int xAxis = (mouseX - (width - xSize) / 2);
         int yAxis = (mouseY - (height - ySize) / 2);
-
         if (xAxis >= 6 && xAxis <= 20 && yAxis >= 6 && yAxis <= 20) {
             drawTexturedModalRect(guiWidth + 6, guiHeight + 6, 176, 0, 14, 14);
         } else {
             drawTexturedModalRect(guiWidth + 6, guiHeight + 6, 176, 14, 14, 14);
         }
-
         super.drawGuiContainerBackgroundLayer(partialTick, mouseX, mouseY);
     }
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
         super.mouseClicked(mouseX, mouseY, button);
-
         int xAxis = (mouseX - (width - xSize) / 2);
         int yAxis = (mouseY - (height - ySize) / 2);
-
         if (button == 0) {
             if (xAxis >= 6 && xAxis <= 20 && yAxis >= 6 && yAxis <= 20) {
                 SoundHandler.playSound(SoundEvents.UI_BUTTON_CLICK);
                 Mekanism.packetHandler.sendToServer(new SimpleGuiMessage(Coord4D.get(tileEntity), 1, 10));
             }
         }
+    }
+
+    @Override
+    protected ResourceLocation getGuiLocation() {
+        return MekanismUtils.getResource(ResourceType.GUI, "GuiTall.png");
     }
 }

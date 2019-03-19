@@ -20,6 +20,7 @@ import mekanism.common.util.MekanismUtils.ResourceType;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
@@ -34,6 +35,7 @@ public class GuiLaserAmplifier extends GuiMekanism<TileEntityLaserAmplifier> {
 
     public GuiLaserAmplifier(InventoryPlayer inventory, TileEntityLaserAmplifier tile) {
         super(tile, new ContainerLaserAmplifier(inventory, tile));
+        ResourceLocation resource = getGuiLocation();
         guiElements.add(new GuiNumberGauge(new INumberInfoHandler() {
             @Override
             public TextureAtlasSprite getIcon() {
@@ -55,20 +57,16 @@ public class GuiLaserAmplifier extends GuiMekanism<TileEntityLaserAmplifier> {
                 return LangUtils.localize("gui.storing") + ": " + MekanismUtils
                       .getEnergyDisplay(level, tileEntity.getMaxEnergy());
             }
-        }, Type.STANDARD, this, MekanismUtils.getResource(ResourceType.GUI, "GuiBlank.png"), 6, 10));
-        guiElements
-              .add(new GuiSecurityTab(this, tileEntity, MekanismUtils.getResource(ResourceType.GUI, "GuiBlank.png")));
-        guiElements.add(new GuiRedstoneControl(this, tileEntity,
-              MekanismUtils.getResource(ResourceType.GUI, "GuiBlank.png")));
-        guiElements
-              .add(new GuiAmplifierTab(this, tileEntity, MekanismUtils.getResource(ResourceType.GUI, "GuiBlank.png")));
+        }, Type.STANDARD, this, resource, 6, 10));
+        guiElements.add(new GuiSecurityTab(this, tileEntity, resource));
+        guiElements.add(new GuiRedstoneControl(this, tileEntity, resource));
+        guiElements.add(new GuiAmplifierTab(this, tileEntity, resource));
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         fontRenderer.drawString(tileEntity.getName(), 55, 6, 0x404040);
         fontRenderer.drawString(LangUtils.localize("container.inventory"), 8, (ySize - 96) + 2, 0x404040);
-
         fontRenderer.drawString(tileEntity.time > 0 ? LangUtils.localize("gui.delay") + ": " + tileEntity.time + "t"
               : LangUtils.localize("gui.noDelay"), 26, 30, 0x404040);
         fontRenderer.drawString(
@@ -77,13 +75,12 @@ public class GuiLaserAmplifier extends GuiMekanism<TileEntityLaserAmplifier> {
         fontRenderer.drawString(
               LangUtils.localize("gui.max") + ": " + MekanismUtils.getEnergyDisplay(tileEntity.maxThreshold), 26, 60,
               0x404040);
-
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTick, int mouseX, int mouseY) {
-        mc.renderEngine.bindTexture(MekanismUtils.getResource(ResourceType.GUI, "GuiBlank.png"));
+        mc.renderEngine.bindTexture(getGuiLocation());
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         int guiWidth = (width - xSize) / 2;
         int guiHeight = (height - ySize) / 2;
@@ -112,6 +109,11 @@ public class GuiLaserAmplifier extends GuiMekanism<TileEntityLaserAmplifier> {
         minField.mouseClicked(mouseX, mouseY, button);
         maxField.mouseClicked(mouseX, mouseY, button);
         timerField.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    protected ResourceLocation getGuiLocation() {
+        return MekanismUtils.getResource(ResourceType.GUI, "GuiBlank.png");
     }
 
     @Override

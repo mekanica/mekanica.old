@@ -35,6 +35,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
@@ -82,10 +83,9 @@ public class GuiLogisticalSorter extends GuiMekanism<TileEntityLogisticalSorter>
         // ySize = 166;
 
         // Add common Mekanism gui elements
-        guiElements.add(new GuiRedstoneControl(this, tileEntity,
-              MekanismUtils.getResource(ResourceType.GUI, "GuiLogisticalSorter.png")));
-        guiElements.add(new GuiSecurityTab(this, tileEntity,
-              MekanismUtils.getResource(ResourceType.GUI, "GuiLogisticalSorter.png")));
+        ResourceLocation resource = getGuiLocation();
+        guiElements.add(new GuiRedstoneControl(this, tileEntity, resource));
+        guiElements.add(new GuiSecurityTab(this, tileEntity, resource));
     }
 
     public int getScroll() {
@@ -341,6 +341,11 @@ public class GuiLogisticalSorter extends GuiMekanism<TileEntityLogisticalSorter>
     }
 
     @Override
+    protected ResourceLocation getGuiLocation() {
+        return MekanismUtils.getResource(ResourceType.GUI, "GuiLogisticalSorter.png");
+    }
+
+    @Override
     public void initGui() {
         super.initGui();
 
@@ -521,7 +526,7 @@ public class GuiLogisticalSorter extends GuiMekanism<TileEntityLogisticalSorter>
         super.drawGuiContainerBackgroundLayer(partialTick, mouseX, mouseY);
 
         // Draw main gui background
-        mc.renderEngine.bindTexture(MekanismUtils.getResource(ResourceType.GUI, "GuiLogisticalSorter.png"));
+        mc.renderEngine.bindTexture(getGuiLocation());
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 

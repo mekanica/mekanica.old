@@ -16,6 +16,7 @@ import mekanism.common.util.MekanismUtils.ResourceType;
 import mekanism.generators.common.inventory.container.ContainerBioGenerator;
 import mekanism.generators.common.tile.TileEntityBioGenerator;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -25,22 +26,17 @@ public class GuiBioGenerator extends GuiMekanism<TileEntityBioGenerator> {
 
     public GuiBioGenerator(InventoryPlayer inventory, TileEntityBioGenerator tile) {
         super(tile, new ContainerBioGenerator(inventory, tile));
-        guiElements.add(new GuiRedstoneControl(this, tileEntity,
-              MekanismUtils.getResource(ResourceType.GUI, "GuiBioGenerator.png")));
-        guiElements.add(new GuiSecurityTab(this, tileEntity,
-              MekanismUtils.getResource(ResourceType.GUI, "GuiBioGenerator.png")));
+        ResourceLocation resource = getGuiLocation();
+        guiElements.add(new GuiRedstoneControl(this, tileEntity, resource));
+        guiElements.add(new GuiSecurityTab(this, tileEntity, resource));
         guiElements.add(new GuiEnergyInfo(() -> Arrays.asList(
               LangUtils.localize("gui.producing") + ": " + MekanismUtils
                     .getEnergyDisplay(tileEntity.isActive ? generators.bioGeneration : 0) + "/t",
               LangUtils.localize("gui.maxOutput") + ": " + MekanismUtils.getEnergyDisplay(tileEntity.getMaxOutput())
-                    + "/t"), this, MekanismUtils.getResource(ResourceType.GUI, "GuiBioGenerator.png")));
-        guiElements
-              .add(new GuiPowerBar(this, tileEntity, MekanismUtils.getResource(ResourceType.GUI, "GuiBioGenerator.png"),
-                    164, 15));
-        guiElements.add(new GuiSlot(SlotType.NORMAL, this,
-              MekanismUtils.getResource(ResourceType.GUI, "GuiBioGenerator.png"), 16, 34));
-        guiElements.add(new GuiSlot(SlotType.NORMAL, this,
-              MekanismUtils.getResource(ResourceType.GUI, "GuiBioGenerator.png"), 142, 34).with(SlotOverlay.POWER));
+                    + "/t"), this, resource));
+        guiElements.add(new GuiPowerBar(this, tileEntity, resource, 164, 15));
+        guiElements.add(new GuiSlot(SlotType.NORMAL, this, resource, 16, 34));
+        guiElements.add(new GuiSlot(SlotType.NORMAL, this, resource, 142, 34).with(SlotOverlay.POWER));
     }
 
     @Override
@@ -54,23 +50,23 @@ public class GuiBioGenerator extends GuiMekanism<TileEntityBioGenerator> {
         fontRenderer.drawString(
               LangUtils.localize("gui.out") + ": " + MekanismUtils.getEnergyDisplay(tileEntity.getMaxOutput()) + "/t",
               51, 44, 0x00CD00);
-
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTick, int mouseX, int mouseY) {
-        mc.renderEngine.bindTexture(MekanismUtils.getResource(ResourceType.GUI, "GuiBioGenerator.png"));
+        mc.renderEngine.bindTexture(getGuiLocation());
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         int guiWidth = (width - xSize) / 2;
         int guiHeight = (height - ySize) / 2;
         drawTexturedModalRect(guiWidth, guiHeight, 0, 0, xSize, ySize);
-
-        int displayInt;
-
-        displayInt = tileEntity.getScaledFuelLevel(52);
+        int displayInt = tileEntity.getScaledFuelLevel(52);
         drawTexturedModalRect(guiWidth + 7, guiHeight + 17 + 52 - displayInt, 176, 52 + 52 - displayInt, 4, displayInt);
-
         super.drawGuiContainerBackgroundLayer(partialTick, mouseX, mouseY);
+    }
+
+    @Override
+    protected ResourceLocation getGuiLocation() {
+        return MekanismUtils.getResource(ResourceType.GUI, "GuiBioGenerator.png");
     }
 }

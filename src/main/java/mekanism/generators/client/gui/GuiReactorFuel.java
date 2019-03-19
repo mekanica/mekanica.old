@@ -26,6 +26,7 @@ import mekanism.generators.common.tile.reactor.TileEntityReactorController;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
@@ -38,38 +39,35 @@ public class GuiReactorFuel extends GuiMekanism<TileEntityReactorController> {
 
     public GuiReactorFuel(InventoryPlayer inventory, final TileEntityReactorController tile) {
         super(tile, new ContainerNull(inventory.player, tile));
+        ResourceLocation resource = getGuiLocation();
         guiElements.add(new GuiEnergyInfo(() -> tileEntity.isFormed() ? Arrays.asList(
               LangUtils.localize("gui.storing") + ": " + MekanismUtils
                     .getEnergyDisplay(tileEntity.getEnergy(), tileEntity.getMaxEnergy()),
               LangUtils.localize("gui.producing") + ": " + MekanismUtils
                     .getEnergyDisplay(tileEntity.getReactor().getPassiveGeneration(false, true)) + "/t")
-              : new ArrayList<>(), this, MekanismUtils.getResource(ResourceType.GUI, "GuiTall.png")));
-        guiElements.add(new GuiGasGauge(() -> tileEntity.deuteriumTank, Type.SMALL, this,
-              MekanismUtils.getResource(ResourceType.GUI, "GuiTall.png"), 25, 64));
-        guiElements.add(new GuiGasGauge(() -> tileEntity.fuelTank, Type.STANDARD, this,
-              MekanismUtils.getResource(ResourceType.GUI, "GuiTall.png"), 79, 50));
-        guiElements.add(new GuiGasGauge(() -> tileEntity.tritiumTank, Type.SMALL, this,
-              MekanismUtils.getResource(ResourceType.GUI, "GuiTall.png"), 133, 64));
+              : new ArrayList<>(), this, resource));
+        guiElements.add(new GuiGasGauge(() -> tileEntity.deuteriumTank, Type.SMALL, this, resource, 25, 64));
+        guiElements.add(new GuiGasGauge(() -> tileEntity.fuelTank, Type.STANDARD, this, resource, 79, 50));
+        guiElements.add(new GuiGasGauge(() -> tileEntity.tritiumTank, Type.SMALL, this, resource, 133, 64));
         guiElements.add(new GuiProgress(new IProgressInfoHandler() {
             @Override
             public double getProgress() {
                 return tileEntity.getActive() ? 1 : 0;
             }
-        }, ProgressBar.SMALL_RIGHT, this, MekanismUtils.getResource(ResourceType.GUI, "GuiTall.png"), 45, 75));
+        }, ProgressBar.SMALL_RIGHT, this, resource, 45, 75));
         guiElements.add(new GuiProgress(new IProgressInfoHandler() {
             @Override
             public double getProgress() {
                 return tileEntity.getActive() ? 1 : 0;
             }
-        }, ProgressBar.SMALL_LEFT, this, MekanismUtils.getResource(ResourceType.GUI, "GuiTall.png"), 99, 75));
-        guiElements.add(new GuiHeatTab(this, tileEntity, MekanismUtils.getResource(ResourceType.GUI, "GuiTall.png")));
-        guiElements.add(new GuiStatTab(this, tileEntity, MekanismUtils.getResource(ResourceType.GUI, "GuiTall.png")));
+        }, ProgressBar.SMALL_LEFT, this, resource, 99, 75));
+        guiElements.add(new GuiHeatTab(this, tileEntity, resource));
+        guiElements.add(new GuiStatTab(this, tileEntity, resource));
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-
         fontRenderer.drawString(tileEntity.getName(), 46, 6, 0x404040);
         String str = LangUtils.localize("gui.reactor.injectionRate") + ": " + (tileEntity.getReactor() == null ? "None"
               : tileEntity.getReactor().getInjectionRate());
@@ -79,21 +77,18 @@ public class GuiReactorFuel extends GuiMekanism<TileEntityReactorController> {
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTick, int mouseX, int mouseY) {
-        mc.renderEngine.bindTexture(MekanismUtils.getResource(ResourceType.GUI, "GuiTall.png"));
+        mc.renderEngine.bindTexture(getGuiLocation());
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         int guiWidth = (width - xSize) / 2;
         int guiHeight = (height - ySize) / 2;
         drawTexturedModalRect(guiWidth, guiHeight, 0, 0, xSize, ySize);
-
         int xAxis = (mouseX - (width - xSize) / 2);
         int yAxis = (mouseY - (height - ySize) / 2);
-
         if (xAxis >= 6 && xAxis <= 20 && yAxis >= 6 && yAxis <= 20) {
             drawTexturedModalRect(guiWidth + 6, guiHeight + 6, 176, 0, 14, 14);
         } else {
             drawTexturedModalRect(guiWidth + 6, guiHeight + 6, 176, 14, 14, 14);
         }
-
         super.drawGuiContainerBackgroundLayer(partialTick, mouseX, mouseY);
 
         injectionRateField.drawTextBox();
@@ -102,19 +97,15 @@ public class GuiReactorFuel extends GuiMekanism<TileEntityReactorController> {
     @Override
     public void updateScreen() {
         super.updateScreen();
-
         injectionRateField.updateCursorCounter();
     }
 
     @Override
     public void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
         super.mouseClicked(mouseX, mouseY, button);
-
         injectionRateField.mouseClicked(mouseX, mouseY, button);
-
         int xAxis = (mouseX - (width - xSize) / 2);
         int yAxis = (mouseY - (height - ySize) / 2);
-
         if (button == 0) {
             if (xAxis >= 6 && xAxis <= 20 && yAxis >= 6 && yAxis <= 20) {
                 SoundHandler.playSound(SoundEvents.UI_BUTTON_CLICK);
@@ -124,17 +115,20 @@ public class GuiReactorFuel extends GuiMekanism<TileEntityReactorController> {
     }
 
     @Override
+    protected ResourceLocation getGuiLocation() {
+        return MekanismUtils.getResource(ResourceType.GUI, "GuiTall.png");
+    }
+
+    @Override
     public void keyTyped(char c, int i) throws IOException {
         if (!injectionRateField.isFocused() || i == Keyboard.KEY_ESCAPE) {
             super.keyTyped(c, i);
         }
-
         if (i == Keyboard.KEY_RETURN) {
             if (injectionRateField.isFocused()) {
                 setInjection();
             }
         }
-
         if (Character.isDigit(c) || isTextboxKey(c, i)) {
             injectionRateField.textboxKeyTyped(c, i);
         }
@@ -144,11 +138,8 @@ public class GuiReactorFuel extends GuiMekanism<TileEntityReactorController> {
         if (!injectionRateField.getText().isEmpty()) {
             int toUse = Math.max(0, Integer.parseInt(injectionRateField.getText()));
             toUse -= toUse % 2;
-
             TileNetworkList data = TileNetworkList.withContents(0, toUse);
-
             Mekanism.packetHandler.sendToServer(new TileEntityMessage(Coord4D.get(tileEntity), data));
-
             injectionRateField.setText("");
         }
     }
@@ -156,12 +147,9 @@ public class GuiReactorFuel extends GuiMekanism<TileEntityReactorController> {
     @Override
     public void initGui() {
         super.initGui();
-
         int guiWidth = (width - xSize) / 2;
         int guiHeight = (height - ySize) / 2;
-
         String prevRad = injectionRateField != null ? injectionRateField.getText() : "";
-
         injectionRateField = new GuiTextField(0, fontRenderer, guiWidth + 98, guiHeight + 115, 26, 11);
         injectionRateField.setMaxStringLength(2);
         injectionRateField.setText(prevRad);

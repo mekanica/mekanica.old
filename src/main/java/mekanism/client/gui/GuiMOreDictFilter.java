@@ -28,6 +28,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
@@ -86,12 +87,10 @@ public class GuiMOreDictFilter extends GuiMekanism<TileEntityDigitalMiner> {
         if (!oreDictText.isFocused() || i == Keyboard.KEY_ESCAPE) {
             super.keyTyped(c, i);
         }
-
         if (oreDictText.isFocused() && i == Keyboard.KEY_RETURN) {
             setOreDictKey();
             return;
         }
-
         if (Character.isLetter(c) || Character.isDigit(c) || TransporterFilter.SPECIAL_CHARS.contains(c)
               || isTextboxKey(c, i)) {
             oreDictText.textboxKeyTyped(c, i);
@@ -101,12 +100,10 @@ public class GuiMOreDictFilter extends GuiMekanism<TileEntityDigitalMiner> {
     @Override
     protected void actionPerformed(GuiButton guibutton) throws IOException {
         super.actionPerformed(guibutton);
-
         if (guibutton.id == 0) {
             if (!oreDictText.getText().isEmpty()) {
                 setOreDictKey();
             }
-
             if (filter.oreDictName != null && !filter.oreDictName.isEmpty()) {
                 if (isNew) {
                     Mekanism.packetHandler.sendToServer(new NewFilterMessage(Coord4D.get(tileEntity), filter));
@@ -114,7 +111,6 @@ public class GuiMOreDictFilter extends GuiMekanism<TileEntityDigitalMiner> {
                     Mekanism.packetHandler
                           .sendToServer(new EditFilterMessage(Coord4D.get(tileEntity), false, origFilter, filter));
                 }
-
                 Mekanism.packetHandler.sendToServer(
                       new DigitalMinerGuiMessage(MinerGuiPacket.SERVER, Coord4D.get(tileEntity), 0, 0, 0));
             } else {
@@ -130,15 +126,11 @@ public class GuiMOreDictFilter extends GuiMekanism<TileEntityDigitalMiner> {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        int xAxis = (mouseX - (width - xSize) / 2);
-        int yAxis = (mouseY - (height - ySize) / 2);
-
         fontRenderer.drawString(
               (isNew ? LangUtils.localize("gui.new") : LangUtils.localize("gui.edit")) + " " + LangUtils
                     .localize("gui.oredictFilter"), 43, 6, 0x404040);
         fontRenderer.drawString(LangUtils.localize("gui.status") + ": " + status, 35, 20, 0x00CD00);
         renderScaledText(LangUtils.localize("gui.key") + ": " + filter.oreDictName, 35, 32, 0x00CD00, 107);
-
         if (!renderStack.isEmpty()) {
             try {
                 GlStateManager.pushMatrix();
@@ -149,7 +141,6 @@ public class GuiMOreDictFilter extends GuiMekanism<TileEntityDigitalMiner> {
             } catch (Exception ignored) {
             }
         }
-
         if (!filter.replaceStack.isEmpty()) {
             GlStateManager.pushMatrix();
             RenderHelper.enableGUIStandardItemLighting();
@@ -157,90 +148,75 @@ public class GuiMOreDictFilter extends GuiMekanism<TileEntityDigitalMiner> {
             RenderHelper.disableStandardItemLighting();
             GlStateManager.popMatrix();
         }
-
+        int xAxis = (mouseX - (width - xSize) / 2);
+        int yAxis = (mouseY - (height - ySize) / 2);
         if (xAxis >= 148 && xAxis <= 162 && yAxis >= 45 && yAxis <= 59) {
             drawHoveringText(LangUtils.localize("gui.digitalMiner.requireReplace") + ": " + LangUtils
                   .transYesNo(filter.requireStack), xAxis, yAxis);
         }
-
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTick, int mouseX, int mouseY) {
-        mc.renderEngine.bindTexture(MekanismUtils.getResource(ResourceType.GUI, "GuiMOreDictFilter.png"));
+        mc.renderEngine.bindTexture(getGuiLocation());
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         int guiWidth = (width - xSize) / 2;
         int guiHeight = (height - ySize) / 2;
         drawTexturedModalRect(guiWidth, guiHeight, 0, 0, xSize, ySize);
-
         int xAxis = (mouseX - (width - xSize) / 2);
         int yAxis = (mouseY - (height - ySize) / 2);
-
         if (xAxis >= 5 && xAxis <= 16 && yAxis >= 5 && yAxis <= 16) {
             drawTexturedModalRect(guiWidth + 5, guiHeight + 5, 176, 0, 11, 11);
         } else {
             drawTexturedModalRect(guiWidth + 5, guiHeight + 5, 176, 11, 11, 11);
         }
-
         if (xAxis >= 131 && xAxis <= 143 && yAxis >= 47 && yAxis <= 59) {
             drawTexturedModalRect(guiWidth + 131, guiHeight + 47, 176 + 11, 0, 12, 12);
         } else {
             drawTexturedModalRect(guiWidth + 131, guiHeight + 47, 176 + 11, 12, 12, 12);
         }
-
         if (xAxis >= 148 && xAxis <= 162 && yAxis >= 45 && yAxis <= 59) {
             drawTexturedModalRect(guiWidth + 148, guiHeight + 45, 176 + 23, 0, 14, 14);
         } else {
             drawTexturedModalRect(guiWidth + 148, guiHeight + 45, 176 + 23, 14, 14, 14);
         }
-
         oreDictText.drawTextBox();
-
         if (xAxis >= 149 && xAxis <= 165 && yAxis >= 19 && yAxis <= 35) {
             GlStateManager.pushMatrix();
             GlStateManager.disableLighting();
             GlStateManager.disableDepth();
             GlStateManager.colorMask(true, true, true, false);
-
             int x = guiWidth + 149;
             int y = guiHeight + 19;
             drawGradientRect(x, y, x + 16, y + 16, -2130706433, -2130706433);
-
             GlStateManager.colorMask(true, true, true, true);
             GlStateManager.enableLighting();
             GlStateManager.enableDepth();
             GlStateManager.popMatrix();
         }
-
         super.drawGuiContainerBackgroundLayer(partialTick, mouseX, mouseY);
     }
 
     @Override
     public void updateScreen() {
         super.updateScreen();
-
         oreDictText.updateCursorCounter();
-
         if (ticker > 0) {
             ticker--;
         } else {
             status = EnumColor.DARK_GREEN + LangUtils.localize("gui.allOK");
         }
-
         if (stackSwitch > 0) {
             stackSwitch--;
         }
-
         if (stackSwitch == 0 && iterStacks != null && iterStacks.size() > 0) {
             stackSwitch = 20;
-
             if (stackIndex == -1 || stackIndex == iterStacks.size() - 1) {
                 stackIndex = 0;
             } else if (stackIndex < iterStacks.size() - 1) {
                 stackIndex++;
             }
-
             renderStack = iterStacks.get(stackIndex);
         } else if (iterStacks != null && iterStacks.size() == 0) {
             renderStack = ItemStack.EMPTY;
@@ -250,34 +226,27 @@ public class GuiMOreDictFilter extends GuiMekanism<TileEntityDigitalMiner> {
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
         super.mouseClicked(mouseX, mouseY, button);
-
         oreDictText.mouseClicked(mouseX, mouseY, button);
-
         if (button == 0) {
             int xAxis = (mouseX - (width - xSize) / 2);
             int yAxis = (mouseY - (height - ySize) / 2);
-
             if (xAxis >= 5 && xAxis <= 16 && yAxis >= 5 && yAxis <= 16) {
                 SoundHandler.playSound(SoundEvents.UI_BUTTON_CLICK);
                 Mekanism.packetHandler.sendToServer(
                       new DigitalMinerGuiMessage(MinerGuiPacket.SERVER, Coord4D.get(tileEntity), isNew ? 5 : 0, 0, 0));
             }
-
             if (xAxis >= 131 && xAxis <= 143 && yAxis >= 47 && yAxis <= 59) {
                 SoundHandler.playSound(SoundEvents.UI_BUTTON_CLICK);
                 setOreDictKey();
             }
-
             if (xAxis >= 148 && xAxis <= 162 && yAxis >= 45 && yAxis <= 59) {
                 SoundHandler.playSound(SoundEvents.UI_BUTTON_CLICK);
                 filter.requireStack = !filter.requireStack;
             }
-
             if (xAxis >= 149 && xAxis <= 165 && yAxis >= 19 && yAxis <= 35) {
                 boolean doNull = false;
                 ItemStack stack = mc.player.inventory.getItemStack();
                 ItemStack toUse = ItemStack.EMPTY;
-
                 if (!stack.isEmpty() && !Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                     if (stack.getItem() instanceof ItemBlock) {
                         if (Block.getBlockFromItem(stack.getItem()) != Blocks.BEDROCK) {
@@ -288,26 +257,27 @@ public class GuiMOreDictFilter extends GuiMekanism<TileEntityDigitalMiner> {
                 } else if (stack.isEmpty() && Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                     doNull = true;
                 }
-
                 if (!toUse.isEmpty() || doNull) {
                     filter.replaceStack = toUse;
                 }
-
                 SoundHandler.playSound(SoundEvents.UI_BUTTON_CLICK);
             }
         }
     }
 
+    @Override
+    protected ResourceLocation getGuiLocation() {
+        return MekanismUtils.getResource(ResourceType.GUI, "GuiMOreDictFilter.png");
+    }
+
     private void updateStackList(String oreName) {
         iterStacks = OreDictCache.getOreDictStacks(oreName, true);
-
         stackSwitch = 0;
         stackIndex = -1;
     }
 
     private void setOreDictKey() {
         String oreName = oreDictText.getText();
-
         if (oreName.isEmpty()) {
             status = EnumColor.DARK_RED + LangUtils.localize("gui.oredictFilter.noKey");
             return;
@@ -315,9 +285,7 @@ public class GuiMOreDictFilter extends GuiMekanism<TileEntityDigitalMiner> {
             status = EnumColor.DARK_RED + LangUtils.localize("gui.oredictFilter.sameKey");
             return;
         }
-
         updateStackList(oreName);
-
         filter.oreDictName = oreName;
         oreDictText.setText("");
     }

@@ -38,80 +38,65 @@ import org.lwjgl.opengl.GL11;
 @SideOnly(Side.CLIENT)
 public class GuiFormulaicAssemblicator extends GuiMekanism<TileEntityFormulaicAssemblicator> {
 
-    public ResourceLocation guiLocation = MekanismUtils.getResource(ResourceType.GUI, "GuiFormulaicAssemblicator.png");
-
     public GuiFormulaicAssemblicator(InventoryPlayer inventory, TileEntityFormulaicAssemblicator tile) {
         super(tile, new ContainerFormulaicAssemblicator(inventory, tile));
-        guiElements.add(new GuiSecurityTab(this, tileEntity, guiLocation));
-        guiElements.add(new GuiUpgradeTab(this, tileEntity, guiLocation));
-        guiElements.add(new GuiRedstoneControl(this, tileEntity, guiLocation));
-        guiElements.add(new GuiSideConfigurationTab(this, tileEntity, guiLocation));
-        guiElements.add(new GuiTransporterConfigTab(this, 34, tileEntity, guiLocation));
-        guiElements.add(new GuiPowerBar(this, tileEntity, guiLocation, 159, 15));
-        guiElements.add(new GuiEnergyInfo(() ->
-        {
+        ResourceLocation resource = getGuiLocation();
+        guiElements.add(new GuiSecurityTab(this, tileEntity, resource));
+        guiElements.add(new GuiUpgradeTab(this, tileEntity, resource));
+        guiElements.add(new GuiRedstoneControl(this, tileEntity, resource));
+        guiElements.add(new GuiSideConfigurationTab(this, tileEntity, resource));
+        guiElements.add(new GuiTransporterConfigTab(this, 34, tileEntity, resource));
+        guiElements.add(new GuiPowerBar(this, tileEntity, resource, 159, 15));
+        guiElements.add(new GuiEnergyInfo(() -> {
             String multiplier = MekanismUtils.getEnergyDisplay(tileEntity.energyPerTick);
             return Arrays.asList(LangUtils.localize("gui.using") + ": " + multiplier + "/t",
                   LangUtils.localize("gui.needed") + ": " + MekanismUtils
                         .getEnergyDisplay(tileEntity.getMaxEnergy() - tileEntity.getEnergy()));
-        }, this, guiLocation));
-        guiElements.add(new GuiSlot(SlotType.POWER, this, guiLocation, 151, 75).with(SlotOverlay.POWER));
-
+        }, this, resource));
+        guiElements.add(new GuiSlot(SlotType.POWER, this, resource, 151, 75).with(SlotOverlay.POWER));
         ySize += 64;
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        int xAxis = (mouseX - (width - xSize) / 2);
-        int yAxis = (mouseY - (height - ySize) / 2);
-
         fontRenderer
               .drawString(tileEntity.getName(), (xSize / 2) - (fontRenderer.getStringWidth(tileEntity.getName()) / 2),
                     6, 0x404040);
         fontRenderer.drawString(LangUtils.localize("container.inventory"), 8, (ySize - 96) + 2, 0x404040);
-
+        int xAxis = (mouseX - (width - xSize) / 2);
+        int yAxis = (mouseY - (height - ySize) / 2);
         if (xAxis >= 44 && xAxis <= 60 && yAxis >= 75 && yAxis <= 91) {
             drawHoveringText(LangUtils.localize("gui.fillEmpty"), xAxis, yAxis);
         }
-
         if (xAxis >= 7 && xAxis <= 21 && yAxis >= 45 && yAxis <= 59) {
             drawHoveringText(LangUtils.localize("gui.encodeFormula"), xAxis, yAxis);
         }
-
         if (xAxis >= 71 && xAxis <= 87 && yAxis >= 75 && yAxis <= 91) {
             drawHoveringText(LangUtils.localize("gui.craftSingle"), xAxis, yAxis);
         }
-
         if (xAxis >= 89 && xAxis <= 105 && yAxis >= 75 && yAxis <= 91) {
             drawHoveringText(LangUtils.localize("gui.craftAvailable"), xAxis, yAxis);
         }
-
         if (xAxis >= 107 && xAxis <= 123 && yAxis >= 75 && yAxis <= 91) {
-            drawHoveringText(
-                  LangUtils.localize("gui.autoModeToggle") + ": " + LangUtils.transOnOff(tileEntity.autoMode), xAxis,
-                  yAxis);
+            drawHoveringText(LangUtils.localize("gui.autoModeToggle") + ": " +
+                  LangUtils.transOnOff(tileEntity.autoMode), xAxis, yAxis);
         }
-
         if (xAxis >= 26 && xAxis <= 42 && yAxis >= 75 && yAxis <= 91) {
-            drawHoveringText(
-                  LangUtils.localize("gui.stockControl") + ": " + LangUtils.transOnOff(tileEntity.stockControl), xAxis,
-                  yAxis);
+            drawHoveringText(LangUtils.localize("gui.stockControl") + ": " +
+                  LangUtils.transOnOff(tileEntity.stockControl), xAxis, yAxis);
         }
-
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTick, int mouseX, int mouseY) {
-        mc.renderEngine.bindTexture(guiLocation);
+        mc.renderEngine.bindTexture(getGuiLocation());
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         int guiWidth = (width - xSize) / 2;
         int guiHeight = (height - ySize) / 2;
         drawTexturedModalRect(guiWidth, guiHeight, 0, 0, xSize, ySize);
-
         int xAxis = mouseX - guiWidth;
         int yAxis = mouseY - guiHeight;
-
         if (!tileEntity.autoMode) {
             if (xAxis >= 44 && xAxis <= 60 && yAxis >= 75 && yAxis <= 91) {
                 drawTexturedModalRect(guiWidth + 44, guiHeight + 75, 176 + 62, 0, 16, 16);
@@ -121,7 +106,6 @@ public class GuiFormulaicAssemblicator extends GuiMekanism<TileEntityFormulaicAs
         } else {
             drawTexturedModalRect(guiWidth + 44, guiHeight + 75, 176 + 62, 32, 16, 16);
         }
-
         if (!tileEntity.autoMode && tileEntity.isRecipe) {
             if (canEncode()) {
                 if (xAxis >= 7 && xAxis <= 21 && yAxis >= 45 && yAxis <= 59) {
@@ -270,5 +254,10 @@ public class GuiFormulaicAssemblicator extends GuiMekanism<TileEntityFormulaicAs
                 }
             }
         }
+    }
+
+    @Override
+    protected ResourceLocation getGuiLocation() {
+        return MekanismUtils.getResource(ResourceType.GUI, "GuiFormulaicAssemblicator.png");
     }
 }

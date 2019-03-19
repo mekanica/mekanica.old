@@ -1,10 +1,11 @@
-package mekanism.client.gui;
+package mekanism.client.gui.chemical;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.OreGas;
+import mekanism.client.gui.GuiMekanism;
 import mekanism.client.gui.element.GuiEnergyInfo;
 import mekanism.client.gui.element.GuiGasGauge;
 import mekanism.client.gui.element.GuiGauge;

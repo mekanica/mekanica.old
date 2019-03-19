@@ -1,5 +1,6 @@
-package mekanism.client.gui;
+package mekanism.client.gui.chemical;
 
+import mekanism.client.gui.GuiAdvancedElectricMachine;
 import mekanism.client.gui.element.GuiProgress.ProgressBar;
 import mekanism.common.tile.prefab.TileEntityAdvancedElectricMachine;
 import net.minecraft.entity.player.InventoryPlayer;

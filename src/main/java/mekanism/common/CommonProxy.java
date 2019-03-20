@@ -152,51 +152,7 @@ public class CommonProxy implements IGuiProvider {
     /**
      * Register tile entities that have special models. Overwritten in client to register TESRs.
      */
-    public void registerSpecialTileEntities() {
-        GameRegistry.registerTileEntity(TileEntityEnrichmentChamber.class, "EnrichmentChamber");
-        GameRegistry.registerTileEntity(TileEntityOsmiumCompressor.class, "OsmiumCompressor");
-        GameRegistry.registerTileEntity(TileEntityCombiner.class, "Combiner");
-        GameRegistry.registerTileEntity(TileEntityCrusher.class, "Crusher");
-        GameRegistry.registerTileEntity(TileEntityFactory.class, "SmeltingFactory");
-        GameRegistry.registerTileEntity(TileEntityAdvancedFactory.class, "AdvancedSmeltingFactory");
-        GameRegistry.registerTileEntity(TileEntityEliteFactory.class, "UltimateSmeltingFactory");
-        GameRegistry.registerTileEntity(TileEntityPurificationChamber.class, "PurificationChamber");
-        GameRegistry.registerTileEntity(TileEntityEnergizedSmelter.class, "EnergizedSmelter");
-        GameRegistry.registerTileEntity(TileEntityMetallurgicInfuser.class, "MetallurgicInfuser");
-        GameRegistry.registerTileEntity(TileEntityGasTank.class, "GasTank");
-        GameRegistry.registerTileEntity(TileEntityEnergyCube.class, "EnergyCube");
-        GameRegistry.registerTileEntity(TileEntityPersonalChest.class, "PersonalChest");
-        GameRegistry.registerTileEntity(TileEntityDynamicTank.class, "DynamicTank");
-        GameRegistry.registerTileEntity(TileEntityDynamicValve.class, "DynamicValve");
-        GameRegistry.registerTileEntity(TileEntityChargepad.class, "Chargepad");
-        GameRegistry.registerTileEntity(TileEntityLogisticalSorter.class, "LogisticalSorter");
-        GameRegistry.registerTileEntity(TileEntityBin.class, "Bin");
-        GameRegistry.registerTileEntity(TileEntityDigitalMiner.class, "DigitalMiner");
-        GameRegistry.registerTileEntity(TileEntityTeleporter.class, "MekanismTeleporter");
-        GameRegistry.registerTileEntity(TileEntityChemicalInjectionChamber.class, "ChemicalInjectionChamber");
-        GameRegistry.registerTileEntity(TileEntityThermalEvaporationController.class, "ThermalEvaporationController");
-        GameRegistry.registerTileEntity(TileEntityPrecisionSawmill.class, "PrecisionSawmill");
-        GameRegistry.registerTileEntity(TileEntityChemicalCrystallizer.class, "ChemicalCrystallizer");
-        GameRegistry.registerTileEntity(TileEntitySeismicVibrator.class, "SeismicVibrator");
-        GameRegistry.registerTileEntity(TileEntityPRC.class, "PressurizedReactionChamber");
-        GameRegistry.registerTileEntity(TileEntityFluidTank.class, "FluidTank");
-        GameRegistry.registerTileEntity(TileEntitySolarNeutronActivator.class, "SolarNeutronActivator");
-        GameRegistry.registerTileEntity(TileEntityFormulaicAssemblicator.class, "FormulaicAssemblicator");
-        GameRegistry.registerTileEntity(TileEntityResistiveHeater.class, "ResistiveHeater");
-        GameRegistry.registerTileEntity(TileEntityBoilerCasing.class, "BoilerCasing");
-        GameRegistry.registerTileEntity(TileEntityBoilerValve.class, "BoilerValve");
-        GameRegistry.registerTileEntity(TileEntitySecurityDesk.class, "SecurityDesk");
-        GameRegistry.registerTileEntity(TileEntityQuantumEntangloporter.class, "QuantumEntangloporter");
-        GameRegistry.registerTileEntity(TileEntityChemicalDissolutionChamber.class, "ChemicalDissolutionChamber");
-
-        //transmitters
-        GameRegistry.registerTileEntity(TileEntityMechanicalPipe.class, "MechanicalPipe");
-        GameRegistry.registerTileEntity(TileEntityUniversalCable.class, "UniversalCable");
-        GameRegistry.registerTileEntity(TileEntityThermodynamicConductor.class, "ThermodynamicConductor");
-        GameRegistry.registerTileEntity(TileEntityLogisticalTransporter.class, "LogisticalTransporter");
-        GameRegistry.registerTileEntity(TileEntityPressurizedTube.class, "PressurizedTube");
-        GameRegistry.registerTileEntity(TileEntityDiversionTransporter.class, "DiversionTransporter");
-        GameRegistry.registerTileEntity(TileEntityRestrictiveTransporter.class, "RestrictiveTransporter");
+    public void registerTESRs() {
     }
 
     public void handleTeleporterUpdate(PortableTeleporterMessage message) {
@@ -279,8 +235,6 @@ public class CommonProxy implements IGuiProvider {
               .get(Configuration.CATEGORY_GENERAL, "EnergyPerRedstone", 10000D).getDouble();
         general.DISASSEMBLER_USAGE = Mekanism.configuration
               .get(Configuration.CATEGORY_GENERAL, "DisassemblerEnergyUsage", 10).getInt();
-        general.VOICE_PORT = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "VoicePort", 36123, null, 1, 65535).getInt();
         //If this is less than 1, upgrades make machines worse. If less than 0, I don't even know.
         general.maxUpgradeMultiplier = Mekanism.configuration
               .get(Configuration.CATEGORY_GENERAL, "UpgradeModifier", 10, null, 1, Integer.MAX_VALUE).getInt();
@@ -345,20 +299,22 @@ public class CommonProxy implements IGuiProvider {
               .get(Configuration.CATEGORY_GENERAL, "BlacklistForgePower", false).getBoolean();
 
         String s = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "EnergyType", "J", null, new String[]{"J", "RF", "EU", "T"})
-              .getString();
+              .get(Configuration.CATEGORY_GENERAL, "EnergyType", "RF", null, new String[]{"J", "RF", "EU", "T"})
+              .getString().trim().toLowerCase();
 
-        if (s != null) {
-            if (s.trim().equalsIgnoreCase("j") || s.trim().equalsIgnoreCase("joules")) {
+        switch (s) {
+            case "joules":
                 general.energyUnit = EnergyType.J;
-            } else if (s.trim().equalsIgnoreCase("rf") || s.trim().equalsIgnoreCase("te") || s.trim()
-                  .equalsIgnoreCase("thermal expansion")) {
-                general.energyUnit = EnergyType.RF;
-            } else if (s.trim().equalsIgnoreCase("eu") || s.trim().equalsIgnoreCase("ic2")) {
+                break;
+            case "eu":
+            case "ic2":
                 general.energyUnit = EnergyType.EU;
-            } else if (s.trim().equalsIgnoreCase("t") || s.trim().equalsIgnoreCase("tesla")) {
+                break;
+            case "tesla":
                 general.energyUnit = EnergyType.T;
-            }
+                break;
+            default:
+                general.energyUnit = EnergyType.RF;
         }
 
         s = Mekanism.configuration
@@ -645,7 +601,7 @@ public class CommonProxy implements IGuiProvider {
 
     public double getReach(EntityPlayer player) {
         if (player instanceof EntityPlayerMP) {
-            return ((EntityPlayerMP) player).interactionManager.getBlockReachDistance();
+            return player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue();
         }
 
         return 0;

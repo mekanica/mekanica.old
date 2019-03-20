@@ -11,12 +11,12 @@ import java.util.stream.Collectors;
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasRegistry;
 import mekanism.api.gas.GasStack;
-import mekanism.client.gui.GuiChemicalCrystallizer;
-import mekanism.client.gui.GuiChemicalDissolutionChamber;
-import mekanism.client.gui.GuiChemicalInfuser;
-import mekanism.client.gui.GuiChemicalInjectionChamber;
-import mekanism.client.gui.GuiChemicalOxidizer;
-import mekanism.client.gui.GuiChemicalWasher;
+import mekanism.client.gui.chemical.GuiChemicalCrystallizer;
+import mekanism.client.gui.chemical.GuiChemicalDissolutionChamber;
+import mekanism.client.gui.chemical.GuiChemicalInfuser;
+import mekanism.client.gui.chemical.GuiChemicalInjectionChamber;
+import mekanism.client.gui.chemical.GuiChemicalOxidizer;
+import mekanism.client.gui.chemical.GuiChemicalWasher;
 import mekanism.client.gui.GuiCombiner;
 import mekanism.client.gui.GuiCrusher;
 import mekanism.client.gui.GuiElectrolyticSeparator;
@@ -109,6 +109,7 @@ import mezz.jei.api.ISubtypeRegistry;
 import mezz.jei.api.ISubtypeRegistry.ISubtypeInterpreter;
 import mezz.jei.api.JEIPlugin;
 import mezz.jei.api.ingredients.IModIngredientRegistration;
+import mezz.jei.api.recipe.IIngredientType;
 import mezz.jei.api.recipe.IRecipeCategoryRegistration;
 import mezz.jei.api.recipe.IRecipeWrapper;
 import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
@@ -120,6 +121,8 @@ import net.minecraftforge.fml.common.Loader;
 
 @JEIPlugin
 public class MekanismJEI implements IModPlugin {
+
+    public static final IIngredientType<GasStack> TYPE_GAS = () -> GasStack.class;
 
     public static final ISubtypeInterpreter NBT_INTERPRETER = itemStack ->
     {
@@ -166,7 +169,7 @@ public class MekanismJEI implements IModPlugin {
     public void registerIngredients(IModIngredientRegistration registry) {
         List<GasStack> list = GasRegistry.getRegisteredGasses().stream().filter(Gas::isVisible)
               .map(g -> new GasStack(g, Fluid.BUCKET_VOLUME)).collect(Collectors.toList());
-        registry.register(GasStack.class, list, new GasStackHelper(), GAS_RENDERER);
+        registry.register(MekanismJEI.TYPE_GAS, list, new GasStackHelper(), GAS_RENDERER);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package mekanism.common.content.transporter;
 
 import mekanism.common.util.InventoryUtils;
-import mekanism.common.util.StackUtils;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -78,22 +77,8 @@ public class StackSearcher {
             IItemHandler inventory = InventoryUtils.getItemHandler(tileEntity, side.getOpposite());
 
             for (i = i - 1; i >= 0; i--) {
-                ItemStack stack = inventory.extractItem(i, max, true);
-
-                if (!stack.isEmpty() && StackUtils.equalsWildcard(stack, type)) {
-                    int current = !ret.getStack().isEmpty() ? ret.getStack().getCount() : 0;
-
-                    if (current + stack.getCount() <= max) {
-                        ret.appendStack(i, stack.copy());
-                    } else {
-                        ItemStack copy = stack.copy();
-                        copy.setCount(max - current);
-                        ret.appendStack(i, copy);
-                    }
-
-                    if (!ret.getStack().isEmpty() && ret.getStack().getCount() == max) {
-                        return ret;
-                    }
+                if (InventoryUtils.takeItemHandler(type, max, ret, inventory, i)) {
+                    return ret;
                 }
             }
         } else if (tileEntity instanceof ISidedInventory) {
@@ -102,31 +87,8 @@ public class StackSearcher {
 
             if (slots.length != 0) {
                 for (i = i - 1; i >= 0; i--) {
-                    int slotID = slots[i];
-
-                    if (!sidedInventory.getStackInSlot(slotID).isEmpty() && StackUtils
-                          .equalsWildcard(sidedInventory.getStackInSlot(slotID), type)) {
-                        ItemStack stack = sidedInventory.getStackInSlot(slotID);
-                        int current = !ret.getStack().isEmpty() ? ret.getStack().getCount() : 0;
-
-                        if (current + stack.getCount() <= max) {
-                            ItemStack copy = stack.copy();
-
-                            if (sidedInventory.canExtractItem(slotID, copy, side.getOpposite())) {
-                                ret.appendStack(slotID, copy);
-                            }
-                        } else {
-                            ItemStack copy = stack.copy();
-
-                            if (sidedInventory.canExtractItem(slotID, copy, side.getOpposite())) {
-                                copy.setCount(max - current);
-                                ret.appendStack(slotID, copy);
-                            }
-                        }
-
-                        if (!ret.getStack().isEmpty() && ret.getStack().getCount() == max) {
-                            return ret;
-                        }
+                    if (InventoryUtils.takeItemSidedInv(side, type, max, ret, sidedInventory, slots, i)) {
+                        return ret;
                     }
                 }
             }
@@ -134,22 +96,8 @@ public class StackSearcher {
             IInventory inventory = InventoryUtils.checkChestInv((IInventory) tileEntity);
 
             for (i = i - 1; i >= 0; i--) {
-                if (!inventory.getStackInSlot(i).isEmpty() && StackUtils
-                      .equalsWildcard(inventory.getStackInSlot(i), type)) {
-                    ItemStack stack = inventory.getStackInSlot(i);
-                    int current = !ret.getStack().isEmpty() ? ret.getStack().getCount() : 0;
-
-                    if (current + stack.getCount() <= max) {
-                        ret.appendStack(i, stack.copy());
-                    } else {
-                        ItemStack copy = stack.copy();
-                        copy.setCount(max - current);
-                        ret.appendStack(i, copy);
-                    }
-
-                    if (!ret.getStack().isEmpty() && ret.getStack().getCount() == max) {
-                        return ret;
-                    }
+                if (InventoryUtils.takeItemInv(type, max, ret, inventory, i)) {
+                    return ret;
                 }
             }
         }

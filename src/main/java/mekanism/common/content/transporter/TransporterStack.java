@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import mekanism.api.Coord4D;
 import mekanism.api.EnumColor;
+import mekanism.api.TileNetworkList;
 import mekanism.common.PacketHandler;
 import mekanism.common.base.ILogisticalTransporter;
-import mekanism.api.TileNetworkList;
 import mekanism.common.capabilities.Capabilities;
 import mekanism.common.content.transporter.TransitRequest.TransitResponse;
 import mekanism.common.content.transporter.TransporterPathfinder.Destination;
@@ -161,8 +161,10 @@ public class TransporterStack {
     }
 
     public TransitResponse recalculatePath(TransitRequest request, ILogisticalTransporter transporter, int min) {
-        Destination newPath = TransporterPathfinder.getNewBasePath(transporter, this, request, min);
+        return getTransitResponse(TransporterPathfinder.getNewBasePath(transporter, this, request, min));
+    }
 
+    private TransitResponse getTransitResponse(Destination newPath) {
         if (newPath == null) {
             return TransitResponse.EMPTY;
         }
@@ -176,17 +178,7 @@ public class TransporterStack {
 
     public TransitResponse recalculateRRPath(TransitRequest request, TileEntityLogisticalSorter outputter,
           ILogisticalTransporter transporter, int min) {
-        Destination newPath = TransporterPathfinder.getNewRRPath(transporter, this, request, outputter, min);
-
-        if (newPath == null) {
-            return TransitResponse.EMPTY;
-        }
-
-        idleDir = null;
-        setPath(newPath.path, Path.DEST);
-        initiatedPath = true;
-
-        return newPath.response;
+        return getTransitResponse(TransporterPathfinder.getNewRRPath(transporter, this, request, outputter, min));
     }
 
     public boolean calculateIdle(ILogisticalTransporter transporter) {

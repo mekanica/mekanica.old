@@ -257,7 +257,8 @@ public class CommonProxy implements IGuiProvider {
                     "Base factor for working out machine performance with upgrades - UpgradeModifier * (UpgradesInstalled/UpgradesPossible).",
                     1, Integer.MAX_VALUE).getInt();
         general.minerSilkMultiplier = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "MinerSilkMultiplier", 6).getDouble();
+              .get(Configuration.CATEGORY_GENERAL, "MinerSilkMultiplier", 6,
+                    "Energy multiplier for using silk touch mode with the Digital Miner.").getDouble();
         general.prefilledGasTanks = Mekanism.configuration
               .get(Configuration.CATEGORY_GENERAL, "PrefilledGasTanks", true,
                     "Add filled creative gas tanks to creative/JEI.").getBoolean();

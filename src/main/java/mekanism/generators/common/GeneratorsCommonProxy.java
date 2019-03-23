@@ -131,8 +131,8 @@ public class GeneratorsCommonProxy implements IGuiProvider {
               .getDouble();
         generators.condenserRate = Mekanism.configuration.get("generation", "TurbineCondenserFlowRate", 32000).getInt();
 
-        generators.energyPerFusionFuel = Mekanism.configuration.get("generation", "EnergyPerFusionFuel", 5E6D)
-              .getDouble();
+        generators.energyPerFusionFuel = Mekanism.configuration.get("generation", "EnergyPerFusionFuel", 5E6D,
+              "Effects the Injection Rate, Max Temp, and Ignition Temp.").getDouble();
 
         for (GeneratorType type : GeneratorType.getGeneratorsForConfig()) {
             generators.generatorsManager.setEntry(type.blockName,
@@ -146,18 +146,23 @@ public class GeneratorsCommonProxy implements IGuiProvider {
     }
 
     private void loadWindConfiguration() {
-        generators.windGenerationMin = Mekanism.configuration.get("generation", "WindGenerationMin", 60D).getDouble();
-        generators.windGenerationMax = Mekanism.configuration.get("generation", "WindGenerationMax", 480D).getDouble();
+        generators.windGenerationMin = Mekanism.configuration.get("generation", "WindGenerationMin", 60D,
+              "Minimum base generation value of the Wind Generator.").getDouble();
+        generators.windGenerationMax = Mekanism.configuration.get("generation", "WindGenerationMax", 480D,
+              "Maximum base generation value of the Wind Generator.").getDouble();
 
         //Ensure max > min to avoid division by zero later
-        final int minY = Mekanism.configuration.get("generation", "WindGenerationMinY", 24).getInt();
-        final int maxY = Mekanism.configuration.get("generation", "WindGenerationMaxY", 255).getInt();
+        final int minY = Mekanism.configuration.get("generation", "WindGenerationMinY", 24,
+              "The minimum Y value that affects the Wind Generators Power generation.").getInt();
+        final int maxY = Mekanism.configuration.get("generation", "WindGenerationMaxY", 255,
+              "The maximum Y value that affects the Wind Generators Power generation.").getInt();
 
         generators.windGenerationMinY = minY;
         generators.windGenerationMaxY = Math.max(minY + 1, maxY);
 
         int[] windGenerationBlacklistDims = Mekanism.configuration
-              .get("generation", "WindGenerationDimBlacklist", new int[]{}).getIntList();
+              .get("generation", "WindGenerationDimBlacklist", new int[]{},
+                    "The list of dimension ids that the Wind Generator will not generate power in.").getIntList();
         generators.windGenerationDimBlacklist = IntStream.of(windGenerationBlacklistDims).boxed().
               collect(Collectors.toCollection(HashSet::new));
     }

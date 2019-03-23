@@ -298,64 +298,106 @@ public class MekanismTools implements IModule {
 
         //Armors
         armorOBSIDIAN = EnumHelper.addArmorMaterial("OBSIDIAN", "TODO",
-              Mekanism.configuration.get("tools.armor-balance.obsidian", "durability", 50).getInt(), new int[]{
-                    Mekanism.configuration.get("tools.armor-balance.obsidian.protection", "feet", 5).getInt(),
-                    Mekanism.configuration.get("tools.armor-balance.obsidian.protection", "legs", 8).getInt(),
-                    Mekanism.configuration.get("tools.armor-balance.obsidian.protection", "chest", 12).getInt(),
-                    Mekanism.configuration.get("tools.armor-balance.obsidian.protection", "head", 5).getInt()
-              }, Mekanism.configuration.get("tools.armor-balance.obsidian", "enchantability", 40).getInt(),
+              Mekanism.configuration.get("tools.armor-balance.obsidian", "durability", 50,
+                    "Base durability of refined obsidian armor.").getInt(), new int[]{
+                    Mekanism.configuration.get("tools.armor-balance.obsidian.protection", "feet", 5,
+                          "Protection value of refined obsidian boots.").getInt(),
+                    Mekanism.configuration.get("tools.armor-balance.obsidian.protection", "legs", 8,
+                          "Protection value of refined obsidian leggings.").getInt(),
+                    Mekanism.configuration.get("tools.armor-balance.obsidian.protection", "chest", 12,
+                          "Protection value of refined obsidian chestplates.").getInt(),
+                    Mekanism.configuration.get("tools.armor-balance.obsidian.protection", "head", 5,
+                          "Protection value of refined obsidian helmets.").getInt()
+              }, Mekanism.configuration.get("tools.armor-balance.obsidian", "enchantability", 40,
+                    "Natural enchantability factor of refined obsidian armor.").getInt(),
               SoundEvents.ITEM_ARMOR_EQUIP_IRON,
-              (float) Mekanism.configuration.get("tools.armor-balance.obsidian", "toughness", 4D).getDouble()
+              (float) Mekanism.configuration.get("tools.armor-balance.obsidian", "toughness", 4D,
+                    "Base armor toughness value of refined obsidian armor.").getDouble()
         );
         armorLAZULI = EnumHelper.addArmorMaterial("LAZULI", "TODO",
-              Mekanism.configuration.get("tools.armor-balance.lapis", "durability", 13).getInt(), new int[]{
-                    Mekanism.configuration.get("tools.armor-balance.lapis.protection", "feet", 2).getInt(),
-                    Mekanism.configuration.get("tools.armor-balance.lapis.protection", "legs", 6).getInt(),
-                    Mekanism.configuration.get("tools.armor-balance.lapis.protection", "chest", 5).getInt(),
-                    Mekanism.configuration.get("tools.armor-balance.lapis.protection", "head", 2).getInt()
-              }, Mekanism.configuration.get("tools.armor-balance.lapis", "enchantability", 8).getInt(),
+              Mekanism.configuration.get("tools.armor-balance.lapis", "durability", 13,
+                    "Base durability of lapis lazuli armor.").getInt(), new int[]{
+                    Mekanism.configuration.get("tools.armor-balance.lapis.protection", "feet", 2,
+                          "Protection value of lapis lazuli boots.").getInt(),
+                    Mekanism.configuration.get("tools.armor-balance.lapis.protection", "legs", 6,
+                          "Protection value of lapis lazuli leggings.").getInt(),
+                    Mekanism.configuration.get("tools.armor-balance.lapis.protection", "chest", 5,
+                          "Protection value of lapis lazuli chestplates.").getInt(),
+                    Mekanism.configuration.get("tools.armor-balance.lapis.protection", "head", 2,
+                          "Protection value of lapis lazuli helmets.").getInt()
+              }, Mekanism.configuration.get("tools.armor-balance.lapis", "enchantability", 8,
+                    "Natural enchantability factor of lapis lazuli armor.").getInt(),
               SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND,
-              (float) Mekanism.configuration.get("tools.armor-balance.lapis", "toughness", 0D).getDouble()
+              (float) Mekanism.configuration.get("tools.armor-balance.lapis", "toughness", 0D,
+                    "Base armor toughness value of lapis lazuli armor.").getDouble()
         );
         armorOSMIUM = EnumHelper.addArmorMaterial("OSMIUM", "TODO",
-              Mekanism.configuration.get("tools.armor-balance.osmium", "durability", 30).getInt(), new int[]{
-                    Mekanism.configuration.get("tools.armor-balance.osmium.protection", "feet", 3).getInt(),
-                    Mekanism.configuration.get("tools.armor-balance.osmium.protection", "legs", 6).getInt(),
-                    Mekanism.configuration.get("tools.armor-balance.osmium.protection", "chest", 5).getInt(),
-                    Mekanism.configuration.get("tools.armor-balance.osmium.protection", "head", 3).getInt()
-              }, Mekanism.configuration.get("tools.armor-balance.osmium", "enchantability", 12).getInt(),
+              Mekanism.configuration.get("tools.armor-balance.osmium", "durability", 30,
+                    "Base durability of osmium armor.").getInt(), new int[]{
+                    Mekanism.configuration.get("tools.armor-balance.osmium.protection", "feet", 3,
+                          "Protection value of osmium boots.").getInt(),
+                    Mekanism.configuration.get("tools.armor-balance.osmium.protection", "legs", 6,
+                          "Protection value of osmium leggings.").getInt(),
+                    Mekanism.configuration.get("tools.armor-balance.osmium.protection", "chest", 5,
+                          "Protection value of osmium chestplates.").getInt(),
+                    Mekanism.configuration.get("tools.armor-balance.osmium.protection", "head", 3,
+                          "Protection value of osmium helmets.").getInt()
+              }, Mekanism.configuration.get("tools.armor-balance.osmium", "enchantability", 12,
+                    "Natural enchantability factor of osmium armor.").getInt(),
               SoundEvents.ITEM_ARMOR_EQUIP_IRON,
-              Mekanism.configuration.get("tools.armor-balance.osmium", "toughness", 1).getInt()
+              Mekanism.configuration.get("tools.armor-balance.osmium", "toughness", 1,
+                    "Base armor toughness value of osmium armor.").getInt()
         );
         armorBRONZE = EnumHelper.addArmorMaterial("BRONZE", "TODO",
-              Mekanism.configuration.get("tools.armor-balance.bronze", "durability", 35).getInt(), new int[]{
-                    Mekanism.configuration.get("tools.armor-balance.bronze.protection", "feet", 2).getInt(),
-                    Mekanism.configuration.get("tools.armor-balance.bronze.protection", "legs", 5).getInt(),
-                    Mekanism.configuration.get("tools.armor-balance.bronze.protection", "chest", 6).getInt(),
-                    Mekanism.configuration.get("tools.armor-balance.bronze.protection", "head", 3).getInt()
-              }, Mekanism.configuration.get("tools.armor-balance.bronze", "enchantability", 10).getInt(),
+              Mekanism.configuration.get("tools.armor-balance.bronze", "durability", 35,
+                    "Base durability of bronze armor.").getInt(), new int[]{
+                    Mekanism.configuration.get("tools.armor-balance.bronze.protection", "feet", 2,
+                          "Protection value of bronze boots.").getInt(),
+                    Mekanism.configuration.get("tools.armor-balance.bronze.protection", "legs", 5,
+                          "Protection value of bronze leggings.").getInt(),
+                    Mekanism.configuration.get("tools.armor-balance.bronze.protection", "chest", 6,
+                          "Protection value of bronze chestplates.").getInt(),
+                    Mekanism.configuration.get("tools.armor-balance.bronze.protection", "head", 3,
+                          "Protection value of bronze helmets.").getInt()
+              }, Mekanism.configuration.get("tools.armor-balance.bronze", "enchantability", 10,
+                    "Natural enchantability factor of bronze armor.").getInt(),
               SoundEvents.ITEM_ARMOR_EQUIP_IRON,
-              (float) Mekanism.configuration.get("tools.armor-balance.bronze", "toughness", 0D).getDouble()
+              (float) Mekanism.configuration.get("tools.armor-balance.bronze", "toughness", 0D,
+                    "Base armor toughness value of bronze armor.").getDouble()
         );
         armorGLOWSTONE = EnumHelper.addArmorMaterial("GLOWSTONE", "TODO",
-              Mekanism.configuration.get("tools.armor-balance.glowstone", "durability", 18).getInt(), new int[]{
-                    Mekanism.configuration.get("tools.armor-balance.glowstone.protection", "feet", 3).getInt(),
-                    Mekanism.configuration.get("tools.armor-balance.glowstone.protection", "legs", 6).getInt(),
-                    Mekanism.configuration.get("tools.armor-balance.glowstone.protection", "chest", 7).getInt(),
-                    Mekanism.configuration.get("tools.armor-balance.glowstone.protection", "head", 3).getInt()
-              }, Mekanism.configuration.get("tools.armor-balance.glowstone", "enchantability", 18).getInt(),
+              Mekanism.configuration.get("tools.armor-balance.glowstone", "durability", 18,
+                    "Base durability of refined glowstone armor.").getInt(), new int[]{
+                    Mekanism.configuration.get("tools.armor-balance.glowstone.protection", "feet", 3,
+                          "Protection value of refined glowstone boots.").getInt(),
+                    Mekanism.configuration.get("tools.armor-balance.glowstone.protection", "legs", 6,
+                          "Protection value of refined glowstone leggings.").getInt(),
+                    Mekanism.configuration.get("tools.armor-balance.glowstone.protection", "chest", 7,
+                          "Protection value of refined glowstone chestplates.").getInt(),
+                    Mekanism.configuration.get("tools.armor-balance.glowstone.protection", "head", 3,
+                          "Protection value of refined glowstone helmets.").getInt()
+              }, Mekanism.configuration.get("tools.armor-balance.glowstone", "enchantability", 18,
+                    "Natural enchantability factor of refined glowstone armor.").getInt(),
               SoundEvents.ITEM_ARMOR_EQUIP_IRON,
-              (float) Mekanism.configuration.get("tools.armor-balance.glowstone", "toughness", 0D).getDouble()
+              (float) Mekanism.configuration.get("tools.armor-balance.glowstone", "toughness", 0D,
+                    "Base armor toughness value of refined glowstone armor.").getDouble()
         );
         armorSTEEL = EnumHelper.addArmorMaterial("STEEL", "TODO",
-              Mekanism.configuration.get("tools.armor-balance.steel", "durability", 40).getInt(), new int[]{
-                    Mekanism.configuration.get("tools.armor-balance.steel.protection", "feet", 3).getInt(),
-                    Mekanism.configuration.get("tools.armor-balance.steel.protection", "legs", 6).getInt(),
-                    Mekanism.configuration.get("tools.armor-balance.steel.protection", "chest", 7).getInt(),
-                    Mekanism.configuration.get("tools.armor-balance.steel.protection", "head", 3).getInt()
-              }, Mekanism.configuration.get("tools.armor-balance.steel", "enchantability", 10).getInt(),
+              Mekanism.configuration.get("tools.armor-balance.steel", "durability", 40,
+                    "Base durability of steel armor.").getInt(), new int[]{
+                    Mekanism.configuration.get("tools.armor-balance.steel.protection", "feet", 3,
+                          "Protection value of steel boots.").getInt(),
+                    Mekanism.configuration.get("tools.armor-balance.steel.protection", "legs", 6,
+                          "Protection value of steel leggings.").getInt(),
+                    Mekanism.configuration.get("tools.armor-balance.steel.protection", "chest", 7,
+                          "Protection value of steel chestplates.").getInt(),
+                    Mekanism.configuration.get("tools.armor-balance.steel.protection", "head", 3,
+                          "Protection value of steel helmets.").getInt()
+              }, Mekanism.configuration.get("tools.armor-balance.steel", "enchantability", 10,
+                    "Natural enchantability factor of steel armor.").getInt(),
               SoundEvents.ITEM_ARMOR_EQUIP_IRON,
-              (float) Mekanism.configuration.get("tools.armor-balance.steel", "toughness", 1D).getDouble()
+              (float) Mekanism.configuration.get("tools.armor-balance.steel", "toughness", 1D,
+                    "Base armor toughness value of steel armor.").getDouble()
         );
 
         if (Mekanism.configuration.hasChanged()) {

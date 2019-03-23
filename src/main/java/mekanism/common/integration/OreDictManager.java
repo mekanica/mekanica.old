@@ -48,7 +48,7 @@ public final class OreDictManager {
         for (ItemStack ore : OreDictionary.getOres("stickWood")) {
             ItemStack stick = StackUtils.size(ore, 1);
             if (!Recipe.PRECISION_SAWMILL.containsRecipe(stick)) {
-                RecipeHandler.addCrusherRecipe(stick, new ItemStack(MekanismItems.Sawdust));
+                RecipeHandler.addPrecisionSawmillRecipe(stick, new ItemStack(MekanismItems.Sawdust));
             }
         }
 

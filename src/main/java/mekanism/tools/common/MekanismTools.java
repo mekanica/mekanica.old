@@ -110,132 +110,191 @@ public class MekanismTools implements IModule {
     public void addItems() {
         //Tools
         toolOBSIDIAN = EnumHelper.addToolMaterial("OBSIDIAN",
-              Mekanism.configuration.get("tools.tool-balance.obsidian.regular", "harvestLevel", 3).getInt(),
-              Mekanism.configuration.get("tools.tool-balance.obsidian.regular", "maxUses", 2500).getInt(),
-              (float) Mekanism.configuration.get("tools.tool-balance.obsidian.regular", "efficiency", 20d).getDouble(0),
-              Mekanism.configuration.get("tools.tool-balance.obsidian.regular", "damage", 10).getInt(),
-              Mekanism.configuration.get("tools.tool-balance.obsidian.regular", "enchantability", 40).getInt()
+              Mekanism.configuration.get("tools.tool-balance.obsidian.regular", "harvestLevel", 3,
+                    "Harvest level of refined obsidian tools.").getInt(),
+              Mekanism.configuration.get("tools.tool-balance.obsidian.regular", "maxUses", 2500,
+                    "Maximum durability of refined obsidian tools.").getInt(),
+              (float) Mekanism.configuration.get("tools.tool-balance.obsidian.regular", "efficiency", 20D,
+                    "Base speed of refined obsidian.").getDouble(0),
+              Mekanism.configuration.get("tools.tool-balance.obsidian.regular", "damage", 10,
+                    "Base attack damage of refined obsidian.").getInt(),
+              Mekanism.configuration.get("tools.tool-balance.obsidian.regular", "enchantability", 40,
+                    "Natural enchantability factor of refined obsidian.").getInt()
         );
         toolOBSIDIAN2 = EnumHelper.addToolMaterial("OBSIDIAN2",
-              Mekanism.configuration.get("tools.tool-balance.obsidian.paxel", "harvestLevel", 3).getInt(),
-              Mekanism.configuration.get("tools.tool-balance.obsidian.paxel", "maxUses", 3000).getInt(),
-              (float) Mekanism.configuration.get("tools.tool-balance.obsidian.paxel", "efficiency", 25d).getDouble(0),
-              Mekanism.configuration.get("tools.tool-balance.obsidian.paxel", "damage", 10).getInt(),
-              Mekanism.configuration.get("tools.tool-balance.obsidian.paxel", "enchantability", 50).getInt()
+              Mekanism.configuration.get("tools.tool-balance.obsidian.paxel", "harvestLevel", 3,
+                    "Harvest level of the refined obsidian paxel.").getInt(),
+              Mekanism.configuration.get("tools.tool-balance.obsidian.paxel", "maxUses", 3000,
+                    "Maximum durability of the refined obsidian paxel.").getInt(),
+              (float) Mekanism.configuration.get("tools.tool-balance.obsidian.paxel", "efficiency", 25D,
+                    "Base speed of a refined obsidian paxel.").getDouble(0),
+              Mekanism.configuration.get("tools.tool-balance.obsidian.paxel", "attackDamage", 10,
+                    "Base attack damage of a refined obsidian paxel.").getInt(),
+              Mekanism.configuration.get("tools.tool-balance.obsidian.paxel", "enchantability", 50,
+                    "Natural enchantability factor of a refined obsidian paxel.").getInt()
         );
         toolLAZULI = EnumHelper.addToolMaterial("LAZULI",
-              Mekanism.configuration.get("tools.tool-balance.lapis.regular", "harvestLevel", 2).getInt(),
-              Mekanism.configuration.get("tools.tool-balance.lapis.regular", "maxUses", 200).getInt(),
-              (float) Mekanism.configuration.get("tools.tool-balance.lapis.regular", "efficiency", 5d).getDouble(0),
-              Mekanism.configuration.get("tools.tool-balance.lapis.regular", "damage", 2).getInt(),
-              Mekanism.configuration.get("tools.tool-balance.lapis.regular", "enchantability", 8).getInt()
+              Mekanism.configuration.get("tools.tool-balance.lapis.regular", "harvestLevel", 2,
+                    "Harvest level of lapis lazuli tools.").getInt(),
+              Mekanism.configuration.get("tools.tool-balance.lapis.regular", "maxUses", 200,
+                    "Maximum durability of lapis lazuli tools.").getInt(),
+              (float) Mekanism.configuration.get("tools.tool-balance.lapis.regular", "efficiency", 5D,
+                    "Base speed of lapis lazuli.").getDouble(0),
+              Mekanism.configuration.get("tools.tool-balance.lapis.regular", "damage", 2,
+                    "Base attack damage of lapis lazuli.").getInt(),
+              Mekanism.configuration.get("tools.tool-balance.lapis.regular", "enchantability", 8,
+                    "Natural enchantability factor of lapis lazuli.").getInt()
         );
         toolLAZULI2 = EnumHelper.addToolMaterial("LAZULI2",
-              Mekanism.configuration.get("tools.tool-balance.lapis.paxel", "harvestLevel", 2).getInt(),
-              Mekanism.configuration.get("tools.tool-balance.lapis.paxel", "maxUses", 250).getInt(),
-              (float) Mekanism.configuration.get("tools.tool-balance.lapis.paxel", "efficiency", 6d).getDouble(0),
-              Mekanism.configuration.get("tools.tool-balance.lapis.paxel", "damage", 4).getInt(),
-              Mekanism.configuration.get("tools.tool-balance.lapis.paxel", "enchantability", 10).getInt()
+              Mekanism.configuration.get("tools.tool-balance.lapis.paxel", "harvestLevel", 2,
+                    "Harvest level of the lapis lazuli paxel.").getInt(),
+              Mekanism.configuration.get("tools.tool-balance.lapis.paxel", "maxUses", 250,
+                    "Maximum durability of the lapis lazuli paxel.").getInt(),
+              (float) Mekanism.configuration.get("tools.tool-balance.lapis.paxel", "efficiency", 6D,
+                    "Base speed of a lapis lazuli paxel.").getDouble(0),
+              Mekanism.configuration.get("tools.tool-balance.lapis.paxel", "damage", 4,
+                    "Base attack damage of a lapis lazuli paxel.").getInt(),
+              Mekanism.configuration.get("tools.tool-balance.lapis.paxel", "enchantability", 10,
+                    "Natural enchantability factor of a lapis lazuli paxel.").getInt()
         );
         toolOSMIUM = EnumHelper.addToolMaterial("OSMIUM",
-              Mekanism.configuration.get("tools.tool-balance.osmium.regular", "harvestLevel", 2).getInt(),
-              Mekanism.configuration.get("tools.tool-balance.osmium.regular", "maxUses", 500).getInt(),
-              (float) Mekanism.configuration.get("tools.tool-balance.osmium.regular", "efficiency", 10d).getDouble(0),
-              Mekanism.configuration.get("tools.tool-balance.osmium.regular", "damage", 4).getInt(),
-              Mekanism.configuration.get("tools.tool-balance.osmium.regular", "enchantability", 12).getInt()
+              Mekanism.configuration.get("tools.tool-balance.osmium.regular", "harvestLevel", 2,
+                    "Harvest level of osmium tools.").getInt(),
+              Mekanism.configuration.get("tools.tool-balance.osmium.regular", "maxUses", 500,
+                    "Maximum durability of osmium tools.").getInt(),
+              (float) Mekanism.configuration.get("tools.tool-balance.osmium.regular", "efficiency", 10D,
+                    "Base speed of osmium.").getDouble(0),
+              Mekanism.configuration.get("tools.tool-balance.osmium.regular", "damage", 4,
+                    "Base attack damage of osmium.").getInt(),
+              Mekanism.configuration.get("tools.tool-balance.osmium.regular", "enchantability", 12,
+                    "Natural enchantability factor of osmium.").getInt()
         );
         toolOSMIUM2 = EnumHelper.addToolMaterial("OSMIUM2",
-              Mekanism.configuration.get("tools.tool-balance.osmium.paxel", "harvestLevel", 3).getInt(),
-              Mekanism.configuration.get("tools.tool-balance.osmium.paxel", "maxUses", 700).getInt(),
-              (float) Mekanism.configuration.get("tools.tool-balance.osmium.paxel", "efficiency", 12d).getDouble(0),
-              Mekanism.configuration.get("tools.tool-balance.osmium.paxel", "damage", 5).getInt(),
-              Mekanism.configuration.get("tools.tool-balance.osmium.paxel", "enchantability", 16).getInt()
+              Mekanism.configuration.get("tools.tool-balance.osmium.paxel", "harvestLevel", 3,
+                    "Harvest level of the osmium paxel.").getInt(),
+              Mekanism.configuration.get("tools.tool-balance.osmium.paxel", "maxUses", 700,
+                    "Maximum durability of the osmium paxel.").getInt(),
+              (float) Mekanism.configuration.get("tools.tool-balance.osmium.paxel", "efficiency", 12D,
+                    "Base speed of an osmium paxel.").getDouble(0),
+              Mekanism.configuration.get("tools.tool-balance.osmium.paxel", "damage", 5,
+                    "Base attack damage of an osmium paxel.").getInt(),
+              Mekanism.configuration.get("tools.tool-balance.osmium.paxel", "enchantability", 16,
+                    "Natural enchantability factor of an osmium paxel.").getInt()
         );
         toolBRONZE = EnumHelper.addToolMaterial("BRONZE",
-              Mekanism.configuration.get("tools.tool-balance.bronze.regular", "harvestLevel", 2).getInt(),
-              Mekanism.configuration.get("tools.tool-balance.bronze.regular", "maxUses", 800).getInt(),
-              (float) Mekanism.configuration.get("tools.tool-balance.bronze.regular", "efficiency", 14d).getDouble(0),
-              Mekanism.configuration.get("tools.tool-balance.bronze.regular", "damage", 6).getInt(),
-              Mekanism.configuration.get("tools.tool-balance.bronze.regular", "enchantability", 10).getInt()
+              Mekanism.configuration.get("tools.tool-balance.bronze.regular", "harvestLevel", 2,
+                    "Harvest level of bronze tools.").getInt(),
+              Mekanism.configuration.get("tools.tool-balance.bronze.regular", "maxUses", 800,
+                    "Maximum durability of bronze tools.").getInt(),
+              (float) Mekanism.configuration.get("tools.tool-balance.bronze.regular", "efficiency", 14D,
+                    "Base speed of bronze.").getDouble(0),
+              Mekanism.configuration.get("tools.tool-balance.bronze.regular", "damage", 6,
+                    "Base attack damage of bronze.").getInt(),
+              Mekanism.configuration.get("tools.tool-balance.bronze.regular", "enchantability", 10,
+                    "Natural enchantability factor of bronze.").getInt()
         );
         toolBRONZE2 = EnumHelper.addToolMaterial("BRONZE2",
-              Mekanism.configuration.get("tools.tool-balance.bronze.paxel", "harvestLevel", 3).getInt(),
-              Mekanism.configuration.get("tools.tool-balance.bronze.paxel", "maxUses", 1100).getInt(),
-              (float) Mekanism.configuration.get("tools.tool-balance.bronze.paxel", "efficiency", 16d).getDouble(0),
-              Mekanism.configuration.get("tools.tool-balance.bronze.paxel", "damage", 10).getInt(),
-              Mekanism.configuration.get("tools.tool-balance.bronze.paxel", "enchantability", 14).getInt()
+              Mekanism.configuration.get("tools.tool-balance.bronze.paxel", "harvestLevel", 3,
+                    "Harvest level of the bronze paxel.").getInt(),
+              Mekanism.configuration.get("tools.tool-balance.bronze.paxel", "maxUses", 1100,
+                    "Maximum durability of the bronze paxel.").getInt(),
+              (float) Mekanism.configuration.get("tools.tool-balance.bronze.paxel", "efficiency", 16D,
+                    "Base speed of a bronze paxel.").getDouble(0),
+              Mekanism.configuration.get("tools.tool-balance.bronze.paxel", "damage", 10,
+                    "Base attack damage of a bronze paxel.").getInt(),
+              Mekanism.configuration.get("tools.tool-balance.bronze.paxel", "enchantability", 14,
+                    "Natural enchantability factor of a bronze paxel.").getInt()
         );
         toolGLOWSTONE = EnumHelper.addToolMaterial("GLOWSTONE",
-              Mekanism.configuration.get("tools.tool-balance.glowstone.regular", "harvestLevel", 2).getInt(),
-              Mekanism.configuration.get("tools.tool-balance.glowstone.regular", "maxUses", 300).getInt(),
-              (float) Mekanism.configuration.get("tools.tool-balance.glowstone.regular", "efficiency", 14d)
-                    .getDouble(0),
-              Mekanism.configuration.get("tools.tool-balance.glowstone.regular", "damage", 5).getInt(),
-              Mekanism.configuration.get("tools.tool-balance.glowstone.regular", "enchantability", 18).getInt()
+              Mekanism.configuration.get("tools.tool-balance.glowstone.regular", "harvestLevel", 2,
+                    "Harvest level of refined glowstone tools.").getInt(),
+              Mekanism.configuration.get("tools.tool-balance.glowstone.regular", "maxUses", 300,
+                    "Maximum durability of refined glowstone tools.").getInt(),
+              (float) Mekanism.configuration.get("tools.tool-balance.glowstone.regular", "efficiency", 14D,
+                    "Base speed of refined glowstone.").getDouble(0),
+              Mekanism.configuration.get("tools.tool-balance.glowstone.regular", "damage", 5,
+                    "Base attack damage of refined glowstone.").getInt(),
+              Mekanism.configuration.get("tools.tool-balance.glowstone.regular", "enchantability", 18,
+                    "Natural enchantability factor of refined glowstone.").getInt()
         );
         toolGLOWSTONE2 = EnumHelper.addToolMaterial("GLOWSTONE2",
-              Mekanism.configuration.get("tools.tool-balance.glowstone.paxel", "harvestLevel", 2).getInt(),
-              Mekanism.configuration.get("tools.tool-balance.glowstone.paxel", "maxUses", 450).getInt(),
-              (float) Mekanism.configuration.get("tools.tool-balance.glowstone.paxel", "efficiency", 18d).getDouble(0),
-              Mekanism.configuration.get("tools.tool-balance.glowstone.paxel", "damage", 5).getInt(),
-              Mekanism.configuration.get("tools.tool-balance.glowstone.paxel", "enchantability", 22).getInt()
+              Mekanism.configuration.get("tools.tool-balance.glowstone.paxel", "harvestLevel", 2,
+                    "Harvest level of the refined glowstone paxel.").getInt(),
+              Mekanism.configuration.get("tools.tool-balance.glowstone.paxel", "maxUses", 450,
+                    "Maximum durability of the refined glowstone paxel.").getInt(),
+              (float) Mekanism.configuration.get("tools.tool-balance.glowstone.paxel", "efficiency", 18D,
+                    "Base speed of a refined glwostone paxel.").getDouble(0),
+              Mekanism.configuration.get("tools.tool-balance.glowstone.paxel", "damage", 5,
+                    "Base attack damage of a refined glowstone paxel.").getInt(),
+              Mekanism.configuration.get("tools.tool-balance.glowstone.paxel", "enchantability", 22,
+                    "Natural enchantability factor of a refined glowstone paxel.").getInt()
         );
         toolSTEEL = EnumHelper.addToolMaterial("STEEL",
-              Mekanism.configuration.get("tools.tool-balance.steel.regular", "harvestLevel", 3).getInt(),
-              Mekanism.configuration.get("tools.tool-balance.steel.regular", "maxUses", 850).getInt(),
-              (float) Mekanism.configuration.get("tools.tool-balance.steel.regular", "efficiency", 14d).getDouble(0),
-              Mekanism.configuration.get("tools.tool-balance.steel.regular", "damage", 4).getInt(),
-              Mekanism.configuration.get("tools.tool-balance.steel.regular", "enchantability", 10).getInt()
+              Mekanism.configuration.get("tools.tool-balance.steel.regular", "harvestLevel", 3,
+                    "Harvest level of steel tools.").getInt(),
+              Mekanism.configuration.get("tools.tool-balance.steel.regular", "maxUses", 850,
+                    "Maximum durability of steel tools.").getInt(),
+              (float) Mekanism.configuration.get("tools.tool-balance.steel.regular", "efficiency", 14D,
+                    "Base speed of steel.").getDouble(0),
+              Mekanism.configuration.get("tools.tool-balance.steel.regular", "damage", 4,
+                    "Base attack damage of steel.").getInt(),
+              Mekanism.configuration.get("tools.tool-balance.steel.regular", "enchantability", 10,
+                    "Natural enchantability factor of steel.").getInt()
         );
         toolSTEEL2 = EnumHelper.addToolMaterial("STEEL2",
-              Mekanism.configuration.get("tools.tool-balance.steel.paxel", "harvestLevel", 3).getInt(),
-              Mekanism.configuration.get("tools.tool-balance.steel.paxel", "maxUses", 1250).getInt(),
-              (float) Mekanism.configuration.get("tools.tool-balance.steel.paxel", "efficiency", 18d).getDouble(0),
-              Mekanism.configuration.get("tools.tool-balance.steel.paxel", "damage", 8).getInt(),
-              Mekanism.configuration.get("tools.tool-balance.steel.paxel", "enchantability", 14).getInt()
+              Mekanism.configuration.get("tools.tool-balance.steel.paxel", "harvestLevel", 3,
+                    "Harvest level of the steel paxel.").getInt(),
+              Mekanism.configuration.get("tools.tool-balance.steel.paxel", "maxUses", 1250,
+                    "Maximum durability of the steel paxel.").getInt(),
+              (float) Mekanism.configuration.get("tools.tool-balance.steel.paxel", "efficiency", 18D,
+                    "Base speed of a steel paxel.").getDouble(0),
+              Mekanism.configuration.get("tools.tool-balance.steel.paxel", "damage", 8,
+                    "Base attack damage of a steel paxel.").getInt(),
+              Mekanism.configuration.get("tools.tool-balance.steel.paxel", "enchantability", 14,
+                    "Natural enchantability factor of a steel paxel.").getInt()
         );
 
         AXE_DAMAGE.put(toolOBSIDIAN,
-              (float) Mekanism.configuration.get("tools.tool-balance.obsidian.regular", "axeAttackDamage", 12D)
-                    .getDouble());
+              (float) Mekanism.configuration.get("tools.tool-balance.obsidian.regular", "axeAttackDamage", 12D,
+                    "Base attack damage of a refined obsidian axe.").getDouble());
         AXE_SPEED.put(toolOBSIDIAN,
-              (float) Mekanism.configuration.get("tools.tool-balance.obsidian.regular", "axeAttackSpeed", -2D)
-                    .getDouble());
+              (float) Mekanism.configuration.get("tools.tool-balance.obsidian.regular", "axeAttackSpeed", -2D,
+                    "Base attack speed of a refined obsidian axe.").getDouble());
 
         AXE_DAMAGE.put(toolLAZULI,
-              (float) Mekanism.configuration.get("tools.tool-balance.lazuli.regular", "axeAttackDamage", 8D)
-                    .getDouble());
+              (float) Mekanism.configuration.get("tools.tool-balance.lazuli.regular", "axeAttackDamage", 8D,
+                    "Base attack damage of a lapis lazuli axe.").getDouble());
         AXE_SPEED.put(toolLAZULI,
-              (float) Mekanism.configuration.get("tools.tool-balance.lazuli.regular", "axeAttackSpeed", -3.1D)
-                    .getDouble());
+              (float) Mekanism.configuration.get("tools.tool-balance.lazuli.regular", "axeAttackSpeed", -3.1D,
+                    "Base attack speed of a lapis lazuli axe.").getDouble());
 
         AXE_DAMAGE.put(toolOSMIUM,
-              (float) Mekanism.configuration.get("tools.tool-balance.osmium.regular", "axeAttackDamage", 8D)
-                    .getDouble());
+              (float) Mekanism.configuration.get("tools.tool-balance.osmium.regular", "axeAttackDamage", 8D,
+                    "Base attack damage of an osmium axe.").getDouble());
         AXE_SPEED.put(toolOSMIUM,
-              (float) Mekanism.configuration.get("tools.tool-balance.osmium.regular", "axeAttackSpeed", -3D)
-                    .getDouble());
+              (float) Mekanism.configuration.get("tools.tool-balance.osmium.regular", "axeAttackSpeed", -3D,
+                    "Base attack speed of an osmium axe.").getDouble());
 
         AXE_DAMAGE.put(toolBRONZE,
-              (float) Mekanism.configuration.get("tools.tool-balance.bronze.regular", "axeAttackDamage", 8D)
-                    .getDouble());
+              (float) Mekanism.configuration.get("tools.tool-balance.bronze.regular", "axeAttackDamage", 8D,
+                    "Base attack damage of a bronze axe.").getDouble());
         AXE_SPEED.put(toolBRONZE,
-              (float) Mekanism.configuration.get("tools.tool-balance.bronze.regular", "axeAttackSpeed", -3.1D)
-                    .getDouble());
+              (float) Mekanism.configuration.get("tools.tool-balance.bronze.regular", "axeAttackSpeed", -3.1D,
+                    "Base attack speed of a bronze axe.").getDouble());
 
         AXE_DAMAGE.put(toolGLOWSTONE,
-              (float) Mekanism.configuration.get("tools.tool-balance.glowstone.regular", "axeAttackDamage", 8D)
-                    .getDouble());
+              (float) Mekanism.configuration.get("tools.tool-balance.glowstone.regular", "axeAttackDamage", 8D,
+                    "Base attack damage of a refined glowstone axe.").getDouble());
         AXE_SPEED.put(toolGLOWSTONE,
-              (float) Mekanism.configuration.get("tools.tool-balance.glowstone.regular", "axeAttackSpeed", -3.1D)
-                    .getDouble());
+              (float) Mekanism.configuration.get("tools.tool-balance.glowstone.regular", "axeAttackSpeed", -3.1D,
+                    "Base attack speed of a refined glowstone axe.").getDouble());
 
         AXE_DAMAGE.put(toolSTEEL,
-              (float) Mekanism.configuration.get("tools.tool-balance.steel.regular", "axeAttackDamage", 8D)
-                    .getDouble());
+              (float) Mekanism.configuration.get("tools.tool-balance.steel.regular", "axeAttackDamage", 8D,
+                    "Base attack damage of a steel axe.").getDouble());
         AXE_SPEED.put(toolSTEEL,
-              (float) Mekanism.configuration.get("tools.tool-balance.steel.regular", "axeAttackSpeed", -3D)
-                    .getDouble());
+              (float) Mekanism.configuration.get("tools.tool-balance.steel.regular", "axeAttackSpeed", -3D,
+                    "Base attack speed of a steel axe.").getDouble());
 
         //Armors
         armorOBSIDIAN = EnumHelper.addArmorMaterial("OBSIDIAN", "TODO",

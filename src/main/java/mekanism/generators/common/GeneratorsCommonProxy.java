@@ -124,12 +124,14 @@ public class GeneratorsCommonProxy implements IGuiProvider {
 
         loadWindConfiguration();
 
-        generators.turbineBladesPerCoil = Mekanism.configuration.get("generation", "TurbineBladesPerCoil", 4).getInt();
-        generators.turbineVentGasFlow = Mekanism.configuration.get("generation", "TurbineVentGasFlow", 16000D)
-              .getDouble();
-        generators.turbineDisperserGasFlow = Mekanism.configuration.get("generation", "TurbineDisperserGasFlow", 640D)
-              .getDouble();
-        generators.condenserRate = Mekanism.configuration.get("generation", "TurbineCondenserFlowRate", 32000).getInt();
+        generators.turbineBladesPerCoil = Mekanism.configuration.get("generation", "TurbineBladesPerCoil", 4,
+              "The number of blades on each turbine coil per blade applied.").getInt();
+        generators.turbineVentGasFlow = Mekanism.configuration.get("generation", "TurbineVentGasFlow", 16000D,
+              "The rate at which steam is vented into the turbine.").getDouble();
+        generators.turbineDisperserGasFlow = Mekanism.configuration.get("generation", "TurbineDisperserGasFlow", 640D,
+              "The rate at which steam is dispersed into the turbine.").getDouble();
+        generators.condenserRate = Mekanism.configuration.get("generation", "TurbineCondenserFlowRate", 32000,
+              "The rate at which steam is condensed in the turbine.").getInt();
 
         generators.energyPerFusionFuel = Mekanism.configuration.get("generation", "EnergyPerFusionFuel", 5E6D,
               "Effects the Injection Rate, Max Temp, and Ignition Temp.").getDouble();

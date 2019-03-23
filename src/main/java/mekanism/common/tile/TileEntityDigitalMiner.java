@@ -25,6 +25,7 @@ import mekanism.api.TileNetworkList;
 import mekanism.common.block.states.BlockStateMachine;
 import mekanism.common.capabilities.Capabilities;
 import mekanism.common.chunkloading.IChunkLoader;
+import mekanism.common.config.MekanismConfig.general;
 import mekanism.common.config.MekanismConfig.usage;
 import mekanism.common.content.miner.MItemStackFilter;
 import mekanism.common.content.miner.MOreDictFilter;
@@ -314,7 +315,7 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
         double ret = energyUsage;
 
         if (silkTouch) {
-            ret *= 6F;
+            ret *= general.minerSilkMultiplier;
         }
 
         int baseRad = Math.max(radius - 10, 0);
@@ -596,7 +597,7 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
     }
 
     private void readBasicData(ByteBuf dataStream) {
-        radius = dataStream.readInt();
+        radius = dataStream.readInt();//client allowed to use whatever server sends
         minY = dataStream.readInt();
         maxY = dataStream.readInt();
         doEject = dataStream.readBoolean();
@@ -639,7 +640,7 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
                     reset();
                     break;
                 case 6:
-                    radius = dataStream.readInt();
+                    radius = Math.min(dataStream.readInt(), general.digitalMinerMaxRadius);
                     break;
                 case 7:
                     minY = dataStream.readInt();
@@ -1026,7 +1027,7 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
                 return new Object[]{"Invalid parameters."};
             }
 
-            radius = ((Double) arguments[0]).intValue();
+            radius = Math.min(((Double) arguments[0]).intValue(), general.digitalMinerMaxRadius);
         } else if (method == 1) {
             if (arguments.length != 1 || !(arguments[0] instanceof Double)) {
                 return new Object[]{"Invalid parameters."};
@@ -1155,7 +1156,7 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
 
     @Override
     public void setConfigurationData(NBTTagCompound nbtTags) {
-        radius = nbtTags.getInteger("radius");
+        radius = Math.min(nbtTags.getInteger("radius"), general.digitalMinerMaxRadius);
         minY = nbtTags.getInteger("minY");
         maxY = nbtTags.getInteger("maxY");
         doEject = nbtTags.getBoolean("doEject");
@@ -1202,7 +1203,7 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
     @Override
     public void readSustainedData(ItemStack itemStack) {
         if (ItemDataUtils.hasData(itemStack, "hasMinerConfig")) {
-            radius = ItemDataUtils.getInt(itemStack, "radius");
+            radius = Math.min(ItemDataUtils.getInt(itemStack, "radius"), general.digitalMinerMaxRadius);
             minY = ItemDataUtils.getInt(itemStack, "minY");
             maxY = ItemDataUtils.getInt(itemStack, "maxY");
             doEject = ItemDataUtils.getBoolean(itemStack, "doEject");

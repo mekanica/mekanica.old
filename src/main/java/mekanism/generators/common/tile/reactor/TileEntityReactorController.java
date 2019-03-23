@@ -52,7 +52,7 @@ public class TileEntityReactorController extends TileEntityReactorBlock implemen
     private int playSoundCooldown = 0;
 
     public TileEntityReactorController() {
-        super("ReactorController", 1000000000);
+        super("ReactorController", Integer.MAX_VALUE);
         inventory = NonNullList.withSize(1, ItemStack.EMPTY);
     }
 

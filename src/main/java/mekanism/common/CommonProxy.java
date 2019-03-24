@@ -400,7 +400,9 @@ public class CommonProxy implements IGuiProvider {
               .getBoolean();
         general.digitalMinerMaxRadius = Mekanism.configuration
               .get(Configuration.CATEGORY_GENERAL, "DigitalMinerMaxRadius", 32,
-                    "Maximum radius in blocks that the Digital Miner can reach.",
+                    "Maximum radius in blocks that the Digital Miner can reach. "
+                          + "(Increasing this may have negative effects on stability and/or performance. "
+                          + "We strongly recommend you leave it at the default value.)",
                     1, Integer.MAX_VALUE).getInt();
 
         for (MachineType type : BlockStateMachine.MachineType.getValidMachines()) {

@@ -134,7 +134,7 @@ public class GeneratorsCommonProxy implements IGuiProvider {
               "The rate at which steam is condensed in the turbine.").getInt();
 
         generators.energyPerFusionFuel = Mekanism.configuration.get("generation", "EnergyPerFusionFuel", 5E6D,
-              "Effects the Injection Rate, Max Temp, and Ignition Temp.").getDouble();
+              "Affects the Injection Rate, Max Temp, and Ignition Temp.").getDouble();
 
         for (GeneratorType type : GeneratorType.getGeneratorsForConfig()) {
             generators.generatorsManager.setEntry(type.blockName,

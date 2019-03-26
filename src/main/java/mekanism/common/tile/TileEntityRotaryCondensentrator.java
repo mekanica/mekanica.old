@@ -3,13 +3,16 @@ package mekanism.common.tile;
 import io.netty.buffer.ByteBuf;
 import java.util.List;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import mekanism.api.Coord4D;
+import mekanism.api.TileNetworkList;
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasRegistry;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.GasTank;
 import mekanism.api.gas.GasTankInfo;
 import mekanism.api.gas.IGasHandler;
+import mekanism.api.gas.IGasItem;
 import mekanism.api.gas.ITubeConnection;
 import mekanism.common.Mekanism;
 import mekanism.common.Upgrade;
@@ -18,7 +21,6 @@ import mekanism.common.base.FluidHandlerWrapper;
 import mekanism.common.base.IFluidHandlerWrapper;
 import mekanism.common.base.ISustainedData;
 import mekanism.common.base.ITankManager;
-import mekanism.common.base.TileNetworkList;
 import mekanism.common.block.states.BlockStateMachine;
 import mekanism.common.capabilities.Capabilities;
 import mekanism.common.config.MekanismConfig.usage;
@@ -26,6 +28,7 @@ import mekanism.common.network.PacketTileEntity.TileEntityMessage;
 import mekanism.common.tile.prefab.TileEntityMachine;
 import mekanism.common.util.ChargeUtils;
 import mekanism.common.util.FluidContainerUtils;
+import mekanism.common.util.InventoryUtils;
 import mekanism.common.util.ItemDataUtils;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.PipeUtils;
@@ -96,7 +99,7 @@ public class TileEntityRotaryCondensentrator extends TileEntityMachine implement
                 }
             } else if (mode == 1) {
                 TileUtils.drawGas(inventory.get(0), gasTank);
-                TileUtils.emitGas(this, gasTank, gasOutput);
+                TileUtils.emitGas(this, gasTank, gasOutput, MekanismUtils.getLeft(facing));
 
                 if (FluidContainerUtils.isFluidContainer(inventory.get(2))) {
                     FluidContainerUtils.handleContainerItemEmpty(this, fluidTank, 2, 3);
@@ -293,7 +296,7 @@ public class TileEntityRotaryCondensentrator extends TileEntityMachine implement
     }
 
     @Override
-    public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
+    public int fill(EnumFacing from, @Nullable FluidStack resource, boolean doFill) {
         if (canFill(from, resource)) {
             return fluidTank.fill(resource, doFill);
         }
@@ -302,8 +305,9 @@ public class TileEntityRotaryCondensentrator extends TileEntityMachine implement
     }
 
     @Override
-    public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
-        if (fluidTank.getFluid() != null && fluidTank.getFluid().getFluid() == resource.getFluid()) {
+    public FluidStack drain(EnumFacing from, @Nullable FluidStack resource, boolean doDrain) {
+        if (resource != null && fluidTank.getFluid() != null && fluidTank.getFluid().getFluid() == resource
+              .getFluid()) {
             return drain(from, resource.amount, doDrain);
         }
 
@@ -311,13 +315,13 @@ public class TileEntityRotaryCondensentrator extends TileEntityMachine implement
     }
 
     @Override
-    public boolean canFill(EnumFacing from, FluidStack fluid) {
-        return mode == 1 && from == MekanismUtils.getRight(facing) && (fluidTank.getFluid() == null ? isValidFluid(
-              new FluidStack(fluid, 1)) : fluidTank.getFluid().isFluidEqual(fluid));
+    public boolean canFill(EnumFacing from, @Nullable FluidStack fluid) {
+        return fluid != null && mode == 1 && from == MekanismUtils.getRight(facing) && (fluidTank.getFluid() == null
+              ? isValidFluid(new FluidStack(fluid, 1)) : fluidTank.getFluid().isFluidEqual(fluid));
     }
 
     @Override
-    public boolean canDrain(EnumFacing from, FluidStack fluid) {
+    public boolean canDrain(EnumFacing from, @Nullable FluidStack fluid) {
         return mode == 0 && from == MekanismUtils.getRight(facing);
     }
 
@@ -352,5 +356,30 @@ public class TileEntityRotaryCondensentrator extends TileEntityMachine implement
     @Override
     public Object[] getTanks() {
         return new Object[]{gasTank, fluidTank};
+    }
+
+    @Nonnull
+    @Override
+    public int[] getSlotsForFace(@Nonnull EnumFacing side) {
+        if (side == MekanismUtils.getLeft(facing)) {
+            //Gas
+            return new int[]{0, 1};
+        } else if (side == MekanismUtils.getRight(facing)) {
+            //Fluid
+            return new int[]{2, 3};
+        }
+        return InventoryUtils.EMPTY;
+    }
+
+    @Override
+    public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
+        if (slot == 0) {
+            //Gas
+            return stack.getItem() instanceof IGasItem;
+        } else if (slot == 2) {
+            //Fluid
+            return FluidContainerUtils.isFluidContainer(stack);
+        }
+        return false;
     }
 }

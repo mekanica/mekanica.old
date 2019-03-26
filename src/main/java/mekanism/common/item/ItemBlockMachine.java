@@ -31,7 +31,7 @@ import mekanism.common.base.ISustainedInventory;
 import mekanism.common.base.ISustainedTank;
 import mekanism.common.base.ITierItem;
 import mekanism.common.base.IUpgradeTile;
-import mekanism.common.base.TileNetworkList;
+import mekanism.api.TileNetworkList;
 import mekanism.common.block.states.BlockStateMachine.MachineType;
 import mekanism.common.capabilities.ItemCapabilityWrapper;
 import mekanism.common.config.MekanismConfig.general;
@@ -454,8 +454,8 @@ public class ItemBlockMachine extends ItemBlock implements IEnergizedItem, ISpec
         } else if (type == MachineType.FLUID_TANK && getBucketMode(itemstack)) {
             if (SecurityUtils.canAccess(entityplayer, itemstack)) {
                 RayTraceResult pos = rayTrace(world, entityplayer, !entityplayer.isSneaking());
-
-                if (pos.typeOfHit == RayTraceResult.Type.BLOCK) {
+                //It can be null if there is nothing in range
+                if (pos != null && pos.typeOfHit == RayTraceResult.Type.BLOCK) {
                     Coord4D coord = new Coord4D(pos.getBlockPos(), world);
 
                     if (!world.provider.canMineBlock(entityplayer, coord.getPos())) {

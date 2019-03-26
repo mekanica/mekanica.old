@@ -102,6 +102,7 @@ public abstract class BlockGenerator extends BlockContainer {
 
     @Nonnull
     @Override
+    @Deprecated
     public IBlockState getStateFromMeta(int meta) {
         GeneratorType type = GeneratorType.get(getGeneratorBlock(), meta & 0xF);
 
@@ -116,6 +117,7 @@ public abstract class BlockGenerator extends BlockContainer {
 
     @Nonnull
     @Override
+    @Deprecated
     public IBlockState getActualState(@Nonnull IBlockState state, IBlockAccess worldIn, BlockPos pos) {
         TileEntity tile = MekanismUtils.getTileEntitySafe(worldIn, pos);
 
@@ -131,6 +133,7 @@ public abstract class BlockGenerator extends BlockContainer {
     }
 
     @Override
+    @Deprecated
     public void neighborChanged(IBlockState state, World world, BlockPos pos, Block neighborBlock,
           BlockPos neighborPos) {
         if (!world.isRemote) {
@@ -214,6 +217,7 @@ public abstract class BlockGenerator extends BlockContainer {
     }
 
     @Override
+    @Deprecated
     public float getPlayerRelativeBlockHardness(IBlockState state, @Nonnull EntityPlayer player, @Nonnull World world,
           @Nonnull BlockPos pos) {
         TileEntity tile = world.getTileEntity(pos);
@@ -385,7 +389,7 @@ public abstract class BlockGenerator extends BlockContainer {
 
             if (!entityplayer.isSneaking()) {
                 if (!stack.isEmpty() && stack.getItem() == GeneratorsItems.TurbineBlade) {
-                    if (rod.editBlade(true)) {
+                    if (rod.addBlade()) {
                         if (!entityplayer.capabilities.isCreativeMode) {
                             stack.shrink(1);
 
@@ -398,7 +402,7 @@ public abstract class BlockGenerator extends BlockContainer {
                     return true;
                 }
             } else if (stack.isEmpty()) {
-                if (rod.editBlade(false)) {
+                if (rod.removeBlade()) {
                     if (!entityplayer.capabilities.isCreativeMode) {
                         entityplayer.setHeldItem(hand, new ItemStack(GeneratorsItems.TurbineBlade));
                         entityplayer.inventory.markDirty();
@@ -406,7 +410,7 @@ public abstract class BlockGenerator extends BlockContainer {
                 }
             } else if (stack.getItem() == GeneratorsItems.TurbineBlade) {
                 if (stack.getCount() < stack.getMaxStackSize()) {
-                    if (rod.editBlade(false)) {
+                    if (rod.removeBlade()) {
                         if (!entityplayer.capabilities.isCreativeMode) {
                             stack.grow(1);
                             entityplayer.inventory.markDirty();
@@ -459,16 +463,19 @@ public abstract class BlockGenerator extends BlockContainer {
 
     @Nonnull
     @Override
+    @Deprecated
     public EnumBlockRenderType getRenderType(IBlockState state) {
         return EnumBlockRenderType.MODEL;
     }
 
     @Override
+    @Deprecated
     public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
 
     @Override
+    @Deprecated
     public boolean isFullCube(IBlockState state) {
         return false;
     }
@@ -488,6 +495,7 @@ public abstract class BlockGenerator extends BlockContainer {
 
     @Nonnull
     @Override
+    @Deprecated
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
         GeneratorType type = GeneratorType.get(state);
 
@@ -591,6 +599,7 @@ public abstract class BlockGenerator extends BlockContainer {
     }
 
     @Override
+    @Deprecated
     public boolean isSideSolid(IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos, EnumFacing side) {
         GeneratorType type = GeneratorType.get(getGeneratorBlock(), state.getBlock().getMetaFromState(state));
 

@@ -1,21 +1,21 @@
 package mekanism.common.integration.crafttweaker.util;
 
-import com.blamejared.mtlib.utils.BaseMapAddition;
-import java.util.Map;
-import mekanism.common.integration.crafttweaker.helpers.RecipeInfoHelper;
+import java.util.List;
 import mekanism.common.recipe.RecipeHandler.Recipe;
 import mekanism.common.recipe.inputs.MachineInput;
 import mekanism.common.recipe.machines.MachineRecipe;
+import mekanism.common.recipe.outputs.MachineOutput;
 
-public class AddMekanismRecipe extends BaseMapAddition<MachineInput, MachineRecipe> {
+public class AddMekanismRecipe<INPUT extends MachineInput<INPUT>, OUTPUT extends MachineOutput<OUTPUT>, RECIPE extends MachineRecipe<INPUT, OUTPUT, RECIPE>> extends
+      RecipeMapModification<INPUT, RECIPE> {
 
-    public AddMekanismRecipe(String name, Recipe recipeType, MachineRecipe recipe) {
-        super(name, recipeType.get());
+    public AddMekanismRecipe(String name, Recipe<INPUT, OUTPUT, RECIPE> recipeType, RECIPE recipe) {
+        super(name, true, recipeType);
         recipes.put(recipe.getInput(), recipe);
     }
 
-    @Override
-    protected String getRecipeInfo(Map.Entry<MachineInput, MachineRecipe> recipe) {
-        return RecipeInfoHelper.getRecipeInfo(recipe);
+    public AddMekanismRecipe(String name, Recipe<INPUT, OUTPUT, RECIPE> recipeType, List<RECIPE> newRecipes) {
+        super(name, true, recipeType);
+        newRecipes.forEach(recipe -> recipes.put(recipe.getInput(), recipe));
     }
 }

@@ -14,7 +14,7 @@ import mekanism.common.base.IActiveState;
 import mekanism.common.base.ILogisticalTransporter;
 import mekanism.common.base.IRedstoneControl;
 import mekanism.common.base.ISustainedData;
-import mekanism.common.base.TileNetworkList;
+import mekanism.api.TileNetworkList;
 import mekanism.common.block.states.BlockStateMachine;
 import mekanism.common.capabilities.Capabilities;
 import mekanism.common.config.MekanismConfig.client;
@@ -95,7 +95,6 @@ public class TileEntityLogisticalSorter extends TileEntityElectricBlock implemen
 
                 outer:
                 for (TransporterFilter filter : filters) {
-                    inner:
                     for (StackSearcher search = new StackSearcher(back, facing.getOpposite()); search.i >= 0; ) {
                         InvStack invStack = filter.getStackFromInventory(search);
 
@@ -665,7 +664,7 @@ public class TileEntityLogisticalSorter extends TileEntityElectricBlock implemen
                 }
 
                 TOreDictFilter filter = new TOreDictFilter();
-                filter.oreDictName = (String) arguments[0];
+                filter.setOreDictName((String) arguments[0]);
                 filter.color = EnumColor.getFromDyeName((String) arguments[1]);
                 filters.add(filter);
 
@@ -682,7 +681,7 @@ public class TileEntityLogisticalSorter extends TileEntityElectricBlock implemen
                     TransporterFilter filter = iter.next();
 
                     if (filter instanceof TOreDictFilter) {
-                        if (((TOreDictFilter) filter).oreDictName.equals(ore)) {
+                        if (((TOreDictFilter) filter).getOreDictName().equals(ore)) {
                             iter.remove();
                             return new Object[]{"Removed filter."};
                         }

@@ -10,7 +10,7 @@ import mekanism.common.LaserManager;
 import mekanism.common.LaserManager.LaserInfo;
 import mekanism.common.Mekanism;
 import mekanism.common.base.IRedstoneControl;
-import mekanism.common.base.TileNetworkList;
+import mekanism.api.TileNetworkList;
 import mekanism.common.capabilities.Capabilities;
 import mekanism.common.config.MekanismConfig.general;
 import mekanism.common.integration.computer.IComputerIntegration;
@@ -134,7 +134,7 @@ public class TileEntityLaserAmplifier extends TileEntityContainerBlock implement
                         diggingProgress += firing;
 
                         if (diggingProgress >= hardness * general.laserEnergyNeededPerHardness) {
-                            LaserManager.breakBlock(hitCoord, true, world);
+                            LaserManager.breakBlock(hitCoord, true, world, pos);
                             diggingProgress = 0;
                         }
                     }

@@ -207,6 +207,7 @@ public abstract class BlockBasic extends Block {
 
     @Nonnull
     @Override
+    @Deprecated
     public IBlockState getStateFromMeta(int meta) {
         BlockStateBasic.BasicBlockType type = BlockStateBasic.BasicBlockType.get(getBasicBlock(), meta & 0xF);
 
@@ -221,6 +222,7 @@ public abstract class BlockBasic extends Block {
 
     @Nonnull
     @Override
+    @Deprecated
     public IBlockState getActualState(@Nonnull IBlockState state, IBlockAccess worldIn, BlockPos pos) {
         TileEntity tile = MekanismUtils.getTileEntitySafe(worldIn, pos);
 
@@ -266,6 +268,7 @@ public abstract class BlockBasic extends Block {
     }
 
     @Override
+    @Deprecated
     public void neighborChanged(IBlockState state, World world, BlockPos pos, Block neighborBlock, BlockPos fromPos) {
         if (!world.isRemote) {
             TileEntity tileEntity = new Coord4D(pos, world).getTileEntity(world);
@@ -524,6 +527,7 @@ public abstract class BlockBasic extends Block {
     }
 
     @Override
+    @Deprecated
     public boolean isSideSolid(IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos, EnumFacing side) {
         return BasicBlockType.get(state) != BasicBlockType.STRUCTURAL_GLASS;
     }
@@ -536,17 +540,20 @@ public abstract class BlockBasic extends Block {
     }
 
     @Override
+    @Deprecated
     public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
 
     @Override
+    @Deprecated
     public boolean isFullCube(IBlockState state) {
         return false;
     }
 
     @Nonnull
     @Override
+    @Deprecated
     public EnumBlockRenderType getRenderType(IBlockState state) {
         return EnumBlockRenderType.MODEL;
     }
@@ -757,6 +764,7 @@ public abstract class BlockBasic extends Block {
     }
 
     @Override
+    @Deprecated
     @SideOnly(Side.CLIENT)
     public boolean shouldSideBeRendered(IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos,
           EnumFacing side) {
@@ -808,6 +816,25 @@ public abstract class BlockBasic extends Block {
 
     @Override
     public boolean isBeaconBase(IBlockAccess world, BlockPos pos, BlockPos beacon) {
-        return BasicBlockType.get(world.getBlockState(pos)).isBeaconBase;
+        BasicBlockType basicBlockType = BasicBlockType.get(world.getBlockState(pos));
+        return basicBlockType != null && basicBlockType.isBeaconBase;
+    }
+
+    @Override
+    public boolean hasComparatorInputOverride(IBlockState blockState) {
+        BasicBlockType basicBlockType = BasicBlockType.get(blockState);
+        return basicBlockType != null && basicBlockType.hasRedstoneOutput;
+    }
+
+    @Override
+    public int getComparatorInputOverride(IBlockState blockState, World worldIn, BlockPos pos) {
+        BasicBlockType basicBlockType = BasicBlockType.get(blockState);
+        if (basicBlockType != null && basicBlockType.hasRedstoneOutput) {
+            TileEntity tile = worldIn.getTileEntity(pos);
+            if (tile instanceof TileEntityBin) {
+                return ((TileEntityBin) tile).getRedstoneLevel();
+            }
+        }
+        return 0;
     }
 }

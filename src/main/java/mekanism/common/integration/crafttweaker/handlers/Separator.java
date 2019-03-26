@@ -1,7 +1,5 @@
 package mekanism.common.integration.crafttweaker.handlers;
 
-import com.blamejared.mtlib.helpers.InputHelper;
-import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.liquid.ILiquidStack;
@@ -15,15 +13,12 @@ import mekanism.common.integration.crafttweaker.util.IngredientWrapper;
 import mekanism.common.integration.crafttweaker.util.RemoveAllMekanismRecipe;
 import mekanism.common.integration.crafttweaker.util.RemoveMekanismRecipe;
 import mekanism.common.recipe.RecipeHandler.Recipe;
-import mekanism.common.recipe.inputs.FluidInput;
 import mekanism.common.recipe.machines.SeparatorRecipe;
-import mekanism.common.recipe.outputs.ChemicalPairOutput;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 @ZenClass("mods.mekanism.separator")
-@ModOnly("mtlib")
 @ZenRegister
 public class Separator {
 
@@ -34,9 +29,9 @@ public class Separator {
           IGasStack rightGasOutput) {
         if (IngredientHelper.checkNotNull(NAME, liquidInput, leftGasOutput, rightGasOutput)) {
             CrafttweakerIntegration.LATE_ADDITIONS
-                  .add(new AddMekanismRecipe(NAME, Recipe.ELECTROLYTIC_SEPARATOR,
-                        new SeparatorRecipe(InputHelper.toFluid(liquidInput), energy, GasHelper.toGas(leftGasOutput),
-                              GasHelper.toGas(rightGasOutput))));
+                  .add(new AddMekanismRecipe<>(NAME, Recipe.ELECTROLYTIC_SEPARATOR,
+                        new SeparatorRecipe(IngredientHelper.toFluid(liquidInput), energy,
+                              GasHelper.toGas(leftGasOutput), GasHelper.toGas(rightGasOutput))));
         }
     }
 
@@ -45,15 +40,13 @@ public class Separator {
           @Optional IIngredient rightGasOutput) {
         if (IngredientHelper.checkNotNull(NAME, liquidInput)) {
             CrafttweakerIntegration.LATE_REMOVALS
-                  .add(new RemoveMekanismRecipe<FluidInput, ChemicalPairOutput, SeparatorRecipe>(NAME,
-                        Recipe.ELECTROLYTIC_SEPARATOR, new IngredientWrapper(liquidInput),
-                        new IngredientWrapper(leftGasOutput, rightGasOutput)));
+                  .add(new RemoveMekanismRecipe<>(NAME, Recipe.ELECTROLYTIC_SEPARATOR,
+                        new IngredientWrapper(leftGasOutput, rightGasOutput), new IngredientWrapper(liquidInput)));
         }
     }
 
     @ZenMethod
     public static void removeAllRecipes() {
-        CrafttweakerIntegration.LATE_REMOVALS
-              .add(new RemoveAllMekanismRecipe<SeparatorRecipe>(NAME, Recipe.ELECTROLYTIC_SEPARATOR));
+        CrafttweakerIntegration.LATE_REMOVALS.add(new RemoveAllMekanismRecipe<>(NAME, Recipe.ELECTROLYTIC_SEPARATOR));
     }
 }

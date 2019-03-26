@@ -4,12 +4,13 @@ import io.netty.buffer.ByteBuf;
 import java.util.Arrays;
 import java.util.List;
 import mekanism.api.EnumColor;
-import mekanism.common.base.TileNetworkList;
+import mekanism.api.TileNetworkList;
+import mekanism.common.content.filter.IFilter;
 import mekanism.common.util.TransporterUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-public abstract class TransporterFilter {
+public abstract class TransporterFilter implements IFilter {
 
     public static final int MAX_LENGTH = 24;
 

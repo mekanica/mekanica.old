@@ -1,11 +1,15 @@
 package mekanism.common.tile;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import mekanism.common.base.FluidHandlerWrapper;
 import mekanism.common.base.IFluidHandlerWrapper;
 import mekanism.common.content.tank.DynamicFluidTank;
+import mekanism.common.util.FluidContainerUtils;
+import mekanism.common.util.InventoryUtils;
 import mekanism.common.util.LangUtils;
 import mekanism.common.util.PipeUtils;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
@@ -33,14 +37,14 @@ public class TileEntityDynamicValve extends TileEntityDynamicTank implements IFl
     }
 
     @Override
-    public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
+    public int fill(EnumFacing from, @Nullable FluidStack resource, boolean doFill) {
         return fluidTank.fill(resource, doFill);
     }
 
     @Override
-    public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
+    public FluidStack drain(EnumFacing from, @Nullable FluidStack resource, boolean doDrain) {
         if (structure != null && structure.fluidStored != null) {
-            if (resource.getFluid() == structure.fluidStored.getFluid()) {
+            if (resource != null && resource.getFluid() == structure.fluidStored.getFluid()) {
                 return fluidTank.drain(resource.amount, doDrain);
             }
         }
@@ -58,12 +62,12 @@ public class TileEntityDynamicValve extends TileEntityDynamicTank implements IFl
     }
 
     @Override
-    public boolean canFill(EnumFacing from, FluidStack fluid) {
+    public boolean canFill(EnumFacing from, @Nullable FluidStack fluid) {
         return ((!world.isRemote && structure != null) || (world.isRemote && clientHasStructure));
     }
 
     @Override
-    public boolean canDrain(EnumFacing from, FluidStack fluid) {
+    public boolean canDrain(EnumFacing from, @Nullable FluidStack fluid) {
         return ((!world.isRemote && structure != null) || (world.isRemote && clientHasStructure));
     }
 
@@ -93,5 +97,18 @@ public class TileEntityDynamicValve extends TileEntityDynamicTank implements IFl
         }
 
         return super.getCapability(capability, side);
+    }
+
+    @Nonnull
+    @Override
+    public int[] getSlotsForFace(@Nonnull EnumFacing side) {
+        return (!world.isRemote && structure != null) || (world.isRemote && clientHasStructure) ? new int[]{0, 1}
+              : InventoryUtils.EMPTY;
+    }
+
+    @Override
+    public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
+        //can be filled/emptied
+        return slot == 0 && FluidContainerUtils.isFluidContainer(stack);
     }
 }

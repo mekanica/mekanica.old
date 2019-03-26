@@ -1,5 +1,6 @@
 package mekanism.common.util;
 
+import java.util.Arrays;
 import java.util.List;
 import mekanism.api.Coord4D;
 import mekanism.api.EnumColor;
@@ -9,6 +10,7 @@ import mekanism.common.content.transporter.TransitRequest;
 import mekanism.common.content.transporter.TransitRequest.TransitResponse;
 import mekanism.common.content.transporter.TransporterManager;
 import mekanism.common.content.transporter.TransporterStack;
+import mekanism.common.tile.TileEntityBin;
 import mekanism.common.tile.TileEntityLogisticalSorter;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
@@ -18,7 +20,7 @@ import net.minecraft.util.EnumFacing;
 
 public final class TransporterUtils {
 
-    public static List<EnumColor> colors = ListUtils
+    public static List<EnumColor> colors = Arrays
           .asList(EnumColor.DARK_BLUE, EnumColor.DARK_GREEN, EnumColor.DARK_AQUA, EnumColor.DARK_RED, EnumColor.PURPLE,
                 EnumColor.INDIGO, EnumColor.BRIGHT_GREEN, EnumColor.AQUA, EnumColor.RED, EnumColor.PINK,
                 EnumColor.YELLOW, EnumColor.BLACK);
@@ -28,7 +30,10 @@ public final class TransporterUtils {
             return false;
         }
 
-        if (tile instanceof IInventory) {
+        //Don't let the bin accept from all sides
+        if (!(tile instanceof TileEntityBin) && InventoryUtils.isItemHandler(tile, side.getOpposite())) {
+            return true;
+        } else if (tile instanceof IInventory) {
             IInventory inventory = (IInventory) tile;
 
             if (inventory.getSizeInventory() > 0) {
@@ -40,8 +45,6 @@ public final class TransporterUtils {
 
                 return slots.length > 0;
             }
-        } else {
-            return InventoryUtils.isItemHandler(tile, side.getOpposite());
         }
 
         return false;

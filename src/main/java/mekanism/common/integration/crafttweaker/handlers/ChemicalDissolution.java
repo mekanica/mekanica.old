@@ -1,10 +1,11 @@
 package mekanism.common.integration.crafttweaker.handlers;
 
-import com.blamejared.mtlib.helpers.InputHelper;
-import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
-import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.minecraft.CraftTweakerMC;
+import java.util.ArrayList;
+import java.util.List;
+import mekanism.api.gas.GasStack;
 import mekanism.common.Mekanism;
 import mekanism.common.integration.crafttweaker.CrafttweakerIntegration;
 import mekanism.common.integration.crafttweaker.gas.IGasStack;
@@ -15,26 +16,28 @@ import mekanism.common.integration.crafttweaker.util.IngredientWrapper;
 import mekanism.common.integration.crafttweaker.util.RemoveAllMekanismRecipe;
 import mekanism.common.integration.crafttweaker.util.RemoveMekanismRecipe;
 import mekanism.common.recipe.RecipeHandler.Recipe;
-import mekanism.common.recipe.inputs.ItemStackInput;
 import mekanism.common.recipe.machines.DissolutionRecipe;
-import mekanism.common.recipe.outputs.GasOutput;
+import net.minecraft.item.ItemStack;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 @ZenClass("mods.mekanism.chemical.dissolution")
-@ModOnly("mtlib")
 @ZenRegister
 public class ChemicalDissolution {
 
     public static final String NAME = Mekanism.MOD_NAME + " Chemical Dissolution Chamber";
 
     @ZenMethod
-    public static void addRecipe(IItemStack itemInput, IGasStack gasOutput) {
-        if (IngredientHelper.checkNotNull(NAME, itemInput, gasOutput)) {
+    public static void addRecipe(IIngredient ingredientInput, IGasStack gasOutput) {
+        if (IngredientHelper.checkNotNull(NAME, ingredientInput, gasOutput)) {
+            GasStack output = GasHelper.toGas(gasOutput);
+            List<DissolutionRecipe> recipes = new ArrayList<>();
+            for (ItemStack stack : CraftTweakerMC.getIngredient(ingredientInput).getMatchingStacks()) {
+                recipes.add(new DissolutionRecipe(stack, output));
+            }
             CrafttweakerIntegration.LATE_ADDITIONS
-                  .add(new AddMekanismRecipe(NAME, Recipe.CHEMICAL_DISSOLUTION_CHAMBER,
-                        new DissolutionRecipe(InputHelper.toStack(itemInput), GasHelper.toGas(gasOutput))));
+                  .add(new AddMekanismRecipe<>(NAME, Recipe.CHEMICAL_DISSOLUTION_CHAMBER, recipes));
         }
     }
 
@@ -42,15 +45,14 @@ public class ChemicalDissolution {
     public static void removeRecipe(IIngredient gasOutput, @Optional IIngredient itemInput) {
         if (IngredientHelper.checkNotNull(NAME, gasOutput)) {
             CrafttweakerIntegration.LATE_REMOVALS
-                  .add(new RemoveMekanismRecipe<ItemStackInput, GasOutput, DissolutionRecipe>(NAME,
-                        Recipe.CHEMICAL_DISSOLUTION_CHAMBER, new IngredientWrapper(gasOutput),
-                        new IngredientWrapper(itemInput)));
+                  .add(new RemoveMekanismRecipe<>(NAME, Recipe.CHEMICAL_DISSOLUTION_CHAMBER,
+                        new IngredientWrapper(gasOutput), new IngredientWrapper(itemInput)));
         }
     }
 
     @ZenMethod
     public static void removeAllRecipes() {
         CrafttweakerIntegration.LATE_REMOVALS
-              .add(new RemoveAllMekanismRecipe<DissolutionRecipe>(NAME, Recipe.CHEMICAL_DISSOLUTION_CHAMBER));
+              .add(new RemoveAllMekanismRecipe<>(NAME, Recipe.CHEMICAL_DISSOLUTION_CHAMBER));
     }
 }

@@ -1,10 +1,12 @@
 package mekanism.common.integration.crafttweaker.handlers;
 
-import com.blamejared.mtlib.helpers.InputHelper;
-import crafttweaker.annotations.ModOnly;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.minecraft.CraftTweakerMC;
+import java.util.ArrayList;
+import java.util.List;
+import mekanism.api.gas.Gas;
 import mekanism.common.Mekanism;
 import mekanism.common.integration.crafttweaker.CrafttweakerIntegration;
 import mekanism.common.integration.crafttweaker.gas.IGasStack;
@@ -18,34 +20,41 @@ import mekanism.common.recipe.RecipeHandler.Recipe;
 import mekanism.common.recipe.inputs.AdvancedMachineInput;
 import mekanism.common.recipe.machines.PurificationRecipe;
 import mekanism.common.recipe.outputs.ItemStackOutput;
+import net.minecraft.item.ItemStack;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 @ZenClass("mods.mekanism.purification")
-@ModOnly("mtlib")
 @ZenRegister
 public class Purification {
 
     public static final String NAME = Mekanism.MOD_NAME + " Purification";
 
     @ZenMethod
-    public static void addRecipe(IItemStack itemInput, IItemStack itemOutput) {
-        if (IngredientHelper.checkNotNull(NAME, itemInput, itemOutput)) {
+    public static void addRecipe(IIngredient ingredientInput, IItemStack itemOutput) {
+        if (IngredientHelper.checkNotNull(NAME, ingredientInput, itemOutput)) {
+            ItemStack output = CraftTweakerMC.getItemStack(itemOutput);
+            List<PurificationRecipe> recipes = new ArrayList<>();
+            for (ItemStack stack : CraftTweakerMC.getIngredient(ingredientInput).getMatchingStacks()) {
+                recipes.add(new PurificationRecipe(stack, output));
+            }
             CrafttweakerIntegration.LATE_ADDITIONS
-                  .add(new AddMekanismRecipe(NAME, Recipe.PURIFICATION_CHAMBER,
-                        new PurificationRecipe(InputHelper.toStack(itemInput), InputHelper.toStack(itemOutput))));
+                  .add(new AddMekanismRecipe<>(NAME, Recipe.PURIFICATION_CHAMBER, recipes));
         }
     }
 
     @ZenMethod
-    public static void addRecipe(IItemStack itemInput, IGasStack gasInput, IItemStack itemOutput) {
-        if (IngredientHelper.checkNotNull(NAME, itemInput, gasInput, itemOutput)) {
+    public static void addRecipe(IIngredient ingredientInput, IGasStack gasInput, IItemStack itemOutput) {
+        if (IngredientHelper.checkNotNull(NAME, ingredientInput, gasInput, itemOutput)) {
+            Gas gas = GasHelper.toGas(gasInput).getGas();
+            ItemStackOutput output = new ItemStackOutput(CraftTweakerMC.getItemStack(itemOutput));
+            List<PurificationRecipe> recipes = new ArrayList<>();
+            for (ItemStack stack : CraftTweakerMC.getIngredient(ingredientInput).getMatchingStacks()) {
+                recipes.add(new PurificationRecipe(new AdvancedMachineInput(stack, gas), output));
+            }
             CrafttweakerIntegration.LATE_ADDITIONS
-                  .add(new AddMekanismRecipe(NAME, Recipe.PURIFICATION_CHAMBER,
-                        new PurificationRecipe(new AdvancedMachineInput(InputHelper.toStack(itemInput),
-                              GasHelper.toGas(gasInput).getGas()),
-                              new ItemStackOutput(InputHelper.toStack(itemOutput)))));
+                  .add(new AddMekanismRecipe<>(NAME, Recipe.PURIFICATION_CHAMBER, recipes));
         }
     }
 
@@ -54,15 +63,13 @@ public class Purification {
           @Optional IIngredient gasInput) {
         if (IngredientHelper.checkNotNull(NAME, itemOutput)) {
             CrafttweakerIntegration.LATE_REMOVALS
-                  .add(new RemoveMekanismRecipe<AdvancedMachineInput, ItemStackOutput, PurificationRecipe>(NAME,
-                        Recipe.PURIFICATION_CHAMBER, new IngredientWrapper(itemOutput),
+                  .add(new RemoveMekanismRecipe<>(NAME, Recipe.PURIFICATION_CHAMBER, new IngredientWrapper(itemOutput),
                         new IngredientWrapper(itemInput, gasInput)));
         }
     }
 
     @ZenMethod
     public static void removeAllRecipes() {
-        CrafttweakerIntegration.LATE_REMOVALS
-              .add(new RemoveAllMekanismRecipe<PurificationRecipe>(NAME, Recipe.PURIFICATION_CHAMBER));
+        CrafttweakerIntegration.LATE_REMOVALS.add(new RemoveAllMekanismRecipe<>(NAME, Recipe.PURIFICATION_CHAMBER));
     }
 }

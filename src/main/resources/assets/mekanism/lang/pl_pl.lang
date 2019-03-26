@@ -965,11 +965,7 @@ reactor.depleted=Zbyt mało paliwa
 reactor.depleted.desc=Reaktor ma niewystarczającą ilość paliwa w celu utrzymania reakcji
 
 # Creative tab
-itemGroup.tabMekanism=Mekanism
-
-# NEI stuff
-nei.chemicalInjectionChamber=Komora wtrysku chemicz.
-nei.rotaryCondensentrator=Kondensentr. rotac.
+itemGroup.tabMekanism=Mekanica
 
 ##############
 # GENERATORS

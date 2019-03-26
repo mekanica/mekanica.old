@@ -41,6 +41,11 @@ def runNoOutput(cmd):
     else:
         return process.returncode
 
+def runVim(filename):
+    process = subprocess.Popen(["vim", filename])
+    (_output, err) = process.communicate()
+    return err
+
 # Uploading to CF requires a API token (CF_API_TOKEN)
 apiToken = os.getenv("CF_API_TOKEN")
 if apiToken == None or len(apiToken) < 1:
@@ -93,12 +98,30 @@ if err != None:
     print("Failed to get changelog for %s -> %s" % (lastTag, args.tag))
     sys.exit(1)
 
+# Dump the changelog into a temporary file
+with open("/tmp/changelog.tmp", "w") as f:
+    f.write(changelog)
+
+# Open up Vim with the temporary file for editing
+res = runVim("/tmp/changelog.tmp")
+if res != None:
+    print("VIM result: " + res)
+    sys.exit(1)
+
+# Read the changelog
+with open("/tmp/changelog.tmp", "r") as f:
+    changelog = "".join(f.readlines())
+    print(changelog)
+
 # Do the actual build
 err = runNoOutput(["./gradlew", "-Pversion=" + args.tag, "clean", "build"])
 if err != None:
     print(err)
     print("Build of %s tag failed" % (args.tag))
     sys.exit(1)
+
+# Print changelog
+print(changelog)
 
 # For each project, extract ID, filename and dependencies and upload
 for project in args.project:
@@ -113,9 +136,7 @@ for project in args.project:
         metadata["relations"] = {"projects": [{"slug": dep, "type": "requiredDependency"}]}
 
     if args.skipupload:
-        print("Skipping upload!")
-        print("Metadata: %s" % metadata)
-        print("Filename: %s" % filename)
+        print("Skipping upload of %s" % filename)
         continue
 
     # Setup files for POST

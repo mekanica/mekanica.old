@@ -5,9 +5,9 @@ import javax.annotation.Nonnull;
 import mekanism.api.Coord4D;
 import mekanism.api.IHeatTransfer;
 import mekanism.api.Range4D;
+import mekanism.api.TileNetworkList;
 import mekanism.common.Mekanism;
 import mekanism.common.base.IRedstoneControl;
-import mekanism.common.base.TileNetworkList;
 import mekanism.common.block.states.BlockStateMachine.MachineType;
 import mekanism.common.capabilities.Capabilities;
 import mekanism.common.config.MekanismConfig.general;
@@ -15,7 +15,7 @@ import mekanism.common.integration.computer.IComputerIntegration;
 import mekanism.common.network.PacketTileEntity.TileEntityMessage;
 import mekanism.common.security.ISecurityTile;
 import mekanism.common.tile.component.TileComponentSecurity;
-import mekanism.common.tile.prefab.TileEntityNoisyBlock;
+import mekanism.common.tile.prefab.TileEntityEffectsBlock;
 import mekanism.common.util.CapabilityUtils;
 import mekanism.common.util.ChargeUtils;
 import mekanism.common.util.HeatUtils;
@@ -28,7 +28,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
-public class TileEntityResistiveHeater extends TileEntityNoisyBlock implements IHeatTransfer, IComputerIntegration,
+public class TileEntityResistiveHeater extends TileEntityEffectsBlock implements IHeatTransfer, IComputerIntegration,
       IRedstoneControl, ISecurityTile {
 
     private static final String[] methods = new String[]{"getEnergy", "getMaxEnergy", "getTemperature",
@@ -338,5 +338,16 @@ public class TileEntityResistiveHeater extends TileEntityNoisyBlock implements I
     @Override
     public TileComponentSecurity getSecurity() {
         return securityComponent;
+    }
+
+    @Nonnull
+    @Override
+    public int[] getSlotsForFace(@Nonnull EnumFacing side) {
+        return new int[]{0};
+    }
+
+    @Override
+    public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
+        return ChargeUtils.canBeCharged(stack);
     }
 }

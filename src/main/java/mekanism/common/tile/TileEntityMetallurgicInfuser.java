@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import javax.annotation.Nonnull;
 import mekanism.api.EnumColor;
 import mekanism.api.IConfigCardAccess;
+import mekanism.api.TileNetworkList;
 import mekanism.api.infuse.InfuseObject;
 import mekanism.api.infuse.InfuseRegistry;
 import mekanism.api.transmitters.TransmissionType;
@@ -18,7 +19,6 @@ import mekanism.common.base.IFactory.RecipeType;
 import mekanism.common.base.ISideConfiguration;
 import mekanism.common.base.ISustainedData;
 import mekanism.common.base.ITierUpgradeable;
-import mekanism.common.base.TileNetworkList;
 import mekanism.common.block.states.BlockStateMachine;
 import mekanism.common.capabilities.Capabilities;
 import mekanism.common.config.MekanismConfig.usage;
@@ -156,9 +156,7 @@ public class TileEntityMetallurgicInfuser extends TileEntityOperationalMachine i
 
         //Machine
         factory.progress[0] = operatingTicks;
-        factory.clientActive = clientActive;
-        factory.isActive = isActive;
-        factory.updateDelay = updateDelay;
+        factory.setActive(isActive);
         factory.controlType = controlType;
         factory.prevEnergy = prevEnergy;
         factory.upgradeComponent.readFrom(upgradeComponent);
@@ -218,13 +216,8 @@ public class TileEntityMetallurgicInfuser extends TileEntityOperationalMachine i
             if (infuseStored.type != null) {
                 return RecipeHandler.getMetallurgicInfuserRecipe(new InfusionInput(infuseStored, itemstack)) != null;
             } else {
-                for (Object obj : Recipe.METALLURGIC_INFUSER.get().keySet()) {
-                    InfusionInput input = (InfusionInput) obj;
-
-                    if (input.inputStack.isItemEqual(itemstack)) {
-                        return true;
-                    }
-                }
+                return Recipe.METALLURGIC_INFUSER.get().keySet().stream()
+                      .anyMatch(input -> input.inputStack.isItemEqual(itemstack));
             }
         } else if (slotID == 4) {
             return ChargeUtils.canBeDischarged(itemstack);

@@ -2,14 +2,14 @@ package mekanism.common.capabilities;
 
 import io.netty.buffer.ByteBuf;
 import mekanism.common.base.ITileNetwork;
-import mekanism.common.base.TileNetworkList;
+import mekanism.api.TileNetworkList;
 import mekanism.common.capabilities.DefaultStorageHelper.NullStorage;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 
 public class DefaultTileNetwork implements ITileNetwork {
 
     public static void register() {
-        CapabilityManager.INSTANCE.register(ITileNetwork.class, new NullStorage<>(), DefaultTileNetwork.class);
+        CapabilityManager.INSTANCE.register(ITileNetwork.class, new NullStorage<>(), DefaultTileNetwork::new);
     }
 
     @Override

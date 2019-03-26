@@ -1,6 +1,7 @@
 package mekanism.client.jei;
 
 import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import java.awt.Color;
 import java.util.Collections;
 import java.util.List;
@@ -8,7 +9,6 @@ import javax.annotation.Nullable;
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
 import mezz.jei.api.ingredients.IIngredientHelper;
-import net.minecraft.item.ItemStack;
 
 public class GasStackHelper implements IIngredientHelper<GasStack> {
 
@@ -25,7 +25,6 @@ public class GasStackHelper implements IIngredientHelper<GasStack> {
                 return stack;
             }
         }
-
         return null;
     }
 
@@ -60,29 +59,18 @@ public class GasStackHelper implements IIngredientHelper<GasStack> {
     }
 
     @Override
-    public ItemStack cheatIngredient(GasStack ingredient, boolean fullStack) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
     public GasStack copyIngredient(GasStack ingredient) {
         return ingredient.copy();
     }
 
     @Override
     public String getErrorInfo(@Nullable GasStack ingredient) {
-        MoreObjects.ToStringHelper toStringHelper = MoreObjects.toStringHelper(GasStack.class);
-
-        Gas gas = ingredient.getGas();
-
-        if (gas != null) {
-            toStringHelper.add("Gas", gas.getLocalizedName());
-        } else {
-            toStringHelper.add("Gas", "null");
+        ToStringHelper toStringHelper = MoreObjects.toStringHelper(GasStack.class);
+        Gas gas = ingredient == null ? null : ingredient.getGas();
+        toStringHelper.add("Gas", gas != null ? gas.getLocalizedName() : "null");
+        if (ingredient != null) {
+            toStringHelper.add("Amount", ingredient.amount);
         }
-
-        toStringHelper.add("Amount", ingredient.amount);
-
         return toStringHelper.toString();
     }
 }

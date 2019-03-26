@@ -3,21 +3,25 @@ package mekanism.generators.common.tile.reactor;
 import io.netty.buffer.ByteBuf;
 import javax.annotation.Nonnull;
 import mekanism.api.Coord4D;
+import mekanism.api.TileNetworkList;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.GasTank;
 import mekanism.client.sound.SoundHandler;
 import mekanism.common.Mekanism;
 import mekanism.common.MekanismFluids;
 import mekanism.common.base.IActiveState;
-import mekanism.common.base.TileNetworkList;
+import mekanism.common.config.MekanismConfig;
 import mekanism.common.network.PacketTileEntity.TileEntityMessage;
+import mekanism.common.util.InventoryUtils;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.TileUtils;
 import mekanism.generators.common.FusionReactor;
+import mekanism.generators.common.item.ItemHohlraum;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -110,7 +114,12 @@ public class TileEntityReactorController extends TileEntityReactorBlock implemen
 
     @SideOnly(Side.CLIENT)
     private void updateSound() {
-        if (getActive() && !isInvalid()) {
+        // If machine sounds are disabled, noop
+        if (!MekanismConfig.client.enableMachineSounds) {
+            return;
+        }
+
+        if (isBurning() && !isInvalid()) {
             // If sounds are being muted, we can attempt to start them on every tick, only to have them
             // denied by the event bus, so use a cooldown period that ensures we're only trying once every
             // second or so to start a sound.
@@ -311,5 +320,16 @@ public class TileEntityReactorController extends TileEntityReactorBlock implemen
         }
 
         return box;
+    }
+
+    @Nonnull
+    @Override
+    public int[] getSlotsForFace(@Nonnull EnumFacing side) {
+        return isFormed() ? new int[]{0} : InventoryUtils.EMPTY;
+    }
+
+    @Override
+    public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
+        return stack.getItem() instanceof ItemHohlraum;
     }
 }

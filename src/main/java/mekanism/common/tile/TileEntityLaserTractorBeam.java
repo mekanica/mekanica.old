@@ -8,7 +8,7 @@ import mekanism.api.lasers.ILaserReceptor;
 import mekanism.common.LaserManager;
 import mekanism.common.LaserManager.LaserInfo;
 import mekanism.common.Mekanism;
-import mekanism.common.base.TileNetworkList;
+import mekanism.api.TileNetworkList;
 import mekanism.common.capabilities.Capabilities;
 import mekanism.common.config.MekanismConfig.general;
 import mekanism.common.network.PacketTileEntity.TileEntityMessage;
@@ -111,7 +111,7 @@ public class TileEntityLaserTractorBeam extends TileEntityContainerBlock impleme
                         diggingProgress += firing;
 
                         if (diggingProgress >= hardness * general.laserEnergyNeededPerHardness) {
-                            List<ItemStack> drops = LaserManager.breakBlock(hitCoord, false, world);
+                            List<ItemStack> drops = LaserManager.breakBlock(hitCoord, false, world, pos);
                             if (drops != null) {
                                 receiveDrops(drops);
                             }

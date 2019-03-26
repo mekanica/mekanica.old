@@ -2,11 +2,13 @@ package mekanism.generators.common.tile.reactor;
 
 import io.netty.buffer.ByteBuf;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import mekanism.api.Coord4D;
 import mekanism.api.EnumColor;
 import mekanism.api.IConfigurable;
 import mekanism.api.IHeatTransfer;
 import mekanism.api.Range4D;
+import mekanism.api.TileNetworkList;
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.GasTankInfo;
@@ -16,7 +18,6 @@ import mekanism.common.Mekanism;
 import mekanism.common.MekanismFluids;
 import mekanism.common.base.FluidHandlerWrapper;
 import mekanism.common.base.IFluidHandlerWrapper;
-import mekanism.common.base.TileNetworkList;
 import mekanism.common.capabilities.Capabilities;
 import mekanism.common.network.PacketTileEntity.TileEntityMessage;
 import mekanism.common.util.CableUtils;
@@ -109,8 +110,8 @@ public class TileEntityReactorPort extends TileEntityReactorBlock implements IFl
     }
 
     @Override
-    public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
-        if (resource.getFluid() == FluidRegistry.WATER && getReactor() != null && !fluidEject) {
+    public int fill(EnumFacing from, @Nullable FluidStack resource, boolean doFill) {
+        if (resource != null && resource.getFluid() == FluidRegistry.WATER && getReactor() != null && !fluidEject) {
             return getReactor().getWaterTank().fill(resource, doFill);
         }
 
@@ -118,8 +119,8 @@ public class TileEntityReactorPort extends TileEntityReactorBlock implements IFl
     }
 
     @Override
-    public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
-        if (resource.getFluid() == FluidRegistry.getFluid("steam") && getReactor() != null) {
+    public FluidStack drain(EnumFacing from, @Nullable FluidStack resource, boolean doDrain) {
+        if (resource != null && resource.getFluid() == FluidRegistry.getFluid("steam") && getReactor() != null) {
             getReactor().getSteamTank().drain(resource.amount, doDrain);
         }
 
@@ -136,13 +137,13 @@ public class TileEntityReactorPort extends TileEntityReactorBlock implements IFl
     }
 
     @Override
-    public boolean canFill(EnumFacing from, FluidStack fluid) {
-        return getReactor() != null && fluid.getFluid().equals(FluidRegistry.WATER) && !fluidEject;
+    public boolean canFill(EnumFacing from, @Nullable FluidStack fluid) {
+        return getReactor() != null && fluid != null && fluid.getFluid().equals(FluidRegistry.WATER) && !fluidEject;
     }
 
     @Override
-    public boolean canDrain(EnumFacing from, FluidStack fluid) {
-        return getReactor() != null && fluid.getFluid().equals(FluidRegistry.getFluid("steam"));
+    public boolean canDrain(EnumFacing from, @Nullable FluidStack fluid) {
+        return getReactor() != null && fluid != null && fluid.getFluid() == FluidRegistry.getFluid("steam");
     }
 
     @Override
@@ -268,7 +269,7 @@ public class TileEntityReactorPort extends TileEntityReactorBlock implements IFl
 
     @Override
     public double getMaxOutput() {
-        return 1000000000;
+        return Integer.MAX_VALUE;
     }
 
     @Override

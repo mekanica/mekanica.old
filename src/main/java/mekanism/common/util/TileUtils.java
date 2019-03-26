@@ -1,10 +1,11 @@
 package mekanism.common.util;
 
 import io.netty.buffer.ByteBuf;
+import java.util.Arrays;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.GasTank;
 import mekanism.common.PacketHandler;
-import mekanism.common.base.TileNetworkList;
+import mekanism.api.TileNetworkList;
 import mekanism.common.tile.prefab.TileEntityBasicBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -76,14 +77,10 @@ public class TileUtils {
         }
     }
 
-    public static void emitGas(TileEntityBasicBlock tile, GasTank tank, int gasOutput) {
-        emitGas(tile, tank, gasOutput, MekanismUtils.getRight(tile.facing));
-    }
-
     public static void emitGas(TileEntityBasicBlock tile, GasTank tank, int gasOutput, EnumFacing facing) {
         if (tank.getGas() != null) {
             GasStack toSend = new GasStack(tank.getGas().getGas(), Math.min(tank.getStored(), gasOutput));
-            tank.draw(GasUtils.emit(toSend, tile, ListUtils.asList(facing)), true);
+            tank.draw(GasUtils.emit(toSend, tile, Arrays.asList(facing)), true);
         }
     }
 }

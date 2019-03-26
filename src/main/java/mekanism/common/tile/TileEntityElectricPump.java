@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import mekanism.api.Coord4D;
 import mekanism.api.EnumColor;
 import mekanism.api.IConfigurable;
@@ -19,7 +20,7 @@ import mekanism.common.base.IRedstoneControl;
 import mekanism.common.base.ISustainedTank;
 import mekanism.common.base.ITankManager;
 import mekanism.common.base.IUpgradeTile;
-import mekanism.common.base.TileNetworkList;
+import mekanism.api.TileNetworkList;
 import mekanism.common.capabilities.Capabilities;
 import mekanism.common.config.MekanismConfig.general;
 import mekanism.common.config.MekanismConfig.usage;
@@ -406,9 +407,9 @@ public class TileEntityElectricPump extends TileEntityElectricBlock implements I
     }
 
     @Override
-    public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
-        if (fluidTank.getFluid() != null && fluidTank.getFluid().getFluid() == resource.getFluid() && from == EnumFacing
-              .byIndex(1)) {
+    public FluidStack drain(EnumFacing from, @Nullable FluidStack resource, boolean doDrain) {
+        if (resource != null && fluidTank.getFluid() != null && fluidTank.getFluid().getFluid() == resource.getFluid()
+              && from == EnumFacing.byIndex(1)) {
             return drain(from, resource.amount, doDrain);
         }
 
@@ -416,7 +417,7 @@ public class TileEntityElectricPump extends TileEntityElectricBlock implements I
     }
 
     @Override
-    public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
+    public int fill(EnumFacing from, @Nullable FluidStack resource, boolean doFill) {
         return 0;
     }
 
@@ -430,12 +431,12 @@ public class TileEntityElectricPump extends TileEntityElectricBlock implements I
     }
 
     @Override
-    public boolean canFill(EnumFacing from, FluidStack fluid) {
+    public boolean canFill(EnumFacing from, @Nullable FluidStack fluid) {
         return false;
     }
 
     @Override
-    public boolean canDrain(EnumFacing from, FluidStack fluid) {
+    public boolean canDrain(EnumFacing from, @Nullable FluidStack fluid) {
         return from == EnumFacing.byIndex(1);
     }
 

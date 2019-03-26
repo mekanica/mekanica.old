@@ -1,8 +1,5 @@
 package mekanism.api.gas;
 
-import mekanism.client.render.MekanismRenderer;
-import mekanism.client.render.MekanismRenderer.FluidType;
-import mekanism.common.Mekanism;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -19,7 +16,7 @@ import net.minecraftforge.fluids.FluidRegistry;
  */
 public class Gas {
 
-    private String name;
+    private final String name;
 
     private String unlocalizedName;
 
@@ -41,8 +38,7 @@ public class Gas {
      * @param s - name or key to associate this Gas with
      */
     public Gas(String s, String icon) {
-        unlocalizedName = name = s;
-        iconLocation = new ResourceLocation(icon);
+        this(s, new ResourceLocation(icon));
     }
 
     public Gas(String s, ResourceLocation icon) {
@@ -57,8 +53,7 @@ public class Gas {
      * @param t - tint of this Gas
      */
     public Gas(String s, int t) {
-        unlocalizedName = name = s;
-        iconLocation = new ResourceLocation(Mekanism.MODID, "blocks/liquid/liquid");
+        this(s, "mekanism:blocks/liquid/liquid");
         tint = t;
     }
 
@@ -156,7 +151,6 @@ public class Gas {
      */
     public Gas setTranslationKey(String s) {
         unlocalizedName = s;
-
         return this;
     }
 
@@ -188,12 +182,13 @@ public class Gas {
      * @return associated IIcon
      */
     public TextureAtlasSprite getSprite() {
+        TextureMap texMap = Minecraft.getMinecraft().getTextureMapBlocks();
         if (from_fluid) {
-            return MekanismRenderer.getFluidTexture(fluid, FluidType.STILL);
+            return texMap.getAtlasSprite(fluid.getStill().toString());
         }
 
         if (sprite == null) {
-            sprite = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(getIcon().toString());
+            sprite = texMap.getAtlasSprite(getIcon().toString());
         }
 
         return sprite;

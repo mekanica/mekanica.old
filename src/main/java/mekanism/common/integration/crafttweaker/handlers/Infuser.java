@@ -1,12 +1,14 @@
 package mekanism.common.integration.crafttweaker.handlers;
 
-import com.blamejared.mtlib.helpers.InputHelper;
-import com.blamejared.mtlib.helpers.LogHelper;
-import crafttweaker.annotations.ModOnly;
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.minecraft.CraftTweakerMC;
+import java.util.ArrayList;
+import java.util.List;
 import mekanism.api.infuse.InfuseRegistry;
+import mekanism.api.infuse.InfuseType;
 import mekanism.common.Mekanism;
 import mekanism.common.integration.crafttweaker.CrafttweakerIntegration;
 import mekanism.common.integration.crafttweaker.helpers.IngredientHelper;
@@ -18,29 +20,33 @@ import mekanism.common.recipe.RecipeHandler.Recipe;
 import mekanism.common.recipe.inputs.InfusionInput;
 import mekanism.common.recipe.machines.MetallurgicInfuserRecipe;
 import mekanism.common.recipe.outputs.ItemStackOutput;
+import net.minecraft.item.ItemStack;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
 @ZenClass("mods.mekanism.infuser")
-@ModOnly("mtlib")
 @ZenRegister
 public class Infuser {
 
     public static final String NAME = Mekanism.MOD_NAME + " Metallurgic Infuser";
 
     @ZenMethod
-    public static void addRecipe(String infuseType, int infuseAmount, IItemStack itemInput, IItemStack itemOutput) {
+    public static void addRecipe(String infuseType, int infuseAmount, IIngredient ingredientInput,
+          IItemStack itemOutput) {
         if (infuseType == null || infuseType.isEmpty()) {
-            LogHelper.logError(String.format("Required parameters missing for %s Recipe.", NAME));
+            CraftTweakerAPI.logError(String.format("Required parameters missing for %s Recipe.", NAME));
             return;
         }
-        if (IngredientHelper.checkNotNull(NAME, itemInput, itemOutput)) {
+        if (IngredientHelper.checkNotNull(NAME, ingredientInput, itemOutput)) {
+            InfuseType type = InfuseRegistry.get(infuseType);
+            ItemStackOutput output = new ItemStackOutput(CraftTweakerMC.getItemStack(itemOutput));
+            List<MetallurgicInfuserRecipe> recipes = new ArrayList<>();
+            for (ItemStack stack : CraftTweakerMC.getIngredient(ingredientInput).getMatchingStacks()) {
+                recipes.add(new MetallurgicInfuserRecipe(new InfusionInput(type, infuseAmount, stack), output));
+            }
             CrafttweakerIntegration.LATE_ADDITIONS
-                  .add(new AddMekanismRecipe(NAME, Recipe.METALLURGIC_INFUSER,
-                        new MetallurgicInfuserRecipe(new InfusionInput(InfuseRegistry.get(infuseType), infuseAmount,
-                              InputHelper.toStack(itemInput)),
-                              new ItemStackOutput(InputHelper.toStack(itemOutput)))));
+                  .add(new AddMekanismRecipe<>(NAME, Recipe.METALLURGIC_INFUSER, recipes));
         }
     }
 
@@ -49,15 +55,13 @@ public class Infuser {
           @Optional String infuseType) {
         if (IngredientHelper.checkNotNull(NAME, itemOutput)) {
             CrafttweakerIntegration.LATE_REMOVALS
-                  .add(new RemoveMekanismRecipe<InfusionInput, ItemStackOutput, MetallurgicInfuserRecipe>(NAME,
-                        Recipe.METALLURGIC_INFUSER, new IngredientWrapper(itemOutput),
+                  .add(new RemoveMekanismRecipe<>(NAME, Recipe.METALLURGIC_INFUSER, new IngredientWrapper(itemOutput),
                         new IngredientWrapper(itemInput, infuseType)));
         }
     }
 
     @ZenMethod
     public static void removeAllRecipes() {
-        CrafttweakerIntegration.LATE_REMOVALS
-              .add(new RemoveAllMekanismRecipe<MetallurgicInfuserRecipe>(NAME, Recipe.CHEMICAL_CRYSTALLIZER));
+        CrafttweakerIntegration.LATE_REMOVALS.add(new RemoveAllMekanismRecipe<>(NAME, Recipe.CHEMICAL_CRYSTALLIZER));
     }
 }

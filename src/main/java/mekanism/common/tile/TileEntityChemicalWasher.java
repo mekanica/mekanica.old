@@ -3,6 +3,7 @@ package mekanism.common.tile;
 import io.netty.buffer.ByteBuf;
 import java.util.List;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import mekanism.api.gas.Gas;
 import mekanism.api.gas.GasStack;
 import mekanism.api.gas.GasTank;
@@ -16,10 +17,9 @@ import mekanism.common.base.FluidHandlerWrapper;
 import mekanism.common.base.IFluidHandlerWrapper;
 import mekanism.common.base.ISustainedData;
 import mekanism.common.base.ITankManager;
-import mekanism.common.base.TileNetworkList;
+import mekanism.api.TileNetworkList;
 import mekanism.common.block.states.BlockStateMachine;
 import mekanism.common.capabilities.Capabilities;
-import mekanism.common.config.MekanismConfig.general;
 import mekanism.common.config.MekanismConfig.usage;
 import mekanism.common.recipe.RecipeHandler;
 import mekanism.common.recipe.inputs.GasInput;
@@ -65,7 +65,6 @@ public class TileEntityChemicalWasher extends TileEntityMachine implements IGasH
     public TileEntityChemicalWasher() {
         super("machine.washer", "ChemicalWasher", BlockStateMachine.MachineType.CHEMICAL_WASHER.baseEnergy,
               usage.chemicalWasherUsage, 4);
-
         inventory = NonNullList.withSize(5, ItemStack.EMPTY);
     }
 
@@ -94,7 +93,7 @@ public class TileEntityChemicalWasher extends TileEntityMachine implements IGasH
                 }
             }
 
-            TileUtils.emitGas(this, outputTank, gasOutput);
+            TileUtils.emitGas(this, outputTank, gasOutput, MekanismUtils.getRight(facing));
 
             prevEnergy = getEnergy();
         }
@@ -150,12 +149,6 @@ public class TileEntityChemicalWasher extends TileEntityMachine implements IGasH
             TileUtils.readTankData(dataStream, fluidTank);
             TileUtils.readTankData(dataStream, inputTank);
             TileUtils.readTankData(dataStream, outputTank);
-
-            if (updateDelay == 0 && clientActive != isActive) {
-                updateDelay = general.UPDATE_DELAY;
-                isActive = clientActive;
-                MekanismUtils.updateBlock(world, getPos());
-            }
         }
     }
 
@@ -310,7 +303,7 @@ public class TileEntityChemicalWasher extends TileEntityMachine implements IGasH
     }
 
     @Override
-    public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
+    public int fill(EnumFacing from, @Nullable FluidStack resource, boolean doFill) {
         if (canFill(from, resource)) {
             return fluidTank.fill(resource, doFill);
         }
@@ -319,7 +312,7 @@ public class TileEntityChemicalWasher extends TileEntityMachine implements IGasH
     }
 
     @Override
-    public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
+    public FluidStack drain(EnumFacing from, @Nullable FluidStack resource, boolean doDrain) {
         return null;
     }
 
@@ -329,12 +322,12 @@ public class TileEntityChemicalWasher extends TileEntityMachine implements IGasH
     }
 
     @Override
-    public boolean canFill(EnumFacing from, FluidStack fluid) {
+    public boolean canFill(EnumFacing from, @Nullable FluidStack fluid) {
         return from == EnumFacing.UP && fluid.getFluid().equals(FluidRegistry.WATER);
     }
 
     @Override
-    public boolean canDrain(EnumFacing from, FluidStack fluid) {
+    public boolean canDrain(EnumFacing from, @Nullable FluidStack fluid) {
         return false;
     }
 

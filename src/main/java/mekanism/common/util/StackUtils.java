@@ -2,6 +2,7 @@ package mekanism.common.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.oredict.OreDictionary;
@@ -135,8 +136,7 @@ public final class StackUtils {
             return -1;
         }
 
-        String name = stack.getItemDamage() == OreDictionary.WILDCARD_VALUE ? stack.getItem().getTranslationKey()
-              : stack.getItem().getTranslationKey(stack);
-        return name.hashCode() << 8 | stack.getItemDamage();
+        int nameHash = Objects.requireNonNull(stack.getItem().getRegistryName()).hashCode();
+        return nameHash << 8 | stack.getMetadata();
     }
 }

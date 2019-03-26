@@ -17,6 +17,7 @@ import mekanism.common.tile.TileEntityFluidTank;
 import mekanism.common.tile.TileEntityGasTank;
 import mekanism.common.tile.TileEntityInductionCell;
 import mekanism.common.tile.TileEntityInductionProvider;
+import mekanism.common.util.InventoryUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -77,7 +78,7 @@ public class WailaDataProvider implements IWailaDataProvider {
             TileEntityBoundingBlock bound = (TileEntityBoundingBlock) tile;
             Coord4D coord = new Coord4D(bound.getPos(), tile.getWorld());
 
-            if (bound.receivedCoords && coord.getTileEntity(tile.getWorld()) instanceof IInventory) {
+            if (bound.receivedCoords && InventoryUtils.isItemHandler(coord.getTileEntity(tile.getWorld()), null)) {
                 currenttip.set(0, EnumColor.WHITE + ((IInventory) coord.getTileEntity(tile.getWorld())).getName());
             }
         }

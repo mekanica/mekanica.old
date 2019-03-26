@@ -5,8 +5,6 @@ import java.util.Map;
 import mekanism.common.content.transporter.Finder.FirstFinder;
 import mekanism.common.util.InventoryUtils;
 import mekanism.common.util.StackUtils;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -41,37 +39,6 @@ public class TransitRequest {
 
                 if (!stack.isEmpty() && !ret.hasType(stack) && finder.modifies(stack)) {
                     ret.setItem(stack, i);
-                }
-            }
-        } else if (tile instanceof ISidedInventory) {
-            ISidedInventory sidedInventory = (ISidedInventory) tile;
-            int[] slots = sidedInventory.getSlotsForFace(side.getOpposite());
-
-            for (int get = slots.length - 1; get >= 0; get--) {
-                int slotID = slots[get];
-
-                if (!sidedInventory.getStackInSlot(slotID).isEmpty()
-                      && sidedInventory.getStackInSlot(slotID).getCount() > 0) {
-                    ItemStack toSend = sidedInventory.getStackInSlot(slotID).copy();
-                    toSend.setCount(Math.min(amount, toSend.getCount()));
-
-                    if (!ret.hasType(toSend) && sidedInventory.canExtractItem(slotID, toSend, side.getOpposite())
-                          && finder.modifies(toSend)) {
-                        ret.setItem(toSend, slotID);
-                    }
-                }
-            }
-        } else if (tile instanceof IInventory) {
-            IInventory inventory = InventoryUtils.checkChestInv((IInventory) tile);
-
-            for (int i = inventory.getSizeInventory() - 1; i >= 0; i--) {
-                if (!inventory.getStackInSlot(i).isEmpty() && inventory.getStackInSlot(i).getCount() > 0) {
-                    ItemStack toSend = inventory.getStackInSlot(i).copy();
-                    toSend.setCount(Math.min(amount, toSend.getCount()));
-
-                    if (!ret.hasType(toSend) && finder.modifies(toSend)) {
-                        ret.setItem(toSend, i);
-                    }
                 }
             }
         }

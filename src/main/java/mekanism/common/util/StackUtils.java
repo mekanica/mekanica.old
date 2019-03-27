@@ -11,7 +11,7 @@ import org.apache.commons.lang3.tuple.Pair;
 public final class StackUtils {
 
     //only used in factory
-    public static boolean diffIgnoreNull(ItemStack stack1, ItemStack stack2) {
+    public static boolean diffIgnoreEmpty(ItemStack stack1, ItemStack stack2) {
         if (stack1.isEmpty() || stack2.isEmpty()) {
             return false;
         }

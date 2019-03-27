@@ -400,7 +400,7 @@ public class TileEntityFactory extends TileEntityMachine implements IComputerInt
 
             for (InvID invID1 : invStacks) {
                 for (InvID invID2 : invStacks) {
-                    if (invID1.ID == invID2.ID || StackUtils.diffIgnoreNull(invID1.stack, invID2.stack)
+                    if (invID1.ID == invID2.ID || StackUtils.diffIgnoreEmpty(invID1.stack, invID2.stack)
                           || Math.abs(invID1.size() - invID2.size()) < 2) {
                         continue;
                     }

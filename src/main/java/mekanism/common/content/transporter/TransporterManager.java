@@ -74,12 +74,19 @@ public class TransporterManager {
                 continue;
             }
 
-            // Simulate the insert; note that we can't use the "normal" simulate, since it would only tell us about
+            // Simulate the insert; note that we can't depend solely on the "normal" simulate, since it would only tell us about
             // _this_ stack, not the cumulative set of stacks. Use our best guess about stacking/maxes to figure out
             // how the inventory would look after the insertion
 
             // Get the item stack for the slot in question
             ItemStack destStack = copy.inventory.get(i);
+
+            // If the item stack is empty, we need to do a simulated insert since we can't tell if the stack
+            // in question would be allowed in this slot. Otherwise, we depend on areItemsStackable to keep us
+            // out of trouble
+            if (destStack.isEmpty() && ItemStack.areItemStacksEqual(handler.insertItem(i, stack, true), stack)) {
+                continue;
+            }
 
             // If the destination isn't empty and not stackable, move along
             if (!destStack.isEmpty() && !InventoryUtils.areItemsStackable(destStack, stack)) {

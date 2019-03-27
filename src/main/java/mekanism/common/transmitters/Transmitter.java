@@ -21,9 +21,9 @@ public abstract class Transmitter<A, N extends DynamicNetwork<A, N>> implements 
         }
 
         if (world().isRemote && theNetwork != null) {
-            theNetwork.transmitters.remove(this);
+            theNetwork.remove(this);
 
-            if (theNetwork.transmitters.isEmpty()) {
+            if (theNetwork.isEmpty()) {
                 theNetwork.deregister();
             }
         }
@@ -32,7 +32,7 @@ public abstract class Transmitter<A, N extends DynamicNetwork<A, N>> implements 
         orphaned = theNetwork == null;
 
         if (world().isRemote && theNetwork != null) {
-            theNetwork.transmitters.add(this);
+            theNetwork.add(this);
         }
 
         setRequestsUpdate();

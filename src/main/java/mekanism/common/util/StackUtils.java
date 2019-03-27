@@ -2,9 +2,9 @@ package mekanism.common.util;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -139,7 +139,8 @@ public final class StackUtils {
             return -1;
         }
 
-        int nameHash = Objects.requireNonNull(stack.getItem().getRegistryName()).hashCode();
+        ResourceLocation registryName = stack.getItem().getRegistryName();
+        int nameHash = registryName == null ? 0 : registryName.hashCode();
         return nameHash << 8 | stack.getMetadata();
     }
 }

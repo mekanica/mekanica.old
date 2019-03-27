@@ -13,6 +13,7 @@ import javax.annotation.Nonnull;
 import mekanism.api.Chunk3D;
 import mekanism.api.Coord4D;
 import mekanism.api.Range4D;
+import mekanism.api.TileNetworkList;
 import mekanism.common.HashList;
 import mekanism.common.Mekanism;
 import mekanism.common.Upgrade;
@@ -21,10 +22,10 @@ import mekanism.common.base.IAdvancedBoundingBlock;
 import mekanism.common.base.IRedstoneControl;
 import mekanism.common.base.ISustainedData;
 import mekanism.common.base.IUpgradeTile;
-import mekanism.api.TileNetworkList;
 import mekanism.common.block.states.BlockStateMachine;
 import mekanism.common.capabilities.Capabilities;
 import mekanism.common.chunkloading.IChunkLoader;
+import mekanism.common.config.MekanismConfig.general;
 import mekanism.common.config.MekanismConfig.usage;
 import mekanism.common.content.miner.MItemStackFilter;
 import mekanism.common.content.miner.MOreDictFilter;
@@ -47,6 +48,7 @@ import mekanism.common.util.InventoryUtils;
 import mekanism.common.util.ItemDataUtils;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.MinerUtils;
+import mekanism.common.util.StackUtils;
 import mekanism.common.util.TransporterUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBush;
@@ -120,6 +122,8 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
 
     public boolean clientRendering = false;
 
+    private final int[] inventorySlots;
+
     /**
      * This machine's current RedstoneControl type.
      */
@@ -134,6 +138,10 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
     public TileEntityDigitalMiner() {
         super("DigitalMiner", BlockStateMachine.MachineType.DIGITAL_MINER.baseEnergy);
         inventory = NonNullList.withSize(29, ItemStack.EMPTY);
+        inventorySlots = new int[inventory.size()];
+        for (int i = 0; i < inventorySlots.length; i++) {
+            inventorySlots[i] = i;
+        }
         radius = 10;
 
         upgradeComponent.setSupported(Upgrade.ANCHOR);
@@ -274,26 +282,25 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
 
             TransitRequest ejectMap = getEjectItemMap();
 
-            if (doEject && delayTicks == 0 && !ejectMap.isEmpty() && getEjectInv() != null && getEjectTile() != null) {
-                if (CapabilityUtils.hasCapability(getEjectInv(), Capabilities.LOGISTICAL_TRANSPORTER_CAPABILITY,
-                      facing.getOpposite())) {
-                    TransitResponse response = TransporterUtils.insert(getEjectTile(), CapabilityUtils
-                          .getCapability(getEjectInv(), Capabilities.LOGISTICAL_TRANSPORTER_CAPABILITY,
-                                facing.getOpposite()), ejectMap, null, true, 0);
-
+            if (doEject && delayTicks == 0 && !ejectMap.isEmpty()) {
+                TileEntity ejectInv = getEjectInv();
+                TileEntity ejectTile = getEjectTile();
+                if (ejectInv != null && ejectTile != null) {
+                    TransitResponse response;
+                    if (CapabilityUtils.hasCapability(ejectInv, Capabilities.LOGISTICAL_TRANSPORTER_CAPABILITY,
+                          facing.getOpposite())) {
+                        response = TransporterUtils.insert(ejectTile, CapabilityUtils
+                              .getCapability(ejectInv, Capabilities.LOGISTICAL_TRANSPORTER_CAPABILITY,
+                                    facing.getOpposite()), ejectMap, null, true, 0);
+                    } else {
+                        response = InventoryUtils.putStackInInventory(ejectInv, ejectMap, facing.getOpposite(), false);
+                    }
                     if (!response.isEmpty()) {
                         response.getInvStack(this, facing.getOpposite()).use();
                     }
-                } else {
-                    TransitResponse response = InventoryUtils
-                          .putStackInInventory(getEjectInv(), ejectMap, facing.getOpposite(), false);
 
-                    if (!response.isEmpty()) {
-                        response.getInvStack(this, facing.getOpposite()).use();
-                    }
+                    delayTicks = 10;
                 }
-
-                delayTicks = 10;
             } else if (delayTicks > 0) {
                 delayTicks--;
             }
@@ -314,7 +321,7 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
         double ret = energyUsage;
 
         if (silkTouch) {
-            ret *= 6F;
+            ret *= general.minerSilkMultiplier;
         }
 
         int baseRad = Math.max(radius - 10, 0);
@@ -341,7 +348,8 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
                   Block.getBlockFromItem(stack.getItem()).getStateFromMeta(stack.getItemDamage()), 3);
 
             IBlockState s = obj.getBlockState(world);
-            if (s.getBlock() instanceof BlockBush && !((BlockBush) s.getBlock()).canBlockStay(world, obj.getPos(), s)) {
+            if (s.getBlock() instanceof BlockBush && !((BlockBush) s.getBlock())
+                  .canBlockStay(world, obj.getPos(), s)) {
                 s.getBlock().dropBlockAsItem(world, obj.getPos(), s, 1);
                 world.setBlockToAir(obj.getPos());
             }
@@ -383,7 +391,7 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
             if (!inventory.get(i).isEmpty() && inventory.get(i).isItemEqual(filter.replaceStack)) {
                 inventory.get(i).shrink(1);
 
-                return MekanismUtils.size(filter.replaceStack, 1);
+                return StackUtils.size(filter.replaceStack, 1);
             }
         }
 
@@ -393,7 +401,7 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
 
             if (stack != null) {
                 stack.use();
-                return MekanismUtils.size(filter.replaceStack, 1);
+                return StackUtils.size(filter.replaceStack, 1);
             }
         }
 
@@ -453,7 +461,8 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
                     added++;
 
                     continue stacks;
-                } else if (testInv.get(i).isItemEqual(stack) && testInv.get(i).getCount() + stack.getCount() <= stack
+                } else if (testInv.get(i).isItemEqual(stack)
+                      && testInv.get(i).getCount() + stack.getCount() <= stack
                       .getMaxStackSize()) {
                     testInv.get(i).grow(stack.getCount());
                     added++;
@@ -596,7 +605,7 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
     }
 
     private void readBasicData(ByteBuf dataStream) {
-        radius = dataStream.readInt();
+        radius = dataStream.readInt();//client allowed to use whatever server sends
         minY = dataStream.readInt();
         maxY = dataStream.readInt();
         doEject = dataStream.readBoolean();
@@ -639,7 +648,7 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
                     reset();
                     break;
                 case 6:
-                    radius = dataStream.readInt();
+                    radius = Math.min(dataStream.readInt(), general.digitalMinerMaxRadius);
                     break;
                 case 7:
                     minY = dataStream.readInt();
@@ -882,7 +891,8 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
 
         if (clientActive != active) {
             Mekanism.packetHandler
-                  .sendToReceivers(new TileEntityMessage(Coord4D.get(this), getNetworkedData(new TileNetworkList())),
+                  .sendToReceivers(
+                        new TileEntityMessage(Coord4D.get(this), getNetworkedData(new TileNetworkList())),
                         new Range4D(Coord4D.get(this)));
 
             clientActive = active;
@@ -942,6 +952,9 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
     @Nonnull
     @Override
     public int[] getSlotsForFace(@Nonnull EnumFacing side) {
+        if (side == facing.getOpposite()) {
+            return inventorySlots;
+        }
         return InventoryUtils.EMPTY;
     }
 
@@ -1026,7 +1039,7 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
                 return new Object[]{"Invalid parameters."};
             }
 
-            radius = ((Double) arguments[0]).intValue();
+            radius = Math.min(((Double) arguments[0]).intValue(), general.digitalMinerMaxRadius);
         } else if (method == 1) {
             if (arguments.length != 1 || !(arguments[0] instanceof Double)) {
                 return new Object[]{"Invalid parameters."};
@@ -1155,7 +1168,7 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
 
     @Override
     public void setConfigurationData(NBTTagCompound nbtTags) {
-        radius = nbtTags.getInteger("radius");
+        radius = Math.min(nbtTags.getInteger("radius"), general.digitalMinerMaxRadius);
         minY = nbtTags.getInteger("minY");
         maxY = nbtTags.getInteger("maxY");
         doEject = nbtTags.getBoolean("doEject");
@@ -1202,7 +1215,7 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
     @Override
     public void readSustainedData(ItemStack itemStack) {
         if (ItemDataUtils.hasData(itemStack, "hasMinerConfig")) {
-            radius = ItemDataUtils.getInt(itemStack, "radius");
+            radius = Math.min(ItemDataUtils.getInt(itemStack, "radius"), general.digitalMinerMaxRadius);
             minY = ItemDataUtils.getInt(itemStack, "minY");
             maxY = ItemDataUtils.getInt(itemStack, "maxY");
             doEject = ItemDataUtils.getBoolean(itemStack, "doEject");

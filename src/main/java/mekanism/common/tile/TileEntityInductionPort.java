@@ -13,10 +13,10 @@ import mekanism.api.Coord4D;
 import mekanism.api.EnumColor;
 import mekanism.api.IConfigurable;
 import mekanism.api.Range4D;
+import mekanism.api.TileNetworkList;
 import mekanism.common.Mekanism;
 import mekanism.common.base.IActiveState;
 import mekanism.common.base.IEnergyWrapper;
-import mekanism.api.TileNetworkList;
 import mekanism.common.capabilities.Capabilities;
 import mekanism.common.capabilities.CapabilityWrapperManager;
 import mekanism.common.config.MekanismConfig.general;
@@ -26,9 +26,12 @@ import mekanism.common.integration.tesla.TeslaIntegration;
 import mekanism.common.network.PacketTileEntity.TileEntityMessage;
 import mekanism.common.util.CableUtils;
 import mekanism.common.util.CapabilityUtils;
+import mekanism.common.util.ChargeUtils;
+import mekanism.common.util.InventoryUtils;
 import mekanism.common.util.LangUtils;
 import mekanism.common.util.MekanismUtils;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
@@ -473,5 +476,18 @@ public class TileEntityInductionPort extends TileEntityInductionCasing implement
         }
 
         return super.getCapability(capability, facing);
+    }
+
+    @Nonnull
+    @Override
+    public int[] getSlotsForFace(@Nonnull EnumFacing side) {
+        //Inserting into input make it draw power from the item inserted
+        return (!world.isRemote && structure != null) || (world.isRemote && clientHasStructure) ? new int[]{
+              mode ? 0 : 1} : InventoryUtils.EMPTY;
+    }
+
+    @Override
+    public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
+        return ChargeUtils.canBeCharged(stack);
     }
 }

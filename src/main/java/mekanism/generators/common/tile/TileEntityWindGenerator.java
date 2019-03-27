@@ -1,9 +1,10 @@
 package mekanism.generators.common.tile;
 
 import io.netty.buffer.ByteBuf;
+import javax.annotation.Nonnull;
 import mekanism.api.Coord4D;
-import mekanism.common.base.IBoundingBlock;
 import mekanism.api.TileNetworkList;
+import mekanism.common.base.IBoundingBlock;
 import mekanism.common.config.MekanismConfig.generators;
 import mekanism.common.util.ChargeUtils;
 import mekanism.common.util.MekanismUtils;
@@ -111,11 +112,6 @@ public class TileEntityWindGenerator extends TileEntityGenerator implements IBou
     }
 
     @Override
-    protected float getInitialVolume() {
-        return 1.5F * super.getInitialVolume();
-    }
-
-    @Override
     public String[] getMethods() {
         return methods;
     }
@@ -185,5 +181,16 @@ public class TileEntityWindGenerator extends TileEntityGenerator implements IBou
 
     public boolean isBlacklistDimension() {
         return isBlacklistDimension;
+    }
+
+    @Nonnull
+    @Override
+    public int[] getSlotsForFace(@Nonnull EnumFacing side) {
+        return new int[]{0};
+    }
+
+    @Override
+    public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
+        return ChargeUtils.canBeCharged(stack);
     }
 }

@@ -5,9 +5,9 @@ import javax.annotation.Nonnull;
 import mekanism.api.Coord4D;
 import mekanism.api.IHeatTransfer;
 import mekanism.api.Range4D;
+import mekanism.api.TileNetworkList;
 import mekanism.common.Mekanism;
 import mekanism.common.base.IRedstoneControl;
-import mekanism.api.TileNetworkList;
 import mekanism.common.block.states.BlockStateMachine.MachineType;
 import mekanism.common.capabilities.Capabilities;
 import mekanism.common.config.MekanismConfig.general;
@@ -123,11 +123,6 @@ public class TileEntityResistiveHeater extends TileEntityEffectsBlock implements
     @Override
     public boolean canSetFacing(int side) {
         return side != 0 && side != 1;
-    }
-
-    @Override
-    public float getInitialVolume() {
-        return super.getInitialVolume() * Math.max(0.001F, soundScale);
     }
 
     @Override
@@ -338,5 +333,16 @@ public class TileEntityResistiveHeater extends TileEntityEffectsBlock implements
     @Override
     public TileComponentSecurity getSecurity() {
         return securityComponent;
+    }
+
+    @Nonnull
+    @Override
+    public int[] getSlotsForFace(@Nonnull EnumFacing side) {
+        return new int[]{0};
+    }
+
+    @Override
+    public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
+        return ChargeUtils.canBeCharged(stack);
     }
 }

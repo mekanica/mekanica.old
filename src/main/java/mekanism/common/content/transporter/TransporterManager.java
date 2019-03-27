@@ -86,11 +86,12 @@ public class TransporterManager {
                 continue;
             }
 
+            int max = handler.getSlotLimit(i);
             int mergedCount = stack.getCount() + destStack.getCount();
-            if (mergedCount > handler.getSlotLimit(i)) {
+            if (mergedCount > max) {
                 // Not all the items will fit; put max in and save leftovers
-                destStack.setCount(handler.getSlotLimit(i));
-                stack.setCount(mergedCount - handler.getSlotLimit(i));
+                destStack.setCount(max);
+                stack.setCount(mergedCount - max);
             } else {
                 // All items will fit!
                 destStack.grow(stack.getCount());
@@ -161,6 +162,7 @@ public class TransporterManager {
 
         // Now for each of the items in the request, simulate the insert, using the state from all the in-flight
         // items to ensure we have an accurate model of what will happen in future
+        // TODO: Investigate why TransitRequest has multiple items possible and get rid of this loop
         for (Map.Entry<ItemStack, Integer> requestEntry : request.itemMap.entrySet()) {
             ItemStack leftovers = simulateInsert(handler, invCopy, side, requestEntry.getKey().copy());
 

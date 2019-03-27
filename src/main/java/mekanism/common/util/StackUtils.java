@@ -10,14 +10,23 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public final class StackUtils {
 
+    //only used in factory
     public static boolean diffIgnoreNull(ItemStack stack1, ItemStack stack2) {
         if (stack1.isEmpty() || stack2.isEmpty()) {
             return false;
         }
-
         return stack1.getItem() != stack2.getItem() || stack1.getItemDamage() != stack2.getItemDamage();
     }
 
+    //only used in factory
+    //could be inlined at this point probably
+    public static Pair<ItemStack, ItemStack> even(ItemStack stack1, ItemStack stack2) {
+        int count = stack1.getCount() + stack2.getCount();
+        ItemStack stack = stack1.isEmpty() ? stack2 : stack1;
+        return Pair.of(size(stack, (count + 1)/2), size(stack, count/2));
+    }
+
+    //ignores count
     public static boolean equalsWildcard(ItemStack wild, ItemStack check) {
         if (wild.isEmpty() || check.isEmpty()) {
             return check == wild;
@@ -28,6 +37,7 @@ public final class StackUtils {
               .getItemDamage());
     }
 
+    //ignores count
     public static boolean equalsWildcardWithNBT(ItemStack wild, ItemStack check) {
         boolean wildcard = equalsWildcard(wild, check);
 
@@ -40,13 +50,7 @@ public final class StackUtils {
                     .equals(check.getTagCompound())));
     }
 
-    //could be inlined at this point probably
-    public static Pair<ItemStack, ItemStack> even(ItemStack stack1, ItemStack stack2) {
-        int count = stack1.getCount() + stack2.getCount();
-        ItemStack stack = stack1.isEmpty() ? stack2 : stack1;
-        return Pair.of(size(stack, (count + 1)/2), size(stack, count/2));
-    }
-
+    //assumes stacks same
     public static ItemStack subtract(ItemStack stack1, ItemStack stack2) {
         if (stack1.isEmpty()) {
             return ItemStack.EMPTY;
@@ -130,7 +134,6 @@ public final class StackUtils {
         }
     }
 
-    //nice hash magic
     public static int hashItemStack(ItemStack stack) {
         if (stack.isEmpty()) {
             return -1;

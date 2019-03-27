@@ -2,7 +2,6 @@ package mekanism.common.tile.transmitter;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.LinkedHashSet;
 import javax.annotation.Nonnull;
 import mekanism.api.Coord4D;
 import mekanism.api.IAlloyInteraction;
@@ -121,7 +120,7 @@ public abstract class TileEntityTransmitter<A, N extends DynamicNetwork<A, N>> e
     public void onAlloyInteraction(EntityPlayer player, EnumHand hand, ItemStack stack, int tierOrdinal) {
         if (getTransmitter().hasTransmitterNetwork()) {
             int upgraded = 0;
-            Object[] array = ((LinkedHashSet) getTransmitter().getTransmitterNetwork().transmitters.clone()).toArray();
+            Object[] array = getTransmitter().getTransmitterNetwork().cloneTransmittersArray();
 
             Arrays.sort(array, (o1, o2) ->
             {

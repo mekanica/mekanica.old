@@ -176,7 +176,7 @@ public class TileEntityUniversalCable extends TileEntityTransmitter<EnergyAccept
     private double getSaveShare() {
         if (getTransmitter().hasTransmitterNetwork()) {
             return EnergyNetwork.round(getTransmitter().getTransmitterNetwork().buffer.amount * (1F / getTransmitter()
-                  .getTransmitterNetwork().transmitters.size()));
+                  .getTransmitterNetwork().getSize()));
         } else {
             return buffer.amount;
         }

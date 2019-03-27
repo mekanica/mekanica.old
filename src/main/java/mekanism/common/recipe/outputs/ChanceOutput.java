@@ -1,7 +1,6 @@
 package mekanism.common.recipe.outputs;
 
 import java.util.Random;
-import mekanism.common.util.InventoryUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
@@ -31,8 +30,8 @@ public class ChanceOutput extends MachineOutput<ChanceOutput> {
 
     @Override
     public void load(NBTTagCompound nbtTags) {
-        primaryOutput = InventoryUtils.loadFromNBT(nbtTags.getCompoundTag("primaryOutput"));
-        secondaryOutput = InventoryUtils.loadFromNBT(nbtTags.getCompoundTag("secondaryOutput"));
+        primaryOutput = new ItemStack(nbtTags.getCompoundTag("primaryOutput"));
+        secondaryOutput = new ItemStack(nbtTags.getCompoundTag("secondaryOutput"));
         secondaryChance = nbtTags.getDouble("secondaryChance");
     }
 

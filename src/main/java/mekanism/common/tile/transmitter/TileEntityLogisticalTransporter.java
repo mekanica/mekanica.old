@@ -207,7 +207,7 @@ public class TileEntityLogisticalTransporter extends TileEntityTransmitter<TileE
                 readStack(dataStream);
 
             } else if (type == BATCH_PACKET) {
-                // Process updates for deletes, just as server does so all the indices are correct
+                // Process updates first; deletes operate on post-update indicies
                 int updates = dataStream.readInt();
                 for (int i = 0; i < updates; i++) {
                     readStack(dataStream);

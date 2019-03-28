@@ -10,7 +10,6 @@ import net.minecraftforge.items.IItemHandler;
 public class StackSearcher {
 
     public int i = -1;
-    public int[] slots;
     public TileEntity tileEntity;
     public EnumFacing side;
 

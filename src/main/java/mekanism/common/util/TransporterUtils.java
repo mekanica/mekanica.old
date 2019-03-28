@@ -10,6 +10,7 @@ import mekanism.common.content.transporter.TransitRequest;
 import mekanism.common.content.transporter.TransitRequest.TransitResponse;
 import mekanism.common.content.transporter.TransporterManager;
 import mekanism.common.content.transporter.TransporterStack;
+import mekanism.common.tile.TileEntityBin;
 import mekanism.common.tile.TileEntityLogisticalSorter;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.tileentity.TileEntity;
@@ -26,7 +27,12 @@ public final class TransporterUtils {
         if (CapabilityUtils.hasCapability(tile, Capabilities.GRID_TRANSMITTER_CAPABILITY, side.getOpposite())) {
             return false;
         }
-
+        if (tile instanceof TileEntityBin) {
+            //Special handling for bins that allows them to only be inserted into from the top
+            if (side != EnumFacing.UP) {
+                return false;
+            }
+        }
         return InventoryUtils.isItemHandler(tile, side.getOpposite());
     }
 

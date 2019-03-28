@@ -104,11 +104,12 @@ public class TransporterManager {
             }
 
             int max = handler.getSlotLimit(i);
-            int mergedCount = stack.getCount() + destStack.getCount();
             if (max == 0) {
                 continue;
             }
-            else if (mergedCount > max) {
+
+            int mergedCount = stack.getCount() + destStack.getCount();
+            if (mergedCount > max) {
                 // Not all the items will fit; put max in and save leftovers
                 destStack.setCount(max);
                 stack.setCount(mergedCount - max);

@@ -107,12 +107,12 @@ public class TileEntityBin extends TileEntityBasicBlock implements ISidedInvento
             topStack.setCount(itemType.getMaxStackSize() - remain);
         }
 
-        count -= StackUtils.getSize(topStack);
+        count -= topStack.getCount();
 
         bottomStack = itemType.copy();
         bottomStack.setCount(Math.min(itemType.getMaxStackSize(), count));
 
-        count -= StackUtils.getSize(bottomStack);
+        count -= bottomStack.getCount();
 
         cacheCount = count;
     }
@@ -198,7 +198,7 @@ public class TileEntityBin extends TileEntityBasicBlock implements ISidedInvento
     }
 
     public int getItemCount() {
-        return StackUtils.getSize(bottomStack) + cacheCount + StackUtils.getSize(topStack);
+        return bottomStack.getCount() + cacheCount + topStack.getCount();
     }
 
     public void setItemCount(int count) {
@@ -292,11 +292,11 @@ public class TileEntityBin extends TileEntityBasicBlock implements ISidedInvento
         cacheCount = nbtTags.getInteger("itemCount");
         tier = BinTier.values()[nbtTags.getInteger("tier")];
 
-        bottomStack = InventoryUtils.loadFromNBT(nbtTags.getCompoundTag("bottomStack"));
-        topStack = InventoryUtils.loadFromNBT(nbtTags.getCompoundTag("topStack"));
+        bottomStack = new ItemStack(nbtTags.getCompoundTag("bottomStack"));
+        topStack = new ItemStack(nbtTags.getCompoundTag("topStack"));
 
         if (getItemCount() > 0) {
-            itemType = InventoryUtils.loadFromNBT(nbtTags.getCompoundTag("itemType"));
+            itemType = new ItemStack(nbtTags.getCompoundTag("itemType"));
         }
     }
 
@@ -394,9 +394,9 @@ public class TileEntityBin extends TileEntityBasicBlock implements ISidedInvento
             if (itemstack.isEmpty()) {
                 topStack = ItemStack.EMPTY;
             } else {
-                if (isValid(itemstack) && itemstack.getCount() > StackUtils.getSize(topStack)
+                if (isValid(itemstack) && itemstack.getCount() > topStack.getCount()
                       && tier != BinTier.CREATIVE) {
-                    add(StackUtils.size(itemstack, itemstack.getCount() - StackUtils.getSize(topStack)));
+                    add(StackUtils.size(itemstack, itemstack.getCount() - topStack.getCount()));
                 }
             }
         }
@@ -654,7 +654,7 @@ public class TileEntityBin extends TileEntityBasicBlock implements ISidedInvento
                 return ItemStack.EMPTY;
             }
 
-            return MekanismUtils.size(tileEntityBin.itemType, tileEntityBin.getItemCount());
+            return StackUtils.size(tileEntityBin.itemType, tileEntityBin.getItemCount());
         }
 
         @Nonnull

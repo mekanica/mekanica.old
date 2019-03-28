@@ -193,7 +193,7 @@ public class TransitRequest {
             int code = 1;
             code = 31 * code + itemStack.getItem().hashCode();
             code = 31 * code + itemStack.getItemDamage();
-            if (itemStack.getTagCompound() != null)
+            if (itemStack.hasTagCompound())
                 code = 31 * code + itemStack.getTagCompound().hashCode();
             return code;
         }

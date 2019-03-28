@@ -2,6 +2,7 @@ package mekanism.common.content.transporter;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons.lang3.tuple.Pair;
 import mekanism.common.content.transporter.Finder.FirstFinder;
 import mekanism.common.util.InventoryUtils;
 import mekanism.common.util.StackUtils;
@@ -14,7 +15,11 @@ import net.minecraftforge.items.IItemHandler;
 
 public class TransitRequest {
 
-    public Map<ItemStack, Integer> itemMap = new HashMap<>();
+    /**
+     * Complicated map- associates item types with both total available item count and slot IDs and
+     * available item amounts for each slot.
+     */
+    public Map<HashedItem, Pair<Integer, Map<Integer, Integer>>> itemMap = new HashMap<>();
 
     public static TransitRequest getFromTransport(TransporterStack stack) {
         return getFromStack(stack.itemStack);
@@ -22,25 +27,37 @@ public class TransitRequest {
 
     public static TransitRequest getFromStack(ItemStack stack) {
         TransitRequest ret = new TransitRequest();
-        ret.setItem(stack, -1);
+        ret.addItem(stack, -1);
         return ret;
     }
 
-    public static TransitRequest getTopStacks(TileEntity tile, EnumFacing side, int amount) {
-        return getTopStacks(tile, side, amount, new FirstFinder());
+    public static TransitRequest buildInventoryMap(TileEntity tile, EnumFacing side, int amount) {
+        return buildInventoryMap(tile, side, amount, new FirstFinder());
     }
 
-    public static TransitRequest getTopStacks(TileEntity tile, EnumFacing side, int amount, Finder finder) {
+    /**
+     * Creates a TransitRequest based on a full inspection of an entire specified inventory from a given
+     * side. The algorithm will use the specified Finder to ensure the resulting map will only capture
+     * desired items. The amount of each item type present in the resulting item type will cap at the
+     * given 'amount' parameter.
+     */
+    public static TransitRequest buildInventoryMap(TileEntity tile, EnumFacing side, int amount, Finder finder) {
         TransitRequest ret = new TransitRequest();
-
+        // so we can keep track of how many of each item type we have in this inventory mapping
+        Map<HashedItem, Integer> itemCountMap = new HashMap<>();
+        
         if (InventoryUtils.isItemHandler(tile, side.getOpposite())) {
             IItemHandler inventory = InventoryUtils.getItemHandler(tile, side.getOpposite());
 
             for (int i = inventory.getSlots() - 1; i >= 0; i--) {
                 ItemStack stack = inventory.extractItem(i, amount, true);
 
-                if (!stack.isEmpty() && !ret.hasType(stack) && finder.modifies(stack)) {
-                    ret.setItem(stack, i);
+                if (!stack.isEmpty() && finder.modifies(stack)) {
+                    HashedItem hashed = new HashedItem(stack);
+                    int toUse = itemCountMap.containsKey(hashed) ? Math.min(stack.getCount(), amount-itemCountMap.get(hashed)) : stack.getCount();
+                    if(toUse == 0) continue; // continue if we don't need anymore of this item type
+                    ret.addItem(StackUtils.size(stack, toUse), i);
+                    itemCountMap.put(hashed, itemCountMap.get(hashed)+toUse);
                 }
             }
         } else if (tile instanceof ISidedInventory) {
@@ -51,13 +68,17 @@ public class TransitRequest {
                 int slotID = slots[get];
 
                 if (!sidedInventory.getStackInSlot(slotID).isEmpty()
-                      && sidedInventory.getStackInSlot(slotID).getCount() > 0) {
+                        && sidedInventory.getStackInSlot(slotID).getCount() > 0) {
                     ItemStack toSend = sidedInventory.getStackInSlot(slotID).copy();
                     toSend.setCount(Math.min(amount, toSend.getCount()));
 
-                    if (!ret.hasType(toSend) && sidedInventory.canExtractItem(slotID, toSend, side.getOpposite())
-                          && finder.modifies(toSend)) {
-                        ret.setItem(toSend, slotID);
+                    if (sidedInventory.canExtractItem(slotID, toSend, side.getOpposite())
+                            && finder.modifies(toSend)) {
+                        HashedItem hashed = new HashedItem(toSend);
+                        int toUse = itemCountMap.containsKey(hashed) ? Math.min(toSend.getCount(), amount-itemCountMap.get(hashed)) : toSend.getCount();
+                        if(toUse == 0) continue; // continue if we don't need anymore of this item type
+                        ret.addItem(StackUtils.size(toSend, toUse), slotID);
+                        itemCountMap.put(hashed, itemCountMap.get(hashed)+toUse);
                     }
                 }
             }
@@ -69,8 +90,12 @@ public class TransitRequest {
                     ItemStack toSend = inventory.getStackInSlot(i).copy();
                     toSend.setCount(Math.min(amount, toSend.getCount()));
 
-                    if (!ret.hasType(toSend) && finder.modifies(toSend)) {
-                        ret.setItem(toSend, i);
+                    if (finder.modifies(toSend)) {
+                        HashedItem hashed = new HashedItem(toSend);
+                        int toUse = itemCountMap.containsKey(hashed) ? Math.min(toSend.getCount(), amount-itemCountMap.get(hashed)) : toSend.getCount();
+                        if(toUse == 0) continue; // continue if we don't need anymore of this item type
+                        ret.addItem(StackUtils.size(toSend, toUse), i);
+                        itemCountMap.put(hashed, itemCountMap.get(hashed)+toUse);
                     }
                 }
             }
@@ -83,17 +108,27 @@ public class TransitRequest {
         return itemMap.isEmpty();
     }
 
-    public void setItem(ItemStack stack, int slot) {
-        itemMap.put(stack.copy(), slot);
+    public void addItem(ItemStack stack, int slot) {
+        HashedItem hashed = new HashedItem(stack);
+        if (!itemMap.containsKey(hashed)) {
+            Map<Integer, Integer> slotMap = new HashMap<>();
+            slotMap.put(slot, stack.getCount());
+            itemMap.put(hashed, Pair.of(stack.getCount(), slotMap));
+        } else {
+            int count = itemMap.get(hashed).getLeft() + stack.getCount();
+            Map<Integer, Integer> slotMap = itemMap.get(hashed).getRight();
+            slotMap.put(slot, stack.getCount());
+            itemMap.put(hashed, Pair.of(count, slotMap));
+        }
     }
 
     public ItemStack getSingleStack() {
-        return itemMap.keySet().iterator().next();
+        return itemMap.keySet().iterator().next().getStack();
     }
 
     public boolean hasType(ItemStack stack) {
-        for (ItemStack s : itemMap.keySet()) {
-            if (InventoryUtils.areItemsStackable(stack, s)) {
+        for (HashedItem item : itemMap.keySet()) {
+            if (InventoryUtils.areItemsStackable(stack, item.getStack())) {
                 return true;
             }
         }
@@ -101,28 +136,90 @@ public class TransitRequest {
         return false;
     }
 
+    /**
+     * A TransitResponse contains information regarding the partial ItemStacks which were allowed entry
+     * into a destination inventory. Note that a TransitResponse should only contain a single item type,
+     * although it may be spread out across multiple slots.
+     * 
+     * @author aidancbrady
+     *
+     */
     public static class TransitResponse {
 
-        public static final TransitResponse EMPTY = new TransitResponse(-1, ItemStack.EMPTY);
+        public static final TransitResponse EMPTY = new TransitResponse();
 
-        public int slotID;
-        public ItemStack stack;
+        /** slot ID to ItemStack map - this details how many items we will be pulling from each slot */
+        private Map<Integer, ItemStack> idMap = new HashMap<>();
+        private ItemStack toSend;
 
-        public TransitResponse(int s, ItemStack i) {
-            slotID = s;
-            stack = i;
+        private TransitResponse() {}
+
+        public TransitResponse(ItemStack i, TransitRequest request, Map<Integer, Integer> slots) {
+            toSend = i;
+
+            // generate our ID/ItemStack map based on the amount of items we're sending
+            int amount = toSend.getCount();
+            for (Map.Entry<Integer, Integer> entry : slots.entrySet()) {
+                int toUse = Math.min(amount, entry.getValue());
+                idMap.put(entry.getKey(), StackUtils.size(toSend, toUse));
+                amount -= toUse;
+                if (amount == 0)
+                    break;
+            }
+        }
+
+        public ItemStack getStack() {
+            return toSend;
         }
 
         public boolean isEmpty() {
-            return stack.isEmpty();
+            return idMap.isEmpty() || (toSend != null && toSend.isEmpty());
         }
 
         public ItemStack getRejected(ItemStack orig) {
-            return StackUtils.size(orig, orig.getCount() - stack.getCount());
+            return StackUtils.size(orig, orig.getCount() - toSend.getCount());
         }
 
         public InvStack getInvStack(TileEntity tile, EnumFacing side) {
-            return new InvStack(tile, slotID, stack, side);
+            return new InvStack(tile, idMap, side);
+        }
+    }
+
+    /**
+     * A wrapper of an ItemStack which tests equality and hashes based on item type, damage and NBT
+     * data, ignoring stack size.
+     * 
+     * @author aidancbrady
+     *
+     */
+    public static class HashedItem {
+        private ItemStack itemStack;
+
+        public HashedItem(ItemStack stack) {
+            itemStack = stack;
+        }
+
+        public ItemStack getStack() {
+            return itemStack;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj instanceof HashedItem) {
+                HashedItem other = (HashedItem) obj;
+                return InventoryUtils.areItemsStackable(itemStack, other.itemStack);
+            }
+
+            return false;
+        }
+
+        @Override
+        public int hashCode() {
+            int code = 1;
+            code = 31 * code + itemStack.getItem().hashCode();
+            code = 31 * code + itemStack.getItemDamage();
+            code = 31 * code + itemStack.getTagCompound().hashCode();
+            return code;
         }
     }
 }

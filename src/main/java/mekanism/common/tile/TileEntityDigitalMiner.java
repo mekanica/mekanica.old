@@ -430,7 +430,7 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
                 }
 
                 if (!request.hasType(stack)) {
-                    request.setItem(stack, i);
+                    request.addItem(stack, i);
                 }
             }
         }

@@ -1,6 +1,8 @@
 package mekanism.common.content.transporter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import mekanism.common.util.InventoryUtils;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -21,14 +23,20 @@ public final class InvStack {
         slotIDs = new ArrayList<>();
         side = facing;
     }
+    
+    public InvStack(TileEntity inv, int slotID, ItemStack stack, EnumFacing facing) {
+        this(inv, getMap(slotID, stack), facing);
+    }
 
-    public InvStack(TileEntity inv, int id, ItemStack stack, EnumFacing facing) {
+    public InvStack(TileEntity inv, Map<Integer, ItemStack> idMap, EnumFacing facing) {
         tileEntity = inv;
         itemStacks = new ArrayList<>();
         slotIDs = new ArrayList<>();
         side = facing;
 
-        appendStack(id, stack);
+        for(Map.Entry<Integer, ItemStack> entry : idMap.entrySet()) {
+            appendStack(entry.getKey(), entry.getValue());
+        }
     }
 
     public ItemStack getStack() {
@@ -93,5 +101,11 @@ public final class InvStack {
 
     public void use() {
         use(getStack().getCount());
+    }
+    
+    private static Map<Integer, ItemStack> getMap(int slotID, ItemStack stack) {
+        Map<Integer, ItemStack> map = new HashMap<>();
+        map.put(slotID, stack);
+        return map;
     }
 }

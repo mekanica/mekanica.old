@@ -45,7 +45,7 @@ public class TransitRequest {
         TransitRequest ret = new TransitRequest();
         // so we can keep track of how many of each item type we have in this inventory mapping
         Map<HashedItem, Integer> itemCountMap = new HashMap<>();
-        
+
         if (InventoryUtils.isItemHandler(tile, side.getOpposite())) {
             IItemHandler inventory = InventoryUtils.getItemHandler(tile, side.getOpposite());
 
@@ -54,10 +54,18 @@ public class TransitRequest {
 
                 if (!stack.isEmpty() && finder.modifies(stack)) {
                     HashedItem hashed = new HashedItem(stack);
-                    int toUse = itemCountMap.containsKey(hashed) ? Math.min(stack.getCount(), amount-itemCountMap.get(hashed)) : stack.getCount();
-                    if(toUse == 0) continue; // continue if we don't need anymore of this item type
+                    int toUse = itemCountMap.containsKey(hashed)
+                            ? Math.min(stack.getCount(), amount - itemCountMap.get(hashed))
+                            : stack.getCount();
+                    if (toUse == 0)
+                        continue; // continue if we don't need anymore of this item type
                     ret.addItem(StackUtils.size(stack, toUse), i);
-                    itemCountMap.put(hashed, itemCountMap.get(hashed)+toUse);
+                    
+                    if(itemCountMap.containsKey(hashed)) {
+                        itemCountMap.put(hashed, itemCountMap.get(hashed) + toUse);
+                    } else {
+                        itemCountMap.put(hashed, toUse);
+                    }
                 }
             }
         } else if (tile instanceof ISidedInventory) {
@@ -72,13 +80,20 @@ public class TransitRequest {
                     ItemStack toSend = sidedInventory.getStackInSlot(slotID).copy();
                     toSend.setCount(Math.min(amount, toSend.getCount()));
 
-                    if (sidedInventory.canExtractItem(slotID, toSend, side.getOpposite())
-                            && finder.modifies(toSend)) {
+                    if (sidedInventory.canExtractItem(slotID, toSend, side.getOpposite()) && finder.modifies(toSend)) {
                         HashedItem hashed = new HashedItem(toSend);
-                        int toUse = itemCountMap.containsKey(hashed) ? Math.min(toSend.getCount(), amount-itemCountMap.get(hashed)) : toSend.getCount();
-                        if(toUse == 0) continue; // continue if we don't need anymore of this item type
+                        int toUse = itemCountMap.containsKey(hashed)
+                                ? Math.min(toSend.getCount(), amount - itemCountMap.get(hashed))
+                                : toSend.getCount();
+                        if (toUse == 0)
+                            continue; // continue if we don't need anymore of this item type
                         ret.addItem(StackUtils.size(toSend, toUse), slotID);
-                        itemCountMap.put(hashed, itemCountMap.get(hashed)+toUse);
+
+                        if(itemCountMap.containsKey(hashed)) {
+                            itemCountMap.put(hashed, itemCountMap.get(hashed) + toUse);
+                        } else {
+                            itemCountMap.put(hashed, toUse);
+                        }
                     }
                 }
             }
@@ -92,10 +107,18 @@ public class TransitRequest {
 
                     if (finder.modifies(toSend)) {
                         HashedItem hashed = new HashedItem(toSend);
-                        int toUse = itemCountMap.containsKey(hashed) ? Math.min(toSend.getCount(), amount-itemCountMap.get(hashed)) : toSend.getCount();
-                        if(toUse == 0) continue; // continue if we don't need anymore of this item type
+                        int toUse = itemCountMap.containsKey(hashed)
+                                ? Math.min(toSend.getCount(), amount - itemCountMap.get(hashed))
+                                : toSend.getCount();
+                        if (toUse == 0)
+                            continue; // continue if we don't need anymore of this item type
                         ret.addItem(StackUtils.size(toSend, toUse), i);
-                        itemCountMap.put(hashed, itemCountMap.get(hashed)+toUse);
+
+                        if(itemCountMap.containsKey(hashed)) {
+                            itemCountMap.put(hashed, itemCountMap.get(hashed) + toUse);
+                        } else {
+                            itemCountMap.put(hashed, toUse);
+                        }
                     }
                 }
             }
@@ -218,7 +241,8 @@ public class TransitRequest {
             int code = 1;
             code = 31 * code + itemStack.getItem().hashCode();
             code = 31 * code + itemStack.getItemDamage();
-            code = 31 * code + itemStack.getTagCompound().hashCode();
+            if (itemStack.getTagCompound() != null)
+                code = 31 * code + itemStack.getTagCompound().hashCode();
             return code;
         }
     }

@@ -60,8 +60,8 @@ public class TransitRequest {
                     if (toUse == 0)
                         continue; // continue if we don't need anymore of this item type
                     ret.addItem(StackUtils.size(stack, toUse), i);
-                    
-                    if(itemCountMap.containsKey(hashed)) {
+
+                    if (itemCountMap.containsKey(hashed)) {
                         itemCountMap.put(hashed, itemCountMap.get(hashed) + toUse);
                     } else {
                         itemCountMap.put(hashed, toUse);
@@ -89,7 +89,7 @@ public class TransitRequest {
                             continue; // continue if we don't need anymore of this item type
                         ret.addItem(StackUtils.size(toSend, toUse), slotID);
 
-                        if(itemCountMap.containsKey(hashed)) {
+                        if (itemCountMap.containsKey(hashed)) {
                             itemCountMap.put(hashed, itemCountMap.get(hashed) + toUse);
                         } else {
                             itemCountMap.put(hashed, toUse);
@@ -114,7 +114,7 @@ public class TransitRequest {
                             continue; // continue if we don't need anymore of this item type
                         ret.addItem(StackUtils.size(toSend, toUse), i);
 
-                        if(itemCountMap.containsKey(hashed)) {
+                        if (itemCountMap.containsKey(hashed)) {
                             itemCountMap.put(hashed, itemCountMap.get(hashed) + toUse);
                         } else {
                             itemCountMap.put(hashed, toUse);
@@ -216,10 +216,12 @@ public class TransitRequest {
      *
      */
     public static class HashedItem {
-        private ItemStack itemStack;
+        private final ItemStack itemStack;
+        private final int hashCode;
 
         public HashedItem(ItemStack stack) {
             itemStack = stack;
+            hashCode = initHashCode();
         }
 
         public ItemStack getStack() {
@@ -238,6 +240,10 @@ public class TransitRequest {
 
         @Override
         public int hashCode() {
+            return hashCode;
+        }
+
+        private int initHashCode() {
             int code = 1;
             code = 31 * code + itemStack.getItem().hashCode();
             code = 31 * code + itemStack.getItemDamage();

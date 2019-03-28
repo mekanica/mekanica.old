@@ -101,7 +101,7 @@ public class TransitRequest {
             IInventory inventory = InventoryUtils.checkChestInv((IInventory) tile);
 
             for (int i = inventory.getSizeInventory() - 1; i >= 0; i--) {
-                if (!inventory.getStackInSlot(i).isEmpty() && inventory.getStackInSlot(i).getCount() > 0) {
+                if (!inventory.getStackInSlot(i).isEmpty()) {
                     ItemStack toSend = inventory.getStackInSlot(i).copy();
                     toSend.setCount(Math.min(amount, toSend.getCount()));
 
@@ -177,7 +177,7 @@ public class TransitRequest {
 
         private TransitResponse() {}
 
-        public TransitResponse(ItemStack i, TransitRequest request, Map<Integer, Integer> slots) {
+        public TransitResponse(ItemStack i, Map<Integer, Integer> slots) {
             toSend = i;
 
             // generate our ID/ItemStack map based on the amount of items we're sending

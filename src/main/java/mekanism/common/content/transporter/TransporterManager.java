@@ -196,7 +196,7 @@ public class TransporterManager {
 
             // Otherwise, construct the appropriately size stack to send and return that
             toSend.setCount(toSend.getCount() - leftovers.getCount());
-            return new TransitResponse(toSend, request, requestEntry.getValue().getRight());
+            return new TransitResponse(toSend, requestEntry.getValue().getRight());
         }
 
         return TransitResponse.EMPTY;

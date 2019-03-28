@@ -79,7 +79,7 @@ public final class InventoryUtils {
 
                         // If empty, end
                         if (toInsert.isEmpty()) {
-                            return new TransitResponse(origInsert, request, requestEntry.getValue().getRight());
+                            return new TransitResponse(origInsert, requestEntry.getValue().getRight());
                         }
                     }
                 }
@@ -109,7 +109,7 @@ public final class InventoryUtils {
                                 sidedInventory.setInventorySlotContents(slotID, toInsert);
                                 sidedInventory.markDirty();
 
-                                return new TransitResponse(origInsert, request, requestEntry.getValue().getRight());
+                                return new TransitResponse(origInsert, requestEntry.getValue().getRight());
                             } else {
                                 int rejects = toInsert.getCount() - sidedInventory.getInventoryStackLimit();
 
@@ -135,7 +135,7 @@ public final class InventoryUtils {
                                 sidedInventory.setInventorySlotContents(slotID, toSet);
                                 sidedInventory.markDirty();
 
-                                return new TransitResponse(origInsert, request, requestEntry.getValue().getRight());
+                                return new TransitResponse(origInsert, requestEntry.getValue().getRight());
                             } else {
                                 int rejects = (inSlot.getCount() + toInsert.getCount()) - max;
 
@@ -170,7 +170,7 @@ public final class InventoryUtils {
                             inventory.setInventorySlotContents(i, toInsert);
                             inventory.markDirty();
 
-                            return new TransitResponse(origInsert, request, requestEntry.getValue().getRight());
+                            return new TransitResponse(origInsert, requestEntry.getValue().getRight());
                         } else {
                             int rejects = toInsert.getCount() - inventory.getInventoryStackLimit();
 
@@ -196,7 +196,7 @@ public final class InventoryUtils {
                             inventory.setInventorySlotContents(i, toSet);
                             inventory.markDirty();
 
-                            return new TransitResponse(origInsert, request, requestEntry.getValue().getRight());
+                            return new TransitResponse(origInsert, requestEntry.getValue().getRight());
                         } else {
                             int rejects = (inSlot.getCount() + toInsert.getCount()) - max;
 
@@ -216,7 +216,7 @@ public final class InventoryUtils {
             }
 
             if (TransporterManager.didEmit(origInsert, toInsert)) {
-                return new TransitResponse(TransporterManager.getToUse(origInsert, toInsert), request,
+                return new TransitResponse(TransporterManager.getToUse(origInsert, toInsert),
                         requestEntry.getValue().getRight());
             }
         }

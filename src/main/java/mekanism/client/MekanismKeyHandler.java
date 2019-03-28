@@ -47,6 +47,8 @@ public class MekanismKeyHandler extends MekKeyHandler {
           Keyboard.KEY_M, keybindCategory);
     public static KeyBinding armorModeSwitchKey = new KeyBinding("Mekanism " + LangUtils.localize("key.armorMode"),
           Keyboard.KEY_G, keybindCategory);
+    public static KeyBinding voiceKey = new KeyBinding("Mekanism " + LangUtils.localize("key.voice"), Keyboard.KEY_U, 
+          keybindCategory);
     public static KeyBinding freeRunnerModeSwitchKey = new KeyBinding("Mekanism " + LangUtils.localize("key.feetMode"),
           Keyboard.KEY_H, keybindCategory);
     public static KeyBinding sneakKey = Minecraft.getMinecraft().gameSettings.keyBindSneak;
@@ -59,6 +61,7 @@ public class MekanismKeyHandler extends MekKeyHandler {
         ClientRegistry.registerKeyBinding(modeSwitchKey);
         ClientRegistry.registerKeyBinding(armorModeSwitchKey);
         ClientRegistry.registerKeyBinding(freeRunnerModeSwitchKey);
+        ClientRegistry.registerKeyBinding(voiceKey);
 
         MinecraftForge.EVENT_BUS.register(this);
     }

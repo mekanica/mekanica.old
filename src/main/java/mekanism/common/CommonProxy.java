@@ -122,16 +122,14 @@ import net.minecraftforge.fml.relauncher.FMLInjectionData;
 public class CommonProxy implements IGuiProvider {
 
     protected final String[] API_PRESENT_MESSAGE = {"Mekanism API jar detected (Mekanism-<version>-api.jar),",
-          "please delete it from your mods folder and restart the game."};
+            "please delete it from your mods folder and restart the game."};
 
     /**
      * Register tile entities that have special models. Overwritten in client to register TESRs.
      */
-    public void registerTESRs() {
-    }
+    public void registerTESRs() {}
 
-    public void handleTeleporterUpdate(PortableTeleporterMessage message) {
-    }
+    public void handleTeleporterUpdate(PortableTeleporterMessage message) {}
 
     /**
      * Handles an PERSONAL_CHEST_CLIENT_OPEN packet via the proxy, not handled on the server-side.
@@ -143,213 +141,203 @@ public class CommonProxy implements IGuiProvider {
      * @param pos - coordinates
      */
     public void openPersonalChest(EntityPlayer entityplayer, int id, int windowId, boolean isBlock, BlockPos pos,
-          EnumHand hand) {
-    }
+            EnumHand hand) {}
 
     /**
      * Register and load client-only item render information.
      */
-    public void registerItemRenders() {
-    }
+    public void registerItemRenders() {}
 
     /**
      * Register and load client-only block render information.
      */
-    public void registerBlockRenders() {
-    }
+    public void registerBlockRenders() {}
 
     /**
      * Set and load the mod's common configuration properties.
      */
     public void loadConfiguration() {
         general.controlCircuitOreDict = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "ControlCircuitOreDict", true,
-                    "Enables recipes using Control Circuits to use OreDict'd Control Circuits from other mods.")
-              .getBoolean();
+                .get(Configuration.CATEGORY_GENERAL, "ControlCircuitOreDict", true,
+                        "Enables recipes using Control Circuits to use OreDict'd Control Circuits from other mods.")
+                .getBoolean();
         general.logPackets = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "LogPackets", false, "Log Mekanica packet names. Debug setting.")
-              .getBoolean();
+                .get(Configuration.CATEGORY_GENERAL, "LogPackets", false, "Log Mekanica packet names. Debug setting.")
+                .getBoolean();
         general.dynamicTankEasterEgg = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "DynamicTankEasterEgg", false, "Audible sparkles.").getBoolean();
-        general.cardboardSpawners = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "AllowSpawnerBoxPickup", true,
-                    "Allows vanilla spawners to be moved with a Cardboard Box.").getBoolean();
-        general.enableWorldRegeneration = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "EnableWorldRegeneration", false,
-                    "Allows chunks to retrogen Mekanica ore blocks.").getBoolean();
-        general.spawnBabySkeletons = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "SpawnBabySkeletons", true,
-                    "Enable the spawning of baby skeletons. Think baby zombies but skeletons.")
-              .getBoolean();
+                .get(Configuration.CATEGORY_GENERAL, "DynamicTankEasterEgg", false, "Audible sparkles.").getBoolean();
+        general.voiceServerEnabled =
+                Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "WalkieTalkieServerEnabled", false).getBoolean();
+        general.cardboardSpawners = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "AllowSpawnerBoxPickup",
+                true, "Allows vanilla spawners to be moved with a Cardboard Box.").getBoolean();
+        general.enableWorldRegeneration = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL,
+                "EnableWorldRegeneration", false, "Allows chunks to retrogen Mekanica ore blocks.").getBoolean();
+        general.spawnBabySkeletons =
+                Mekanism.configuration
+                        .get(Configuration.CATEGORY_GENERAL, "SpawnBabySkeletons", true,
+                                "Enable the spawning of baby skeletons. Think baby zombies but skeletons.")
+                        .getBoolean();
         general.obsidianTNTDelay = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "ObsidianTNTDelay", 100, "Fuse time for Obsidian TNT.")
-              .getInt();
-        general.obsidianTNTBlastRadius = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "ObsidianTNTBlastRadius", 12,
-                    "Radius of the explosion of Obsidian TNT.").getInt();
-        general.UPDATE_DELAY = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "ClientUpdateDelay", 10,
-              "How many ticks must pass until a block's active state can sync with the client.")
-              .getInt();
-        general.osmiumPerChunk = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "OsmiumPerChunk", 12, "Chance that osmium generates in a chunk.", 0,
-                    Integer.MAX_VALUE).getInt();
-        general.osmiumMaxVeinSize = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "OsmiumVeinSize", 8, "Max number of blocks in an osmium vein.", 1,
-                    Integer.MAX_VALUE)
-              .getInt();
-        general.copperPerChunk = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "CopperPerChunk", 16, "Chance that copper generates in a chunk.", 0,
-                    Integer.MAX_VALUE)
-              .getInt();
-        general.copperMaxVeinSize = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "CopperVeinSize", 8, "Max number of blocks in a copper vein.", 1,
-                    Integer.MAX_VALUE)
-              .getInt();
-        general.tinPerChunk = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "TinPerChunk", 14, "Chance that tin generates in a chunk.", 0,
-                    Integer.MAX_VALUE).getInt();
-        general.tinMaxVeinSize = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "TinVeinSize", 8, "Max number of blocks in a tin vein.", 1,
-                    Integer.MAX_VALUE).getInt();
-        general.saltPerChunk = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "SaltPerChunk", 2, "Chance that salt generates in a chunk.", 0,
-                    Integer.MAX_VALUE).getInt();
-        general.saltMaxVeinSize = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "SaltVeinSize", 6, "Max number of blocks in a salt vein.", 1,
-                    Integer.MAX_VALUE).getInt();
+                .get(Configuration.CATEGORY_GENERAL, "ObsidianTNTDelay", 100, "Fuse time for Obsidian TNT.").getInt();
+        general.obsidianTNTBlastRadius = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL,
+                "ObsidianTNTBlastRadius", 12, "Radius of the explosion of Obsidian TNT.").getInt();
+        general.UPDATE_DELAY =
+                Mekanism.configuration
+                        .get(Configuration.CATEGORY_GENERAL, "ClientUpdateDelay", 10,
+                                "How many ticks must pass until a block's active state can sync with the client.")
+                        .getInt();
+        general.osmiumPerChunk = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "OsmiumPerChunk", 12,
+                "Chance that osmium generates in a chunk.", 0, Integer.MAX_VALUE).getInt();
+        general.osmiumMaxVeinSize = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "OsmiumVeinSize", 8,
+                "Max number of blocks in an osmium vein.", 1, Integer.MAX_VALUE).getInt();
+        general.copperPerChunk = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "CopperPerChunk", 16,
+                "Chance that copper generates in a chunk.", 0, Integer.MAX_VALUE).getInt();
+        general.copperMaxVeinSize = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "CopperVeinSize", 8,
+                "Max number of blocks in a copper vein.", 1, Integer.MAX_VALUE).getInt();
+        general.tinPerChunk = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "TinPerChunk", 14,
+                "Chance that tin generates in a chunk.", 0, Integer.MAX_VALUE).getInt();
+        general.tinMaxVeinSize = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "TinVeinSize", 8,
+                "Max number of blocks in a tin vein.", 1, Integer.MAX_VALUE).getInt();
+        general.saltPerChunk = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "SaltPerChunk", 2,
+                "Chance that salt generates in a chunk.", 0, Integer.MAX_VALUE).getInt();
+        general.saltMaxVeinSize = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "SaltVeinSize", 6,
+                "Max number of blocks in a salt vein.", 1, Integer.MAX_VALUE).getInt();
         general.userWorldGenVersion = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "WorldRegenVersion", 0,
-              "Change this value to cause Mekanica to regen its ore in all loaded chunks.")
-              .getInt();
+                "Change this value to cause Mekanica to regen its ore in all loaded chunks.").getInt();
         general.FROM_IC2 = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "JoulesToEU", 10D,
-              "Conversion multiplier from EU to Joules (EU * JoulesToEU = Joules)").getDouble();
+                "Conversion multiplier from EU to Joules (EU * JoulesToEU = Joules)").getDouble();
         general.TO_IC2 = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "EUToJoules", .1D,
-              "Conversion multiplier from Joules to EU (Joules * EUToJoules = EU)").getDouble();
+                "Conversion multiplier from Joules to EU (Joules * EUToJoules = EU)").getDouble();
         general.FROM_RF = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "JoulesToRF", 2.5D,
-              "Conversion multiplier from RF to Joules (RF * JoulesToRF = Joules)").getDouble();
+                "Conversion multiplier from RF to Joules (RF * JoulesToRF = Joules)").getDouble();
         general.TO_RF = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "RFToJoules", 0.4D,
-              "Conversion multiplier from Joules to RF (Joules * RFToJoules = RF)").getDouble();
-        general.FROM_TESLA = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "JoulesToTesla", 2.5D,
-              "Conversion multiplier from Tesla to Joules (Tesla * JoulesToTesla = Joules)")
-              .getDouble();
-        general.TO_TESLA = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "TeslaToJoules", 0.4D,
-              "Conversion multiplier from Joules to Tesla (Joules * TeslaToJoules = Tesla)")
-              .getDouble();
-        general.FROM_FORGE = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "JoulesToForge", 2.5D,
-              "Conversion multiplier from Forge Energy to Joules (FE * JoulesToForge = Joules)")
-              .getDouble();
-        general.TO_FORGE = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "ForgeToJoules", 0.4D,
-              "Conversion multiplier from Joules to Forge Energy (Joules * ForgeToJoules = FE)")
-              .getDouble();
+                "Conversion multiplier from Joules to RF (Joules * RFToJoules = RF)").getDouble();
+        general.FROM_TESLA =
+                Mekanism.configuration
+                        .get(Configuration.CATEGORY_GENERAL, "JoulesToTesla", 2.5D,
+                                "Conversion multiplier from Tesla to Joules (Tesla * JoulesToTesla = Joules)")
+                        .getDouble();
+        general.TO_TESLA =
+                Mekanism.configuration
+                        .get(Configuration.CATEGORY_GENERAL, "TeslaToJoules", 0.4D,
+                                "Conversion multiplier from Joules to Tesla (Joules * TeslaToJoules = Tesla)")
+                        .getDouble();
+        general.FROM_FORGE =
+                Mekanism.configuration
+                        .get(Configuration.CATEGORY_GENERAL, "JoulesToForge", 2.5D,
+                                "Conversion multiplier from Forge Energy to Joules (FE * JoulesToForge = Joules)")
+                        .getDouble();
+        general.TO_FORGE =
+                Mekanism.configuration
+                        .get(Configuration.CATEGORY_GENERAL, "ForgeToJoules", 0.4D,
+                                "Conversion multiplier from Joules to Forge Energy (Joules * ForgeToJoules = FE)")
+                        .getDouble();
         general.FROM_H2 = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "HydrogenEnergyDensity", 200D,
-              "How much energy is produced per mB of Hydrogen, also affects Electrolytic Separator usage, Ethylene burn rate and Gas generator energy capacity")
-              .getDouble();
-        general.ETHENE_BURN_TIME = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "EthyleneBurnTime", 40,
-              "Burn time for Ethylene (1mB hydrogen + 2*bioFuel/tick*200ticks/100mB * 20x efficiency bonus).").getInt();
-        general.ENERGY_PER_REDSTONE = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "EnergyPerRedstone", 10000D,
-                    "How much energy (Joules) a piece of redstone gives in machines.").getDouble();
-        general.DISASSEMBLER_USAGE = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "DisassemblerEnergyUsage", 10,
-                    "Base Energy (Joules) usage of the Atomic Disassembler.").getInt();
-        //If this is less than 1, upgrades make machines worse. If less than 0, I don't even know.
-        general.maxUpgradeMultiplier = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "UpgradeModifier", 10,
-                    "Base factor for working out machine performance with upgrades - UpgradeModifier * (UpgradesInstalled/UpgradesPossible).",
-                    1, Integer.MAX_VALUE).getInt();
-        general.minerSilkMultiplier = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "MinerSilkMultiplier", 6,
-                    "Energy multiplier for using silk touch mode with the Digital Miner.").getDouble();
-        general.prefilledGasTanks = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "PrefilledGasTanks", true,
-                    "Add filled creative gas tanks to creative/JEI.").getBoolean();
-        general.armoredJetpackDamageRatio = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "ArmoredJetpackDamageRatio", 0.8,
-                    "Damage absorb ratio of the Armored Jetpack.").getDouble();
-        general.armoredJetpackDamageMax = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "ArmoredJepackDamageMax", 115,
-                    "Max damage the Armored Jetpack can absorb.").getInt();
-        general.aestheticWorldDamage = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "AestheticWorldDamage", true,
-                    "If enabled, lasers can break blocks and the flamethrower starts fires.").getBoolean();
-        general.opsBypassRestrictions = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "OpsBypassRestrictions", false,
-                    "Ops can bypass the block security restrictions if enabled.").getBoolean();
+                "How much energy is produced per mB of Hydrogen, also affects Electrolytic Separator usage, Ethylene burn rate and Gas generator energy capacity")
+                .getDouble();
+        general.ETHENE_BURN_TIME = Mekanism.configuration
+                .get(Configuration.CATEGORY_GENERAL, "EthyleneBurnTime", 40,
+                        "Burn time for Ethylene (1mB hydrogen + 2*bioFuel/tick*200ticks/100mB * 20x efficiency bonus).")
+                .getInt();
+        general.ENERGY_PER_REDSTONE = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "EnergyPerRedstone",
+                10000D, "How much energy (Joules) a piece of redstone gives in machines.").getDouble();
+        general.DISASSEMBLER_USAGE = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL,
+                "DisassemblerEnergyUsage", 10, "Base Energy (Joules) usage of the Atomic Disassembler.").getInt();
+        general.VOICE_PORT = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "VoicePort", 36123, null, 1, 65535).getInt();
+        // If this is less than 1, upgrades make machines worse. If less than 0, I don't even know.
+        general.maxUpgradeMultiplier = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "UpgradeModifier", 10,
+                "Base factor for working out machine performance with upgrades - UpgradeModifier * (UpgradesInstalled/UpgradesPossible).",
+                1, Integer.MAX_VALUE).getInt();
+        general.minerSilkMultiplier = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "MinerSilkMultiplier",
+                6, "Energy multiplier for using silk touch mode with the Digital Miner.").getDouble();
+        general.prefilledGasTanks = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "PrefilledGasTanks",
+                true, "Add filled creative gas tanks to creative/JEI.").getBoolean();
+        general.armoredJetpackDamageRatio = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL,
+                "ArmoredJetpackDamageRatio", 0.8, "Damage absorb ratio of the Armored Jetpack.").getDouble();
+        general.armoredJetpackDamageMax = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL,
+                "ArmoredJepackDamageMax", 115, "Max damage the Armored Jetpack can absorb.").getInt();
+        general.aestheticWorldDamage =
+                Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "AestheticWorldDamage", true,
+                        "If enabled, lasers can break blocks and the flamethrower starts fires.").getBoolean();
+        general.opsBypassRestrictions =
+                Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "OpsBypassRestrictions", false,
+                        "Ops can bypass the block security restrictions if enabled.").getBoolean();
         general.maxJetpackGas = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "MaxJetpackGas", 24000, "Jetpack Gas Tank capacity in mB.")
-              .getInt();
+                .get(Configuration.CATEGORY_GENERAL, "MaxJetpackGas", 24000, "Jetpack Gas Tank capacity in mB.")
+                .getInt();
         general.maxScubaGas = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "MaxScubaGas", 24000, "Scuba Tank Gas Tank capacity in mB.")
-              .getInt();
-        general.maxFlamethrowerGas = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "MaxFlamethrowerGas", 24000, "Flamethrower Gas Tank capacity in mB.")
-              .getInt();
+                .get(Configuration.CATEGORY_GENERAL, "MaxScubaGas", 24000, "Scuba Tank Gas Tank capacity in mB.")
+                .getInt();
+        general.maxFlamethrowerGas = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "MaxFlamethrowerGas",
+                24000, "Flamethrower Gas Tank capacity in mB.").getInt();
         general.maxPumpRange = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "MaxPumpRange", 80,
-              "Maximum block distance to pull fluid from for the Electric Pump.").getInt();
-        general.pumpWaterSources = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "PumpWaterSources", false,
-              "If enabled makes Water and Heavy Water blocks be removed from the world on pump.")
-              .getBoolean();
-        general.maxPlenisherNodes = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "MaxPlenisherNodes", 4000,
-                    "Fluidic Plenisher stops after this many blocks.").getInt();
-        general.evaporationHeatDissipation = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "EvaporationHeatDissipation", 0.02D,
-                    "Thermal Evaporation Tower heat loss per tick.").getDouble();
-        general.evaporationTempMultiplier = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "EvaporationTempMultiplier", 0.1D,
-                    "Temperature to amount produced ratio for Thermal Evaporation Tower.").getDouble();
-        general.evaporationSolarMultiplier = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "EvaporationSolarMultiplier", 0.2D,
-                    "Heat to absorb per Solar Panel array of Thermal Evaporation Tower.").getDouble();
-        general.evaporationMaxTemp = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "EvaporationMaxTemp", 3000D,
-                    "Max Temperature of the Thermal Evaporation Tower.").getDouble();
+                "Maximum block distance to pull fluid from for the Electric Pump.").getInt();
+        general.pumpWaterSources = Mekanism.configuration
+                .get(Configuration.CATEGORY_GENERAL, "PumpWaterSources", false,
+                        "If enabled makes Water and Heavy Water blocks be removed from the world on pump.")
+                .getBoolean();
+        general.maxPlenisherNodes = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "MaxPlenisherNodes",
+                4000, "Fluidic Plenisher stops after this many blocks.").getInt();
+        general.evaporationHeatDissipation = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL,
+                "EvaporationHeatDissipation", 0.02D, "Thermal Evaporation Tower heat loss per tick.").getDouble();
+        general.evaporationTempMultiplier =
+                Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "EvaporationTempMultiplier", 0.1D,
+                        "Temperature to amount produced ratio for Thermal Evaporation Tower.").getDouble();
+        general.evaporationSolarMultiplier =
+                Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "EvaporationSolarMultiplier", 0.2D,
+                        "Heat to absorb per Solar Panel array of Thermal Evaporation Tower.").getDouble();
+        general.evaporationMaxTemp = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "EvaporationMaxTemp",
+                3000D, "Max Temperature of the Thermal Evaporation Tower.").getDouble();
         general.energyPerHeat = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "EnergyPerHeat", 1000D,
-              "Joules required by the Resistive Heater to produce one unit of heat. Also affects Thermoelectric Boiler's Water->Steam rate.")
-              .getDouble();
-        general.maxEnergyPerSteam = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "MaxEnergyPerSteam", 100D,
-                    "Maximum Joules per mB of Steam. Also affects Thermoelectric Boiler.").getDouble();
-        general.superheatingHeatTransfer = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "SuperheatingHeatTransfer", 10000D,
-                    "Amount of heat each Boiler heating element produces.").getDouble();
-        general.heatPerFuelTick = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "HeatPerFuelTick", 4D,
-              "Amount of heat produced per fuel tick of a fuel's burn time in the Fuelwood Heater.")
-              .getDouble();
-        general.allowTransmitterAlloyUpgrade = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "AllowTransmitterAlloyUpgrade", true,
-                    "Allow right clicking on Cables/Pipes/Tubes with alloys to upgrade the tier.").getBoolean();
-        general.allowChunkloading = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "AllowChunkloading", true,
-                    "Disable to make the anchor upgrade not do anything.").getBoolean();
+                "Joules required by the Resistive Heater to produce one unit of heat. Also affects Thermoelectric Boiler's Water->Steam rate.")
+                .getDouble();
+        general.maxEnergyPerSteam = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "MaxEnergyPerSteam",
+                100D, "Maximum Joules per mB of Steam. Also affects Thermoelectric Boiler.").getDouble();
+        general.superheatingHeatTransfer = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL,
+                "SuperheatingHeatTransfer", 10000D, "Amount of heat each Boiler heating element produces.").getDouble();
+        general.heatPerFuelTick = Mekanism.configuration
+                .get(Configuration.CATEGORY_GENERAL, "HeatPerFuelTick", 4D,
+                        "Amount of heat produced per fuel tick of a fuel's burn time in the Fuelwood Heater.")
+                .getDouble();
+        general.allowTransmitterAlloyUpgrade =
+                Mekanism.configuration
+                        .get(Configuration.CATEGORY_GENERAL, "AllowTransmitterAlloyUpgrade", true,
+                                "Allow right clicking on Cables/Pipes/Tubes with alloys to upgrade the tier.")
+                        .getBoolean();
+        general.allowChunkloading = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "AllowChunkloading",
+                true, "Disable to make the anchor upgrade not do anything.").getBoolean();
         general.allowProtection = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "AllowProtection", true,
-              "Enable the security system for players to prevent others from accessing their machines. Does NOT affect Frequencies.")
-              .getBoolean();
-        general.portableTeleporterDelay = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "PortableTeleporterDelay", 0,
-                    "Delay in ticks before a player is teleported after clicking the Teleport button in the portable teleporter.")
-              .getInt();
-        general.quantumEntangloporterEnergyTransfer = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "QuantumEntangloporterEnergyTransfer", 16000000D,
-                    "Maximum buffer of an Entangoloporter frequency.").getDouble();
+                "Enable the security system for players to prevent others from accessing their machines. Does NOT affect Frequencies.")
+                .getBoolean();
+        general.portableTeleporterDelay = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL,
+                "PortableTeleporterDelay", 0,
+                "Delay in ticks before a player is teleported after clicking the Teleport button in the portable teleporter.")
+                .getInt();
+        general.quantumEntangloporterEnergyTransfer =
+                Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "QuantumEntangloporterEnergyTransfer",
+                        16000000D, "Maximum buffer of an Entangoloporter frequency.").getDouble();
 
-        general.blacklistIC2 = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "BlacklistIC2Power", false,
-              "Disables IC2 power integration. Requires world restart (server-side option in SMP).").getBoolean();
+        general.blacklistIC2 = Mekanism.configuration
+                .get(Configuration.CATEGORY_GENERAL, "BlacklistIC2Power", false,
+                        "Disables IC2 power integration. Requires world restart (server-side option in SMP).")
+                .getBoolean();
         general.blacklistRF = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "BlacklistRFPower", false,
-              "Disables Thermal Expansion RedstoneFlux power integration. Requires world restart (server-side option in SMP).")
-              .getBoolean();
+                "Disables Thermal Expansion RedstoneFlux power integration. Requires world restart (server-side option in SMP).")
+                .getBoolean();
         general.blacklistTesla = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "BlacklistTeslaPower", false,
-                    "Disables Tesla power integration. Requires world restart (server-side option in SMP).")
-              .getBoolean();
-        general.blacklistForge = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "BlacklistForgePower", false,
-                    "Disables Forge Energy (FE,IF,uF,CF) power integration. Requires world restart (server-side option in SMP).")
-              .getBoolean();
+                .get(Configuration.CATEGORY_GENERAL, "BlacklistTeslaPower", false,
+                        "Disables Tesla power integration. Requires world restart (server-side option in SMP).")
+                .getBoolean();
+        general.blacklistForge = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "BlacklistForgePower",
+                false,
+                "Disables Forge Energy (FE,IF,uF,CF) power integration. Requires world restart (server-side option in SMP).")
+                .getBoolean();
 
-        String s = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "EnergyType", "RF", "Displayed energy type in Mekanica GUIs.",
-                    new String[]{"J", "RF", "EU", "T"})
-              .getString().trim().toLowerCase();
+        String s =
+                Mekanism.configuration
+                        .get(Configuration.CATEGORY_GENERAL, "EnergyType", "RF",
+                                "Displayed energy type in Mekanica GUIs.", new String[] {"J", "RF", "EU", "T"})
+                        .getString().trim().toLowerCase();
 
         switch (s) {
             case "joules":
@@ -366,121 +354,112 @@ public class CommonProxy implements IGuiProvider {
                 general.energyUnit = EnergyType.RF;
         }
 
-        s = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "Temperature Units", "K",
-                    "Displayed temperature unit in Mekanica GUIs.", new String[]{"K", "C", "R", "F"})
-              .getString();
+        s = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "Temperature Units", "K",
+                "Displayed temperature unit in Mekanica GUIs.", new String[] {"K", "C", "R", "F"}).getString();
 
         if (s != null) {
             if (s.trim().equalsIgnoreCase("k") || s.trim().equalsIgnoreCase("kelvin")) {
                 general.tempUnit = TempType.K;
-            } else if (s.trim().equalsIgnoreCase("c") || s.trim().equalsIgnoreCase("celsius") || s.trim()
-                  .equalsIgnoreCase("centigrade")) {
+            } else if (s.trim().equalsIgnoreCase("c") || s.trim().equalsIgnoreCase("celsius")
+                    || s.trim().equalsIgnoreCase("centigrade")) {
                 general.tempUnit = TempType.C;
             } else if (s.trim().equalsIgnoreCase("r") || s.trim().equalsIgnoreCase("rankine")) {
                 general.tempUnit = TempType.R;
             } else if (s.trim().equalsIgnoreCase("f") || s.trim().equalsIgnoreCase("fahrenheit")) {
                 general.tempUnit = TempType.F;
-            } else if (s.trim().equalsIgnoreCase("a") || s.trim().equalsIgnoreCase("ambient") || s.trim()
-                  .equalsIgnoreCase("stp")) {
+            } else if (s.trim().equalsIgnoreCase("a") || s.trim().equalsIgnoreCase("ambient")
+                    || s.trim().equalsIgnoreCase("stp")) {
                 general.tempUnit = TempType.STP;
             }
         }
 
         general.laserRange = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "LaserRange", 64, "How far (in blocks) a laser can travel.")
-              .getInt();
-        general.laserEnergyNeededPerHardness = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "LaserDiggingEnergy", 100000,
-                    "Energy needed to destroy or attract blocks with a Laser (per block hardness level).")
-              .getInt();
+                .get(Configuration.CATEGORY_GENERAL, "LaserRange", 64, "How far (in blocks) a laser can travel.")
+                .getInt();
+        general.laserEnergyNeededPerHardness =
+                Mekanism.configuration
+                        .get(Configuration.CATEGORY_GENERAL, "LaserDiggingEnergy", 100000,
+                                "Energy needed to destroy or attract blocks with a Laser (per block hardness level).")
+                        .getInt();
         general.destroyDisabledBlocks = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "DestroyDisabledBlocks", true,
-                    "If machine is disabled in config, do we set its block to air if it is found in world?")
-              .getBoolean();
+                .get(Configuration.CATEGORY_GENERAL, "DestroyDisabledBlocks", true,
+                        "If machine is disabled in config, do we set its block to air if it is found in world?")
+                .getBoolean();
         general.digitalMinerMaxRadius = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "DigitalMinerMaxRadius", 32,
-                    "Maximum radius in blocks that the Digital Miner can reach. "
-                          + "(Increasing this may have negative effects on stability and/or performance. "
-                          + "We strongly recommend you leave it at the default value.)",
-                    1, Integer.MAX_VALUE).getInt();
+                .get(Configuration.CATEGORY_GENERAL, "DigitalMinerMaxRadius", 32,
+                        "Maximum radius in blocks that the Digital Miner can reach. "
+                                + "(Increasing this may have negative effects on stability and/or performance. "
+                                + "We strongly recommend you leave it at the default value.)",
+                        1, Integer.MAX_VALUE)
+                .getInt();
 
         for (MachineType type : BlockStateMachine.MachineType.getValidMachines()) {
-            general.machinesManager.setEntry(type.blockName,
-                  Mekanism.configuration.get("machines", type.blockName + "Enabled", true,
-                        "Allow " + type.blockName + " to be used/crafted.").getBoolean());
+            general.machinesManager.setEntry(type.blockName, Mekanism.configuration.get("machines",
+                    type.blockName + "Enabled", true, "Allow " + type.blockName + " to be used/crafted.").getBoolean());
         }
 
-        general.sawdustChancePlank = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "SawdustChancePlank", 0.25D,
-                    "Chance of producing sawdust per operation in the precision sawmill when turning planks into sticks.")
-              .getDouble();
+        general.sawdustChancePlank = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "SawdustChancePlank",
+                0.25D,
+                "Chance of producing sawdust per operation in the precision sawmill when turning planks into sticks.")
+                .getDouble();
         general.sawdustChanceLog = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "SawdustChanceLog", 1D,
-              "Chance of producing sawdust per operation in the precision sawmill when turning logs into planks.")
-              .getDouble();
+                "Chance of producing sawdust per operation in the precision sawmill when turning logs into planks.")
+                .getDouble();
 
         usage.enrichmentChamberUsage = Mekanism.configuration
-              .get("usage", "EnrichmentChamberUsage", 50D, "Energy per operation tick (Joules).").getDouble();
+                .get("usage", "EnrichmentChamberUsage", 50D, "Energy per operation tick (Joules).").getDouble();
         usage.osmiumCompressorUsage = Mekanism.configuration
-              .get("usage", "OsmiumCompressorUsage", 100D, "Energy per operation tick (Joules).").getDouble();
+                .get("usage", "OsmiumCompressorUsage", 100D, "Energy per operation tick (Joules).").getDouble();
         usage.combinerUsage = Mekanism.configuration
-              .get("usage", "CombinerUsage", 50D, "Energy per operation tick (Joules).").getDouble();
+                .get("usage", "CombinerUsage", 50D, "Energy per operation tick (Joules).").getDouble();
         usage.crusherUsage = Mekanism.configuration
-              .get("usage", "CrusherUsage", 50D, "Energy per operation tick (Joules).").getDouble();
+                .get("usage", "CrusherUsage", 50D, "Energy per operation tick (Joules).").getDouble();
         usage.metallurgicInfuserUsage = Mekanism.configuration
-              .get("usage", "MetallurgicInfuserUsage", 50D, "Energy per operation tick (Joules).").getDouble();
+                .get("usage", "MetallurgicInfuserUsage", 50D, "Energy per operation tick (Joules).").getDouble();
         usage.purificationChamberUsage = Mekanism.configuration
-              .get("usage", "PurificationChamberUsage", 200D, "Energy per operation tick (Joules).")
-              .getDouble();
+                .get("usage", "PurificationChamberUsage", 200D, "Energy per operation tick (Joules).").getDouble();
         usage.energizedSmelterUsage = Mekanism.configuration
-              .get("usage", "EnergizedSmelterUsage", 50D, "Energy per operation tick (Joules).").getDouble();
+                .get("usage", "EnergizedSmelterUsage", 50D, "Energy per operation tick (Joules).").getDouble();
         usage.digitalMinerUsage = Mekanism.configuration
-              .get("usage", "DigitalMinerUsage", 100D, "Energy per operation tick (Joules).").getDouble();
+                .get("usage", "DigitalMinerUsage", 100D, "Energy per operation tick (Joules).").getDouble();
         usage.electricPumpUsage = Mekanism.configuration
-              .get("usage", "ElectricPumpUsage", 100D, "Energy per operation tick (Joules).").getDouble();
+                .get("usage", "ElectricPumpUsage", 100D, "Energy per operation tick (Joules).").getDouble();
         usage.rotaryCondensentratorUsage = Mekanism.configuration
-              .get("usage", "RotaryCondensentratorUsage", 50D, "Energy per operation tick (Joules).")
-              .getDouble();
+                .get("usage", "RotaryCondensentratorUsage", 50D, "Energy per operation tick (Joules).").getDouble();
         usage.oxidationChamberUsage = Mekanism.configuration
-              .get("usage", "OxidationChamberUsage", 200D, "Energy per operation tick (Joules).").getDouble();
+                .get("usage", "OxidationChamberUsage", 200D, "Energy per operation tick (Joules).").getDouble();
         usage.chemicalInfuserUsage = Mekanism.configuration
-              .get("usage", "ChemicalInfuserUsage", 200D, "Energy per operation tick (Joules).").getDouble();
+                .get("usage", "ChemicalInfuserUsage", 200D, "Energy per operation tick (Joules).").getDouble();
         usage.chemicalInjectionChamberUsage = Mekanism.configuration
-              .get("usage", "ChemicalInjectionChamberUsage", 400D, "Energy per operation tick (Joules).")
-              .getDouble();
+                .get("usage", "ChemicalInjectionChamberUsage", 400D, "Energy per operation tick (Joules).").getDouble();
         usage.precisionSawmillUsage = Mekanism.configuration
-              .get("usage", "PrecisionSawmillUsage", 50D, "Energy per operation tick (Joules).").getDouble();
+                .get("usage", "PrecisionSawmillUsage", 50D, "Energy per operation tick (Joules).").getDouble();
         usage.chemicalDissolutionChamberUsage = Mekanism.configuration
-              .get("usage", "ChemicalDissolutionChamberUsage", 400D, "Energy per operation tick (Joules).").getDouble();
+                .get("usage", "ChemicalDissolutionChamberUsage", 400D, "Energy per operation tick (Joules).")
+                .getDouble();
         usage.chemicalWasherUsage = Mekanism.configuration
-              .get("usage", "ChemicalWasherUsage", 200D, "Energy per operation tick (Joules).").getDouble();
+                .get("usage", "ChemicalWasherUsage", 200D, "Energy per operation tick (Joules).").getDouble();
         usage.chemicalCrystallizerUsage = Mekanism.configuration
-              .get("usage", "ChemicalCrystallizerUsage", 400D, "Energy per operation tick (Joules).")
-              .getDouble();
+                .get("usage", "ChemicalCrystallizerUsage", 400D, "Energy per operation tick (Joules).").getDouble();
         usage.seismicVibratorUsage = Mekanism.configuration
-              .get("usage", "SeismicVibratorUsage", 50D, "Energy per operation tick (Joules).").getDouble();
+                .get("usage", "SeismicVibratorUsage", 50D, "Energy per operation tick (Joules).").getDouble();
         usage.pressurizedReactionBaseUsage = Mekanism.configuration
-              .get("usage", "PressurizedReactionBaseUsage", 5D, "Energy per operation tick (Joules).")
-              .getDouble();
+                .get("usage", "PressurizedReactionBaseUsage", 5D, "Energy per operation tick (Joules).").getDouble();
         usage.fluidicPlenisherUsage = Mekanism.configuration
-              .get("usage", "FluidicPlenisherUsage", 100D, "Energy per operation tick (Joules).").getDouble();
+                .get("usage", "FluidicPlenisherUsage", 100D, "Energy per operation tick (Joules).").getDouble();
         usage.laserUsage = Mekanism.configuration
-              .get("usage", "LaserUsage", 5000D, "Energy per operation tick (Joules).").getDouble();
+                .get("usage", "LaserUsage", 5000D, "Energy per operation tick (Joules).").getDouble();
         usage.heavyWaterElectrolysisUsage = Mekanism.configuration.get("usage", "HeavyWaterElectrolysisUsage", 800D,
-              "Energy needed for one [recipe unit] of heavy water production (Joules).")
-              .getDouble();
+                "Energy needed for one [recipe unit] of heavy water production (Joules).").getDouble();
         usage.formulaicAssemblicatorUsage = Mekanism.configuration
-              .get("usage", "FormulaicAssemblicatorUsage", 100D, "Energy per operation tick (Joules).")
-              .getDouble();
+                .get("usage", "FormulaicAssemblicatorUsage", 100D, "Energy per operation tick (Joules).").getDouble();
         usage.teleporterBaseUsage = Mekanism.configuration
-              .get("usage", "TeleporterBaseUsage", 1000, "Base Joules cost for a teleportation.")
-              .getInt();
+                .get("usage", "TeleporterBaseUsage", 1000, "Base Joules cost for a teleportation.").getInt();
         usage.teleporterDistanceUsage = Mekanism.configuration.get("usage", "TeleporterDistanceUsage", 10,
-              "Joules per unit of distance travelled during teleportation - sqrt(xDiff^2 + yDiff^2 + zDiff^2).")
-              .getInt();
-        usage.teleporterDimensionPenalty = Mekanism.configuration
-              .get("usage", "TeleporterDimensionPenalty", 10000,
-                    "Flat additional cost for interdimensional teleportation.").getInt();
+                "Joules per unit of distance travelled during teleportation - sqrt(xDiff^2 + yDiff^2 + zDiff^2).")
+                .getInt();
+        usage.teleporterDimensionPenalty = Mekanism.configuration.get("usage", "TeleporterDimensionPenalty", 10000,
+                "Flat additional cost for interdimensional teleportation.").getInt();
 
         Tier.loadConfig();
 
@@ -506,20 +485,17 @@ public class CommonProxy implements IGuiProvider {
     /**
      * Adds block hit effects on the client side.
      */
-    public void addHitEffects(Coord4D coord, RayTraceResult mop) {
-    }
+    public void addHitEffects(Coord4D coord, RayTraceResult mop) {}
 
     /**
      * Does a generic creation animation, starting from the rendering block.
      */
-    public void doGenericSparkle(TileEntity tileEntity, INodeChecker checker) {
-    }
+    public void doGenericSparkle(TileEntity tileEntity, INodeChecker checker) {}
 
     /**
      * Does the multiblock creation animation, starting from the rendering block.
      */
-    public void doMultiblockSparkle(TileEntityMultiblock<?> tileEntity) {
-    }
+    public void doMultiblockSparkle(TileEntityMultiblock<?> tileEntity) {}
 
     @Override
     public Object getClientGui(int ID, EntityPlayer player, World world, BlockPos pos) {
@@ -539,15 +515,15 @@ public class CommonProxy implements IGuiProvider {
                 return new ContainerElectricMachine(player.inventory, (TileEntityElectricMachine) tileEntity);
             case 4:
                 return new ContainerAdvancedElectricMachine(player.inventory,
-                      (TileEntityAdvancedElectricMachine) tileEntity);
+                        (TileEntityAdvancedElectricMachine) tileEntity);
             case 5:
                 return new ContainerDoubleElectricMachine(player.inventory,
-                      (TileEntityDoubleElectricMachine) tileEntity);
+                        (TileEntityDoubleElectricMachine) tileEntity);
             case 6:
                 return new ContainerElectricMachine(player.inventory, (TileEntityElectricMachine) tileEntity);
             case 7:
                 return new ContainerRotaryCondensentrator(player.inventory,
-                      (TileEntityRotaryCondensentrator) tileEntity);
+                        (TileEntityRotaryCondensentrator) tileEntity);
             case 8:
                 return new ContainerEnergyCube(player.inventory, (TileEntityEnergyCube) tileEntity);
             case 9:
@@ -570,7 +546,7 @@ public class CommonProxy implements IGuiProvider {
                 return null;
             case 15:
                 return new ContainerAdvancedElectricMachine(player.inventory,
-                      (TileEntityAdvancedElectricMachine) tileEntity);
+                        (TileEntityAdvancedElectricMachine) tileEntity);
             case 16:
                 return new ContainerElectricMachine(player.inventory, (TileEntityElectricMachine) tileEntity);
             case 17:
@@ -629,18 +605,18 @@ public class CommonProxy implements IGuiProvider {
                 return new ContainerChemicalInfuser(player.inventory, (TileEntityChemicalInfuser) tileEntity);
             case 31:
                 return new ContainerAdvancedElectricMachine(player.inventory,
-                      (TileEntityAdvancedElectricMachine) tileEntity);
+                        (TileEntityAdvancedElectricMachine) tileEntity);
             case 32:
                 return new ContainerElectrolyticSeparator(player.inventory,
-                      (TileEntityElectrolyticSeparator) tileEntity);
+                        (TileEntityElectrolyticSeparator) tileEntity);
             case 33:
                 return new ContainerThermalEvaporationController(player.inventory,
-                      (TileEntityThermalEvaporationController) tileEntity);
+                        (TileEntityThermalEvaporationController) tileEntity);
             case 34:
                 return new ContainerChanceMachine(player.inventory, (TileEntityChanceMachine) tileEntity);
             case 35:
                 return new ContainerChemicalDissolutionChamber(player.inventory,
-                      (TileEntityChemicalDissolutionChamber) tileEntity);
+                        (TileEntityChemicalDissolutionChamber) tileEntity);
             case 36:
                 return new ContainerChemicalWasher(player.inventory, (TileEntityChemicalWasher) tileEntity);
             case 37:
@@ -661,10 +637,10 @@ public class CommonProxy implements IGuiProvider {
                 return new ContainerLaserTractorBeam(player.inventory, (TileEntityLaserTractorBeam) tileEntity);
             case 46:
                 return new ContainerQuantumEntangloporter(player.inventory,
-                      (TileEntityQuantumEntangloporter) tileEntity);
+                        (TileEntityQuantumEntangloporter) tileEntity);
             case 47:
                 return new ContainerSolarNeutronActivator(player.inventory,
-                      (TileEntitySolarNeutronActivator) tileEntity);
+                        (TileEntitySolarNeutronActivator) tileEntity);
             case 48:
                 return new ContainerNull(player, (TileEntityContainerBlock) tileEntity);
             case 49:
@@ -683,7 +659,7 @@ public class CommonProxy implements IGuiProvider {
                 return new ContainerNull(player, (TileEntityContainerBlock) tileEntity);
             case 56:
                 return new ContainerFormulaicAssemblicator(player.inventory,
-                      (TileEntityFormulaicAssemblicator) tileEntity);
+                        (TileEntityFormulaicAssemblicator) tileEntity);
             case 57:
                 return new ContainerSecurityDesk(player.inventory, (TileEntitySecurityDesk) tileEntity);
             case 58:
@@ -693,8 +669,7 @@ public class CommonProxy implements IGuiProvider {
         return null;
     }
 
-    public void preInit() {
-    }
+    public void preInit() {}
 
     public double getReach(EntityPlayer player) {
         if (player instanceof EntityPlayerMP) {
@@ -761,8 +736,7 @@ public class CommonProxy implements IGuiProvider {
         return -1;
     }
 
-    public void renderLaser(World world, Pos3D from, Pos3D to, EnumFacing direction, double energy) {
-    }
+    public void renderLaser(World world, Pos3D from, Pos3D to, EnumFacing direction, double energy) {}
 
     public Object getFontRenderer() {
         return null;

@@ -949,7 +949,13 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
     @Nonnull
     @Override
     public int[] getSlotsForFace(@Nonnull EnumFacing side) {
-        return side == facing.getOpposite() ? INV_SLOTS : InventoryUtils.EMPTY;
+        //Allow for automation via the top (as that is where it can auto pull from)
+        return side == EnumFacing.UP ||  side == facing.getOpposite() ? INV_SLOTS : InventoryUtils.EMPTY;
+    }
+
+    @Override
+    public boolean isItemValidForSlot(int slotID, @Nonnull ItemStack stack) {
+        return slotID != 27 || ChargeUtils.canBeDischarged(stack);
     }
 
     public TileEntity getEjectTile() {

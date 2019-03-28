@@ -383,7 +383,7 @@ public class TileEntityRotaryCondensentrator extends TileEntityMachine implement
             //Fluid
             return FluidContainerUtils.isFluidContainer(stack);
         } else if (slot == 4) {
-            return ChargeUtils.canBeCharged(stack);
+            return ChargeUtils.canBeDischarged(stack);
         }
         return false;
     }

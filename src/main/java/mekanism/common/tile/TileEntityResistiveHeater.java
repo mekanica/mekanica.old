@@ -345,6 +345,6 @@ public class TileEntityResistiveHeater extends TileEntityEffectsBlock implements
 
     @Override
     public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
-        return ChargeUtils.canBeCharged(stack);
+        return ChargeUtils.canBeDischarged(stack);
     }
 }

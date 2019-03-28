@@ -488,6 +488,11 @@ public class TileEntityInductionPort extends TileEntityInductionCasing implement
 
     @Override
     public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack) {
-        return ChargeUtils.canBeCharged(stack);
+        if (slot == 0) {
+            return ChargeUtils.canBeCharged(stack);
+        } else if (slot == 1) {
+            return ChargeUtils.canBeDischarged(stack);
+        }
+        return false;
     }
 }

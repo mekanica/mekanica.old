@@ -12,12 +12,9 @@ import mekanism.common.Mekanism;
 import mekanism.common.base.ISideConfiguration;
 import mekanism.common.content.transporter.TransitRequest.TransitResponse;
 import mekanism.common.content.transporter.TransporterStack.Path;
-import mekanism.common.tile.TileEntityBin;
 import mekanism.common.util.InventoryUtils;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.StackUtils;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -68,6 +65,10 @@ public class TransporterManager {
 
     private static ItemStack simulateInsert(IItemHandler handler, InventoryCopy copy, EnumFacing side, ItemStack stack) {
         for (int i = 0; i < handler.getSlots(); i++) {
+            if (stack.isEmpty()) {
+                // Nothing more to insert
+                break;
+            }
 
             // Make sure that the item is valid for the handler
             if (!handler.isItemValid(i, stack)) {
@@ -81,21 +82,33 @@ public class TransporterManager {
             // Get the item stack for the slot in question
             ItemStack destStack = copy.inventory.get(i);
 
-            // If the item stack is empty, we need to do a simulated insert since we can't tell if the stack
-            // in question would be allowed in this slot. Otherwise, we depend on areItemsStackable to keep us
-            // out of trouble
-            if (destStack.isEmpty() && ItemStack.areItemStacksEqual(handler.insertItem(i, stack, true), stack)) {
-                continue;
-            }
-
             // If the destination isn't empty and not stackable, move along
             if (!destStack.isEmpty() && !InventoryUtils.areItemsStackable(destStack, stack)) {
                 continue;
             }
 
+            // If the item stack is empty, we need to do a simulated insert since we can't tell if the stack
+            // in question would be allowed in this slot. Otherwise, we depend on areItemsStackable to keep us
+            // out of trouble
+            if (destStack.isEmpty()) {
+                // Simulate an insert;
+                if (ItemStack.areItemStacksEqual(handler.insertItem(i, stack, true), stack)) {
+                    // Insert will fail; bail
+                    continue;
+                }
+
+                // Set the destStack to match ours
+                destStack = stack.copy();
+                destStack.setCount(0);
+                copy.inventory.set(i, destStack);
+            }
+
             int max = handler.getSlotLimit(i);
             int mergedCount = stack.getCount() + destStack.getCount();
-            if (mergedCount > max) {
+            if (max == 0) {
+                continue;
+            }
+            else if (mergedCount > max) {
                 // Not all the items will fit; put max in and save leftovers
                 destStack.setCount(max);
                 stack.setCount(mergedCount - max);
@@ -104,8 +117,6 @@ public class TransporterManager {
                 destStack.grow(stack.getCount());
                 stack.setCount(0);
             }
-
-            // TODO: Do I need to strength constraints on stack size versus slot size?!
         }
 
         return stack;

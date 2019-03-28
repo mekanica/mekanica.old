@@ -68,60 +68,6 @@ public class TransitRequest {
                     }
                 }
             }
-        } else if (tile instanceof ISidedInventory) {
-            ISidedInventory sidedInventory = (ISidedInventory) tile;
-            int[] slots = sidedInventory.getSlotsForFace(side.getOpposite());
-
-            for (int get = slots.length - 1; get >= 0; get--) {
-                int slotID = slots[get];
-
-                if (!sidedInventory.getStackInSlot(slotID).isEmpty()
-                        && sidedInventory.getStackInSlot(slotID).getCount() > 0) {
-                    ItemStack toSend = sidedInventory.getStackInSlot(slotID).copy();
-                    toSend.setCount(Math.min(amount, toSend.getCount()));
-
-                    if (sidedInventory.canExtractItem(slotID, toSend, side.getOpposite()) && finder.modifies(toSend)) {
-                        HashedItem hashed = new HashedItem(toSend);
-                        int toUse = itemCountMap.containsKey(hashed)
-                                ? Math.min(toSend.getCount(), amount - itemCountMap.get(hashed))
-                                : toSend.getCount();
-                        if (toUse == 0)
-                            continue; // continue if we don't need anymore of this item type
-                        ret.addItem(StackUtils.size(toSend, toUse), slotID);
-
-                        if (itemCountMap.containsKey(hashed)) {
-                            itemCountMap.put(hashed, itemCountMap.get(hashed) + toUse);
-                        } else {
-                            itemCountMap.put(hashed, toUse);
-                        }
-                    }
-                }
-            }
-        } else if (tile instanceof IInventory) {
-            IInventory inventory = InventoryUtils.checkChestInv((IInventory) tile);
-
-            for (int i = inventory.getSizeInventory() - 1; i >= 0; i--) {
-                if (!inventory.getStackInSlot(i).isEmpty()) {
-                    ItemStack toSend = inventory.getStackInSlot(i).copy();
-                    toSend.setCount(Math.min(amount, toSend.getCount()));
-
-                    if (finder.modifies(toSend)) {
-                        HashedItem hashed = new HashedItem(toSend);
-                        int toUse = itemCountMap.containsKey(hashed)
-                                ? Math.min(toSend.getCount(), amount - itemCountMap.get(hashed))
-                                : toSend.getCount();
-                        if (toUse == 0)
-                            continue; // continue if we don't need anymore of this item type
-                        ret.addItem(StackUtils.size(toSend, toUse), i);
-
-                        if (itemCountMap.containsKey(hashed)) {
-                            itemCountMap.put(hashed, itemCountMap.get(hashed) + toUse);
-                        } else {
-                            itemCountMap.put(hashed, toUse);
-                        }
-                    }
-                }
-            }
         }
 
         return ret;

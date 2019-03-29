@@ -38,6 +38,22 @@ public class TransporterStack {
     public Path pathType;
     private List<Coord4D> pathToTarget = new ArrayList<>();
 
+    private int id;
+
+    protected TransporterStack() {}
+
+    public TransporterStack(int id) {
+        this.id = id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
     public static TransporterStack readFromNBT(NBTTagCompound nbtTags) {
         TransporterStack stack = new TransporterStack();
         stack.read(nbtTags);
@@ -59,6 +75,7 @@ public class TransporterStack {
             data.add(-1);
         }
 
+        data.add(id);
         data.add(progress);
         originalLocation.write(data);
         data.add(pathType.ordinal());
@@ -84,6 +101,8 @@ public class TransporterStack {
             color = null;
         }
 
+        id = dataStream.readInt();
+
         progress = dataStream.readInt();
         originalLocation = Coord4D.read(dataStream);
         pathType = Path.values()[dataStream.readInt()];
@@ -102,6 +121,7 @@ public class TransporterStack {
             nbtTags.setInteger("color", TransporterUtils.colors.indexOf(color));
         }
 
+        nbtTags.setInteger("id", id);
         nbtTags.setInteger("progress", progress);
         nbtTags.setTag("originalLocation", originalLocation.write(new NBTTagCompound()));
 
@@ -122,6 +142,7 @@ public class TransporterStack {
             color = TransporterUtils.colors.get(nbtTags.getInteger("color"));
         }
 
+        id = nbtTags.getInteger("id");
         progress = nbtTags.getInteger("progress");
         originalLocation = Coord4D.read(nbtTags.getCompoundTag("originalLocation"));
 

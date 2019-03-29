@@ -1,7 +1,9 @@
 package mekanism.common.tile.transmitter;
 
 import io.netty.buffer.ByteBuf;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import javax.annotation.Nonnull;
 import mekanism.api.Coord4D;
@@ -196,18 +198,20 @@ public class TileEntityLogisticalTransporter extends TileEntityTransmitter<TileE
                     MekanismUtils.updateBlock(world, pos);
                 }
 
-                getTransmitter().transit.clear();
-
-                int amount = dataStream.readInt();
-
-                for (int i = 0; i < amount; i++) {
-                    getTransmitter().transit.add(TransporterStack.readFromPacket(dataStream));
+                // Load all the stacks currently in transit into a list; we then hand
+                // this list off to the TransporterImpl
+                List<TransporterStack> stacks = new ArrayList<>();
+                int count = dataStream.readInt();
+                for (int i = 0; i < count; i++) {
+                    stacks.add(TransporterStack.readFromPacket(dataStream));
                 }
+
+                getTransmitter().resetTransit(stacks, dataStream.readInt());
+
             } else if (type == SYNC_PACKET) {
                 readStack(dataStream);
 
             } else if (type == BATCH_PACKET) {
-                // Process updates first; deletes operate on post-update indicies
                 int updates = dataStream.readInt();
                 for (int i = 0; i < updates; i++) {
                     readStack(dataStream);
@@ -215,7 +219,7 @@ public class TileEntityLogisticalTransporter extends TileEntityTransmitter<TileE
 
                 int deletes = dataStream.readInt();
                 for (int i = 0; i < deletes; i++) {
-                    getTransmitter().transit.remove(dataStream.readInt());
+                    getTransmitter().deleteStack(dataStream.readInt());
                 }
             }
         }
@@ -235,11 +239,15 @@ public class TileEntityLogisticalTransporter extends TileEntityTransmitter<TileE
             data.add(-1);
         }
 
-        data.add(getTransmitter().transit.size());
-
-        for (TransporterStack stack : getTransmitter().transit) {
+        // Serialize all the in-flight stacks (this includes their ID)
+        Collection<TransporterStack> stacks = getTransmitter().getTransit();
+        data.add(stacks.size());
+        for (TransporterStack stack : stacks) {
             stack.write(getTransmitter(), data);
         }
+
+        // Append the next ID
+        data.add(getTransmitter().getNextId());
 
         return data;
     }
@@ -253,12 +261,11 @@ public class TileEntityLogisticalTransporter extends TileEntityTransmitter<TileE
 
         data.add(SYNC_PACKET);
         stack.write(getTransmitter(), data);
-        data.add(getTransmitter().transit.indexOf(stack));
 
         return data;
     }
 
-    public TileNetworkList makeBatchPacket(Set<TransporterStack> updates, Set<TransporterStack> deletes) {
+    public TileNetworkList makeBatchPacket(Set<TransporterStack> updates, Set<Integer> deletes) {
         TileNetworkList data = new TileNetworkList();
 
         if (Mekanism.hooks.MCMPLoaded) {
@@ -267,16 +274,14 @@ public class TileEntityLogisticalTransporter extends TileEntityTransmitter<TileE
 
         data.add(BATCH_PACKET);
 
-        // Do updates first, so that any deletions will be for the correct indicies
         data.add(updates.size());
         for (TransporterStack s : updates) {
             s.write(getTransmitter(), data);
-            data.add(getTransmitter().transit.indexOf(s));
         }
 
         data.add(deletes.size());
-        for (TransporterStack s : deletes) {
-            data.add(getTransmitter().transit.indexOf(s));
+        for (Integer id : deletes) {
+            data.add(id);
         }
 
         return data;
@@ -290,7 +295,7 @@ public class TileEntityLogisticalTransporter extends TileEntityTransmitter<TileE
             stack.progress = 5;
         }
 
-        getTransmitter().transit.replace(dataStream.readInt(), stack);
+        getTransmitter().updateStack(stack);
     }
 
 
@@ -311,8 +316,7 @@ public class TileEntityLogisticalTransporter extends TileEntityTransmitter<TileE
 
             for (int i = 0; i < tagList.tagCount(); i++) {
                 TransporterStack stack = TransporterStack.readFromNBT(tagList.getCompoundTagAt(i));
-
-                getTransmitter().transit.add(stack);
+                getTransmitter().updateStack(stack);
             }
         }
     }
@@ -330,7 +334,7 @@ public class TileEntityLogisticalTransporter extends TileEntityTransmitter<TileE
 
         NBTTagList stacks = new NBTTagList();
 
-        for (TransporterStack stack : getTransmitter().transit) {
+        for (TransporterStack stack : getTransmitter().getTransit()) {
             NBTTagCompound tagCompound = new NBTTagCompound();
             stack.write(tagCompound);
             stacks.appendTag(tagCompound);
@@ -396,7 +400,7 @@ public class TileEntityLogisticalTransporter extends TileEntityTransmitter<TileE
         super.onChunkUnload();
 
         if (!getWorld().isRemote) {
-            for (TransporterStack stack : getTransmitter().transit) {
+            for (TransporterStack stack : getTransmitter().getTransit()) {
                 TransporterUtils.drop(getTransmitter(), stack);
             }
         }

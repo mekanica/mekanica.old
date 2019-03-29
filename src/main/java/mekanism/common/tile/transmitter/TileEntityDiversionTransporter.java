@@ -86,7 +86,7 @@ public class TileEntityDiversionTransporter extends TileEntityLogisticalTranspor
     }
 
     @Override
-    public TileNetworkList makeBatchPacket(Set<TransporterStack> updates, Set<TransporterStack> deletes) {
+    public TileNetworkList makeBatchPacket(Set<TransporterStack> updates, Set<Integer> deletes) {
         return addModes(super.makeBatchPacket(updates, deletes));
     }
 

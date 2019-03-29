@@ -1,6 +1,11 @@
 package mekanism.common.transmitters;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import mekanism.api.Coord4D;
 import mekanism.api.EnumColor;
@@ -28,7 +33,9 @@ import net.minecraft.util.EnumFacing;
 
 public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwork> implements ILogisticalTransporter {
 
-    public HashList<TransporterStack> transit = new HashList<>();
+    private Map<Integer, TransporterStack> transit = new HashMap<>();
+
+    private int nextId = 0;
 
     public EnumColor color;
 
@@ -38,33 +45,58 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
         super(multiPart);
     }
 
+    public Collection<TransporterStack> getTransit() {
+        return Collections.unmodifiableCollection(transit.values());
+    }
+
+    public int getNextId() {
+        return nextId;
+    }
+
+    public void deleteStack(int id) {
+        if (!transit.containsKey(id)) {
+            Mekanism.logger.info("Tried to delete stack that doesn't exist: {}", id);
+        }
+        transit.remove(id);
+    }
+
+    public void updateStack(TransporterStack s) {
+        transit.put(s.getId(), s);
+    }
+
+    public void resetTransit(List<TransporterStack> stacks, int nextId) {
+        transit.clear();
+        for (TransporterStack s: stacks) {
+            transit.put(s.getId(), s);
+        }
+        this.nextId = nextId;
+    }
+
     public void update() {
         if (world().isRemote) {
-            for (TransporterStack stack : transit) {
-                if (stack != null) {
-                    stack.progress = Math.min(100, stack.progress + getTileEntity().tier.speed);
-                }
+            for (TransporterStack stack : transit.values()) {
+                stack.progress = Math.min(100, stack.progress + getTileEntity().tier.speed);
             }
         } else {
             if (getTransmitterNetwork() == null) {
                 return;
             }
 
-            Set<TransporterStack> deletes = new HashSet<>();
+            Set<Integer> deletes = new HashSet<>();
 
             getTileEntity().pullItems();
 
-            for (TransporterStack stack : transit) {
+            for (TransporterStack stack : transit.values()) {
                 if (!stack.initiatedPath) {
                     if (stack.itemStack.isEmpty() || !recalculate(stack, null)) {
-                        deletes.add(stack);
+                        deletes.add(stack.getId());
                         continue;
                     }
                 }
 
                 stack.progress += getTileEntity().tier.speed;
 
-                if (stack.progress > 100) {
+                if (stack.progress >= 100) {
                     Coord4D prevSet = null;
 
                     if (stack.hasPath()) {
@@ -72,7 +104,7 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
 
                         if (currentIndex == 0) //Necessary for transition reasons, not sure why
                         {
-                            deletes.add(stack);
+                            deletes.add(stack.getId());
                             continue;
                         }
 
@@ -85,7 +117,7 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
                                       .getCapability(next.getTileEntity(world()),
                                             Capabilities.LOGISTICAL_TRANSPORTER_CAPABILITY, null);
                                 nextTile.entityEntering(stack, stack.progress % 100);
-                                deletes.add(stack);
+                                deletes.add(stack.getId());
 
                                 continue;
                             } else if (next != null) {
@@ -103,7 +135,7 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
 
                                     if (response.getRejected(stack.itemStack).isEmpty()) {
                                         TransporterManager.remove(stack);
-                                        deletes.add(stack);
+                                        deletes.add(stack.getId());
                                         continue;
                                     } else {
                                         needsSync.add(stack);
@@ -117,7 +149,7 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
                     }
 
                     if (!recalculate(stack, prevSet)) {
-                        deletes.add(stack);
+                        deletes.add(stack.getId());
                         continue;
                     } else {
                         if (prevSet != null) {
@@ -132,19 +164,19 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
                               .canInsert(stack.getDest().getTileEntity(world()), stack.color, stack.itemStack,
                                     stack.getSide(this), false))) {
                             if (!recalculate(stack, null)) {
-                                deletes.add(stack);
+                                deletes.add(stack.getId());
                                 continue;
                             }
                         } else if (stack.pathType == Path.HOME && (!checkSideForInsert(stack) || !InventoryUtils
                               .canInsert(stack.getDest().getTileEntity(world()), stack.color, stack.itemStack,
                                     stack.getSide(this), true))) {
                             if (!recalculate(stack, null)) {
-                                deletes.add(stack);
+                                deletes.add(stack.getId());
                                 continue;
                             }
                         } else if (stack.pathType == Path.NONE) {
                             if (!recalculate(stack, null)) {
-                                deletes.add(stack);
+                                deletes.add(stack.getId());
                                 continue;
                             }
                         }
@@ -158,7 +190,7 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
 
                         if (recalculate) {
                             if (!recalculate(stack, null)) {
-                                deletes.add(stack);
+                                deletes.add(stack.getId());
                                 continue;
                             }
                         }
@@ -170,15 +202,15 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
             // TODO: Verify that there's no case where we want a sync update before removal; in my testing
             // this had a surprising impact on overall efficiency, which suggests we're adding lots
             // of packets to needSync that isn't strictly necessary
-            needsSync.removeIf(s -> deletes.contains(s));
+            needsSync.removeIf(s -> deletes.contains(s.getId()));
 
             if (deletes.size() > 0 || needsSync.size() > 0) {
                 // Construct the message first; this way our indices are in sync with client
                 TileEntityMessage msg = new TileEntityMessage(coord(), getTileEntity().makeBatchPacket(needsSync, deletes));
 
                 // Now remove any entries from transit that have been deleted
-                for (TransporterStack stack : deletes) {
-                    transit.remove(stack);
+                for (Integer id : deletes) {
+                    transit.remove(id);
                 }
 
                 // Clear the pending sync packets
@@ -233,7 +265,7 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
           int min, boolean force) {
         EnumFacing from = coord().sideDifference(original).getOpposite();
 
-        TransporterStack stack = new TransporterStack();
+        TransporterStack stack = new TransporterStack(nextId++);
         stack.originalLocation = original;
         stack.homeLocation = original;
         stack.color = color;
@@ -249,7 +281,7 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
             stack.itemStack = response.getStack();
 
             if (doEmit) {
-                transit.add(stack);
+                transit.put(stack.getId(), stack);
                 Mekanism.packetHandler
                       .sendToReceivers(new TileEntityMessage(coord(), getTileEntity().makeSyncPacket(stack)),
                             new Range4D(coord()));
@@ -267,7 +299,7 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
           boolean doEmit, int min) {
         EnumFacing from = coord().sideDifference(Coord4D.get(outputter)).getOpposite();
 
-        TransporterStack stack = new TransporterStack();
+        TransporterStack stack = new TransporterStack(nextId++);
         stack.originalLocation = Coord4D.get(outputter);
         stack.homeLocation = Coord4D.get(outputter);
         stack.color = color;
@@ -282,7 +314,7 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
             stack.itemStack = response.getStack();
 
             if (doEmit) {
-                transit.add(stack);
+                transit.put(stack.getId(), stack);
                 Mekanism.packetHandler
                       .sendToReceivers(new TileEntityMessage(coord(), getTileEntity().makeSyncPacket(stack)),
                             new Range4D(coord()));
@@ -304,7 +336,8 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
         // of bandwidth in a busy server, so by adding to needsSync, the sync will happen
         // in a batch on a per-tick basis.
         stack.progress = progress;
-        transit.add(stack);
+        stack.setId(nextId++);
+        transit.put(stack.getId(), stack);
         needsSync.add(stack);
 
         // N.B. We are not marking the chunk as dirty here! I don't believe it's needed, since

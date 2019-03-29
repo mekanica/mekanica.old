@@ -64,7 +64,7 @@ public final class InventoryUtils {
             return ((TileEntityLogisticalSorter) tile).sendHome(request.getSingleStack());
         }
 
-        for (Map.Entry<HashedItem, Pair<Integer, Map<Integer, Integer>>> requestEntry : request.itemMap.entrySet()) {
+        for (Map.Entry<HashedItem, Pair<Integer, Map<Integer, Integer>>> requestEntry : request.getItemMap().entrySet()) {
             ItemStack origInsert = StackUtils.size(requestEntry.getKey().getStack(), requestEntry.getValue().getLeft());
             ItemStack toInsert = origInsert.copy();
 

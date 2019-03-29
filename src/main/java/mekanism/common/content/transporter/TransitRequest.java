@@ -19,7 +19,7 @@ public class TransitRequest {
      * Complicated map- associates item types with both total available item count and slot IDs and
      * available item amounts for each slot.
      */
-    public Map<HashedItem, Pair<Integer, Map<Integer, Integer>>> itemMap = new HashMap<>();
+    private Map<HashedItem, Pair<Integer, Map<Integer, Integer>>> itemMap = new HashMap<>();
 
     public static TransitRequest getFromTransport(TransporterStack stack) {
         return getFromStack(stack.itemStack);
@@ -49,20 +49,22 @@ public class TransitRequest {
         if (InventoryUtils.isItemHandler(tile, side.getOpposite())) {
             IItemHandler inventory = InventoryUtils.getItemHandler(tile, side.getOpposite());
 
+            // count backwards- we start from the bottom of the inventory and go back for consistency
             for (int i = inventory.getSlots() - 1; i >= 0; i--) {
                 ItemStack stack = inventory.extractItem(i, amount, true);
 
                 if (!stack.isEmpty() && finder.modifies(stack)) {
                     HashedItem hashed = new HashedItem(stack);
-                    int toUse = itemCountMap.containsKey(hashed)
-                            ? Math.min(stack.getCount(), amount - itemCountMap.get(hashed))
+                    int currentCount = itemCountMap.getOrDefault(hashed, -1);
+                    int toUse = currentCount != -1
+                            ? Math.min(stack.getCount(), amount - currentCount)
                             : stack.getCount();
                     if (toUse == 0)
                         continue; // continue if we don't need anymore of this item type
                     ret.addItem(StackUtils.size(stack, toUse), i);
 
-                    if (itemCountMap.containsKey(hashed)) {
-                        itemCountMap.put(hashed, itemCountMap.get(hashed) + toUse);
+                    if (currentCount != -1) {
+                        itemCountMap.put(hashed, currentCount + toUse);
                     } else {
                         itemCountMap.put(hashed, toUse);
                     }
@@ -71,6 +73,10 @@ public class TransitRequest {
         }
 
         return ret;
+    }
+    
+    public Map<HashedItem, Pair<Integer, Map<Integer, Integer>>> getItemMap() {
+        return itemMap;
     }
 
     public boolean isEmpty() {
@@ -117,8 +123,8 @@ public class TransitRequest {
 
         public static final TransitResponse EMPTY = new TransitResponse();
 
-        /** slot ID to ItemStack map - this details how many items we will be pulling from each slot */
-        private Map<Integer, ItemStack> idMap = new HashMap<>();
+        /** slot ID to item count map - this details how many items we will be pulling from each slot */
+        private Map<Integer, Integer> idMap = new HashMap<>();
         private ItemStack toSend;
 
         private TransitResponse() {}
@@ -130,7 +136,7 @@ public class TransitRequest {
             int amount = toSend.getCount();
             for (Map.Entry<Integer, Integer> entry : slots.entrySet()) {
                 int toUse = Math.min(amount, entry.getValue());
-                idMap.put(entry.getKey(), StackUtils.size(toSend, toUse));
+                idMap.put(entry.getKey(), toUse);
                 amount -= toUse;
                 if (amount == 0)
                     break;
@@ -142,7 +148,7 @@ public class TransitRequest {
         }
 
         public boolean isEmpty() {
-            return idMap.isEmpty() || (toSend != null && toSend.isEmpty());
+            return this == EMPTY || idMap.isEmpty() || (toSend != null && toSend.isEmpty());
         }
 
         public ItemStack getRejected(ItemStack orig) {
@@ -150,7 +156,7 @@ public class TransitRequest {
         }
 
         public InvStack getInvStack(TileEntity tile, EnumFacing side) {
-            return new InvStack(tile, idMap, side);
+            return new InvStack(tile, toSend, idMap, side);
         }
     }
 
@@ -192,9 +198,9 @@ public class TransitRequest {
         private int initHashCode() {
             int code = 1;
             code = 31 * code + itemStack.getItem().hashCode();
-            code = 31 * code + itemStack.getItemDamage();
             if (itemStack.hasTagCompound())
                 code = 31 * code + itemStack.getTagCompound().hashCode();
+            code = 31 * code + itemStack.getItemDamage();
             return code;
         }
     }

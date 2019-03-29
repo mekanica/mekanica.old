@@ -184,7 +184,7 @@ public class TransporterManager {
         // Now for each of the items in the request, simulate the insert, using the state from all the in-flight
         // items to ensure we have an accurate model of what will happen in future. We try each stack in the
         // request; it might be possible to not send the first item, but the second could work, etc.
-        for (Map.Entry<HashedItem, Pair<Integer, Map<Integer, Integer>>> requestEntry : request.itemMap.entrySet()) {
+        for (Map.Entry<HashedItem, Pair<Integer, Map<Integer, Integer>>> requestEntry : request.getItemMap().entrySet()) {
             // Create a sending ItemStack with the hashed item type and total item count within the request
             ItemStack toSend = StackUtils.size(requestEntry.getKey().getStack(), requestEntry.getValue().getLeft());
             ItemStack leftovers = simulateInsert(handler, invCopy, side, toSend.copy());

@@ -44,7 +44,7 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
 
     private EnumColor color;
 
-    public Map<Integer, TransporterStack> needsSync = new HashMap<>();
+    private Map<Integer, TransporterStack> needsSync = new HashMap<>();
 
     public TransporterImpl(TileEntityLogisticalTransporter multiPart) {
         super(multiPart);
@@ -217,20 +217,17 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
                 }
             }
 
-            // Remove any packets from needsSync that are also queued up for removal
-            // TODO: Verify that there's no case where we want a sync update before removal; in my testing
-            // this had a surprising impact on overall efficiency, which suggests we're adding lots
-            // of packets to needSync that isn't strictly necessary
+            // Remove any packets from needsSync that are also queued up for removal; there tends to be a large
+            // overlap between updates and deletes. This suggests that we are being too aggressive on adding
+            // to needsSync
+            // TODO: Investigate why the overlap is so large
             deletes.stream().forEach(id -> needsSync.remove(id));
 
             if (deletes.size() > 0 || needsSync.size() > 0) {
-                // Construct the message first; this way our indices are in sync with client
                 TileEntityMessage msg = new TileEntityMessage(coord(), getTileEntity().makeBatchPacket(needsSync, deletes));
 
                 // Now remove any entries from transit that have been deleted
-                for (Integer id : deletes) {
-                    transit.remove(id);
-                }
+                deletes.stream().forEach(id -> transit.remove(id));
 
                 // Clear the pending sync packets
                 needsSync.clear();

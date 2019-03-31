@@ -143,33 +143,33 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
                                 ILogisticalTransporter nextTile = CapabilityUtils
                                       .getCapability(next.getTileEntity(world()),
                                             Capabilities.LOGISTICAL_TRANSPORTER_CAPABILITY, null);
-                                nextTile.entityEntering(stack, stack.progress % 100);
+                                if (nextTile != null) {
+                                    nextTile.entityEntering(stack, stack.progress % 100);
+                                }
                                 deletes.add(stackId);
 
                                 continue;
                             } else if (next != null) {
                                 prevSet = next;
                             }
-                        } else {
-                            if (stack.pathType != Path.NONE) {
-                                TileEntity tile = next.getTileEntity(world());
+                        } else if (stack.pathType != Path.NONE) {
+                            TileEntity tile = next.getTileEntity(world());
 
-                                if (tile != null) {
-                                    TransitResponse response = InventoryUtils
-                                          .putStackInInventory(tile, TransitRequest.getFromTransport(stack),
-                                                stack.getSide(this), stack.pathType == Path.HOME);
+                            if (tile != null) {
+                                TransitResponse response = InventoryUtils
+                                      .putStackInInventory(tile, TransitRequest.getFromTransport(stack),
+                                            stack.getSide(this), stack.pathType == Path.HOME);
 
-                                    if (response.getRejected(stack.itemStack).isEmpty()) {
-                                        TransporterManager.remove(stack);
-                                        deletes.add(stackId);
-                                        continue;
-                                    } else {
-                                        //Don't add it ot needsSync here because it will be added in the below
-                                        // recalculate statement and then added or added to deletes
-                                        stack.itemStack = response.getRejected(stack.itemStack);
+                                if (response.getRejected(stack.itemStack).isEmpty()) {
+                                    TransporterManager.remove(stack);
+                                    deletes.add(stackId);
+                                    continue;
+                                } else {
+                                    //Don't add it ot needsSync here because it will be added in the below
+                                    // recalculate statement and then added or added to deletes
+                                    stack.itemStack = response.getRejected(stack.itemStack);
 
-                                        prevSet = next;
-                                    }
+                                    prevSet = next;
                                 }
                             }
                         }
@@ -331,7 +331,7 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
         int stackId = nextId++;
         stack.progress = progress;
         transit.put(stackId, stack);
-        //Don't add to needsSync as the only place this gets called immediately adds it to deletes afterwards
+        needsSync.put(stackId, stack);
 
         // N.B. We are not marking the chunk as dirty here! I don't believe it's needed, since
         // the next tick will generate the necessary save and if we crash before the next tick,

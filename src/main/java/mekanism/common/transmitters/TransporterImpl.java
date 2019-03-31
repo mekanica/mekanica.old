@@ -1,5 +1,7 @@
 package mekanism.common.transmitters;
 
+import io.netty.buffer.ByteBuf;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,8 +30,11 @@ import mekanism.common.util.CapabilityUtils;
 import mekanism.common.util.InventoryUtils;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.TransporterUtils;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.util.Constants.NBT;
 
 public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwork> implements ILogisticalTransporter {
 
@@ -37,9 +42,9 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
 
     private int nextId = 0;
 
-    public EnumColor color;
+    private EnumColor color;
 
-    public Set<TransporterStack> needsSync = new HashSet<>();
+    public Map<Integer, TransporterStack> needsSync = new HashMap<>();
 
     public TransporterImpl(TileEntityLogisticalTransporter multiPart) {
         super(multiPart);
@@ -49,27 +54,38 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
         return Collections.unmodifiableCollection(transit.values());
     }
 
-    public int getNextId() {
-        return nextId;
-    }
-
     public void deleteStack(int id) {
-        if (!transit.containsKey(id)) {
-            Mekanism.logger.info("Tried to delete stack that doesn't exist: {}", id);
-        }
         transit.remove(id);
     }
 
-    public void updateStack(TransporterStack s) {
-        transit.put(s.getId(), s);
+    public void addStack(int id, TransporterStack s) {
+        transit.put(id, s);
     }
 
-    public void resetTransit(List<TransporterStack> stacks, int nextId) {
+    public void readFromPacket(ByteBuf dataStream) {
         transit.clear();
-        for (TransporterStack s: stacks) {
-            transit.put(s.getId(), s);
+
+        int count = dataStream.readInt();
+        for (int i = 0; i < count; i++) {
+            int id = dataStream.readInt();
+            TransporterStack s = TransporterStack.readFromPacket(dataStream);
+            transit.put(id, s);
         }
-        this.nextId = nextId;
+    }
+
+    public void readFromNBT(NBTTagCompound nbtTags){
+        if (nbtTags.hasKey("color")) {
+            setColor(TransporterUtils.colors.get(nbtTags.getInteger("color")));
+        }
+
+        if (nbtTags.hasKey("stacks")) {
+            NBTTagList tagList = nbtTags.getTagList("stacks", NBT.TAG_COMPOUND);
+
+            for (int i = 0; i < tagList.tagCount(); i++) {
+                TransporterStack stack = TransporterStack.readFromNBT(tagList.getCompoundTagAt(i));
+                transit.put(nextId++, stack);
+            }
+        }
     }
 
     public void update() {
@@ -86,10 +102,13 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
 
             getTileEntity().pullItems();
 
-            for (TransporterStack stack : transit.values()) {
+            for (Map.Entry<Integer, TransporterStack> entry : transit.entrySet()) {
+                int stackId = entry.getKey();
+                TransporterStack stack = entry.getValue();
+
                 if (!stack.initiatedPath) {
-                    if (stack.itemStack.isEmpty() || !recalculate(stack, null)) {
-                        deletes.add(stack.getId());
+                    if (stack.itemStack.isEmpty() || !recalculate(stackId, stack, null)) {
+                        deletes.add(stackId);
                         continue;
                     }
                 }
@@ -104,7 +123,7 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
 
                         if (currentIndex == 0) //Necessary for transition reasons, not sure why
                         {
-                            deletes.add(stack.getId());
+                            deletes.add(stackId);
                             continue;
                         }
 
@@ -117,7 +136,7 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
                                       .getCapability(next.getTileEntity(world()),
                                             Capabilities.LOGISTICAL_TRANSPORTER_CAPABILITY, null);
                                 nextTile.entityEntering(stack, stack.progress % 100);
-                                deletes.add(stack.getId());
+                                deletes.add(stackId);
 
                                 continue;
                             } else if (next != null) {
@@ -128,17 +147,17 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
                                 TileEntity tile = next.getTileEntity(world());
 
                                 if (tile != null) {
-                                    needsSync.add(stack);
+                                    needsSync.put(stackId, stack);
                                     TransitResponse response = InventoryUtils
                                           .putStackInInventory(tile, TransitRequest.getFromTransport(stack),
                                                 stack.getSide(this), stack.pathType == Path.HOME);
 
                                     if (response.getRejected(stack.itemStack).isEmpty()) {
                                         TransporterManager.remove(stack);
-                                        deletes.add(stack.getId());
+                                        deletes.add(stackId);
                                         continue;
                                     } else {
-                                        needsSync.add(stack);
+                                        needsSync.put(stackId, stack);
                                         stack.itemStack = response.getRejected(stack.itemStack);
 
                                         prevSet = next;
@@ -148,8 +167,8 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
                         }
                     }
 
-                    if (!recalculate(stack, prevSet)) {
-                        deletes.add(stack.getId());
+                    if (!recalculate(stackId, stack, prevSet)) {
+                        deletes.add(stackId);
                         continue;
                     } else {
                         if (prevSet != null) {
@@ -163,20 +182,20 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
                         if (stack.pathType == Path.DEST && (!checkSideForInsert(stack) || !InventoryUtils
                               .canInsert(stack.getDest().getTileEntity(world()), stack.color, stack.itemStack,
                                     stack.getSide(this), false))) {
-                            if (!recalculate(stack, null)) {
-                                deletes.add(stack.getId());
+                            if (!recalculate(stackId, stack, null)) {
+                                deletes.add(stackId);
                                 continue;
                             }
                         } else if (stack.pathType == Path.HOME && (!checkSideForInsert(stack) || !InventoryUtils
                               .canInsert(stack.getDest().getTileEntity(world()), stack.color, stack.itemStack,
                                     stack.getSide(this), true))) {
-                            if (!recalculate(stack, null)) {
-                                deletes.add(stack.getId());
+                            if (!recalculate(stackId, stack, null)) {
+                                deletes.add(stackId);
                                 continue;
                             }
                         } else if (stack.pathType == Path.NONE) {
-                            if (!recalculate(stack, null)) {
-                                deletes.add(stack.getId());
+                            if (!recalculate(stackId, stack, null)) {
+                                deletes.add(stackId);
                                 continue;
                             }
                         }
@@ -189,8 +208,8 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
                         }
 
                         if (recalculate) {
-                            if (!recalculate(stack, null)) {
-                                deletes.add(stack.getId());
+                            if (!recalculate(stackId, stack, null)) {
+                                deletes.add(stackId);
                                 continue;
                             }
                         }
@@ -202,7 +221,7 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
             // TODO: Verify that there's no case where we want a sync update before removal; in my testing
             // this had a surprising impact on overall efficiency, which suggests we're adding lots
             // of packets to needSync that isn't strictly necessary
-            needsSync.removeIf(s -> deletes.contains(s.getId()));
+            deletes.stream().forEach(id -> needsSync.remove(id));
 
             if (deletes.size() > 0 || needsSync.size() > 0) {
                 // Construct the message first; this way our indices are in sync with client
@@ -230,8 +249,8 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
               || getTileEntity().getConnectionType(side) == ConnectionType.PUSH;
     }
 
-    private boolean recalculate(TransporterStack stack, Coord4D from) {
-        needsSync.add(stack);
+    private boolean recalculate(int stackId, TransporterStack stack, Coord4D from) {
+        needsSync.put(stackId, stack);
 
         if (stack.pathType != Path.NONE) {
             TransitResponse ret = stack.recalculatePath(TransitRequest.getFromTransport(stack), this, 0);
@@ -265,7 +284,7 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
           int min, boolean force) {
         EnumFacing from = coord().sideDifference(original).getOpposite();
 
-        TransporterStack stack = new TransporterStack(nextId++);
+        TransporterStack stack = new TransporterStack();
         stack.originalLocation = original;
         stack.homeLocation = original;
         stack.color = color;
@@ -281,9 +300,10 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
             stack.itemStack = response.getStack();
 
             if (doEmit) {
-                transit.put(stack.getId(), stack);
+                int stackId = nextId++;
+                transit.put(stackId, stack);
                 Mekanism.packetHandler
-                      .sendToReceivers(new TileEntityMessage(coord(), getTileEntity().makeSyncPacket(stack)),
+                      .sendToReceivers(new TileEntityMessage(coord(), getTileEntity().makeSyncPacket(stackId, stack)),
                             new Range4D(coord()));
                 MekanismUtils.saveChunk(getTileEntity());
             }
@@ -299,7 +319,7 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
           boolean doEmit, int min) {
         EnumFacing from = coord().sideDifference(Coord4D.get(outputter)).getOpposite();
 
-        TransporterStack stack = new TransporterStack(nextId++);
+        TransporterStack stack = new TransporterStack();
         stack.originalLocation = Coord4D.get(outputter);
         stack.homeLocation = Coord4D.get(outputter);
         stack.color = color;
@@ -314,9 +334,10 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
             stack.itemStack = response.getStack();
 
             if (doEmit) {
-                transit.put(stack.getId(), stack);
+                int stackId = nextId++;
+                transit.put(stackId, stack);
                 Mekanism.packetHandler
-                      .sendToReceivers(new TileEntityMessage(coord(), getTileEntity().makeSyncPacket(stack)),
+                      .sendToReceivers(new TileEntityMessage(coord(), getTileEntity().makeSyncPacket(stackId, stack)),
                             new Range4D(coord()));
                 MekanismUtils.saveChunk(getTileEntity());
             }
@@ -335,10 +356,10 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
         // This code used to generate a sync message at this point, but that was a LOT
         // of bandwidth in a busy server, so by adding to needsSync, the sync will happen
         // in a batch on a per-tick basis.
+        int stackId = nextId++;
         stack.progress = progress;
-        stack.setId(nextId++);
-        transit.put(stack.getId(), stack);
-        needsSync.add(stack);
+        transit.put(stackId, stack);
+        needsSync.put(stackId, stack);
 
         // N.B. We are not marking the chunk as dirty here! I don't believe it's needed, since
         // the next tick will generate the necessary save and if we crash before the next tick,

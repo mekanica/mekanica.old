@@ -38,7 +38,7 @@ public class TransporterStack {
     public Path pathType;
     private List<Coord4D> pathToTarget = new ArrayList<>();
 
-    protected TransporterStack() {}
+    public TransporterStack() {}
 
     public static TransporterStack readFromNBT(NBTTagCompound nbtTags) {
         TransporterStack stack = new TransporterStack();

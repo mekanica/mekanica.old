@@ -4,6 +4,8 @@ import io.netty.buffer.ByteBuf;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import javax.annotation.Nonnull;
 import mekanism.api.Coord4D;
@@ -198,15 +200,7 @@ public class TileEntityLogisticalTransporter extends TileEntityTransmitter<TileE
                     MekanismUtils.updateBlock(world, pos);
                 }
 
-                // Load all the stacks currently in transit into a list; we then hand
-                // this list off to the TransporterImpl
-                List<TransporterStack> stacks = new ArrayList<>();
-                int count = dataStream.readInt();
-                for (int i = 0; i < count; i++) {
-                    stacks.add(TransporterStack.readFromPacket(dataStream));
-                }
-
-                getTransmitter().resetTransit(stacks, dataStream.readInt());
+                getTransmitter().readFromPacket(dataStream);
 
             } else if (type == SYNC_PACKET) {
                 readStack(dataStream);
@@ -246,13 +240,10 @@ public class TileEntityLogisticalTransporter extends TileEntityTransmitter<TileE
             stack.write(getTransmitter(), data);
         }
 
-        // Append the next ID
-        data.add(getTransmitter().getNextId());
-
         return data;
     }
 
-    public TileNetworkList makeSyncPacket(TransporterStack stack) {
+    public TileNetworkList makeSyncPacket(int stackId, TransporterStack stack) {
         TileNetworkList data = new TileNetworkList();
 
         if (Mekanism.hooks.MCMPLoaded) {
@@ -260,12 +251,13 @@ public class TileEntityLogisticalTransporter extends TileEntityTransmitter<TileE
         }
 
         data.add(SYNC_PACKET);
+        data.add(stackId);
         stack.write(getTransmitter(), data);
 
         return data;
     }
 
-    public TileNetworkList makeBatchPacket(Set<TransporterStack> updates, Set<Integer> deletes) {
+    public TileNetworkList makeBatchPacket(Map<Integer, TransporterStack> updates, Set<Integer> deletes) {
         TileNetworkList data = new TileNetworkList();
 
         if (Mekanism.hooks.MCMPLoaded) {
@@ -275,8 +267,9 @@ public class TileEntityLogisticalTransporter extends TileEntityTransmitter<TileE
         data.add(BATCH_PACKET);
 
         data.add(updates.size());
-        for (TransporterStack s : updates) {
-            s.write(getTransmitter(), data);
+        for (Entry<Integer, TransporterStack> entry : updates.entrySet()) {
+            data.add(entry.getKey());
+            entry.getValue().write(getTransmitter(), data);
         }
 
         data.add(deletes.size());
@@ -289,13 +282,14 @@ public class TileEntityLogisticalTransporter extends TileEntityTransmitter<TileE
 
 
     private void readStack(ByteBuf dataStream) {
+        int id = dataStream.readInt();
         TransporterStack stack = TransporterStack.readFromPacket(dataStream);
 
         if (stack.progress == 0) {
             stack.progress = 5;
         }
 
-        getTransmitter().updateStack(stack);
+        getTransmitter().addStack(id, stack);
     }
 
 
@@ -307,18 +301,7 @@ public class TileEntityLogisticalTransporter extends TileEntityTransmitter<TileE
             tier = TransporterTier.values()[nbtTags.getInteger("tier")];
         }
 
-        if (nbtTags.hasKey("color")) {
-            getTransmitter().setColor(TransporterUtils.colors.get(nbtTags.getInteger("color")));
-        }
-
-        if (nbtTags.hasKey("stacks")) {
-            NBTTagList tagList = nbtTags.getTagList("stacks", NBT.TAG_COMPOUND);
-
-            for (int i = 0; i < tagList.tagCount(); i++) {
-                TransporterStack stack = TransporterStack.readFromNBT(tagList.getCompoundTagAt(i));
-                getTransmitter().updateStack(stack);
-            }
-        }
+        getTransmitter().readFromNBT(nbtTags);
     }
 
     @Nonnull

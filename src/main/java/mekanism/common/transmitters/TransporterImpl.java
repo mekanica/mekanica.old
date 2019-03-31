@@ -1,18 +1,15 @@
 package mekanism.common.transmitters;
 
 import io.netty.buffer.ByteBuf;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import mekanism.api.Coord4D;
 import mekanism.api.EnumColor;
 import mekanism.api.Range4D;
-import mekanism.common.HashList;
 import mekanism.common.Mekanism;
 import mekanism.common.base.ILogisticalTransporter;
 import mekanism.common.capabilities.Capabilities;
@@ -217,17 +214,14 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
                 }
             }
 
-            // Remove any packets from needsSync that are also queued up for removal; there tends to be a large
-            // overlap between updates and deletes. This suggests that we are being too aggressive on adding
-            // to needsSync
-            // TODO: Investigate why the overlap is so large
-            deletes.stream().forEach(id -> needsSync.remove(id));
-
             if (deletes.size() > 0 || needsSync.size() > 0) {
+                // TODO: Rework above so that we are guaranteed that there is no overlap between deletes/needsSync
+                deletes.forEach(id -> needsSync.remove(id));
+
                 TileEntityMessage msg = new TileEntityMessage(coord(), getTileEntity().makeBatchPacket(needsSync, deletes));
 
                 // Now remove any entries from transit that have been deleted
-                deletes.stream().forEach(id -> transit.remove(id));
+                deletes.forEach(id -> transit.remove(id));
 
                 // Clear the pending sync packets
                 needsSync.clear();

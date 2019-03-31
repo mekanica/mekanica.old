@@ -1,9 +1,7 @@
 package mekanism.common.tile.transmitter;
 
 import io.netty.buffer.ByteBuf;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -11,13 +9,13 @@ import javax.annotation.Nonnull;
 import mekanism.api.Coord4D;
 import mekanism.api.EnumColor;
 import mekanism.api.Range4D;
+import mekanism.api.TileNetworkList;
 import mekanism.api.transmitters.TransmissionType;
 import mekanism.common.Mekanism;
 import mekanism.common.Tier;
 import mekanism.common.Tier.BaseTier;
 import mekanism.common.Tier.TransporterTier;
 import mekanism.common.base.ILogisticalTransporter;
-import mekanism.api.TileNetworkList;
 import mekanism.common.block.property.PropertyColor;
 import mekanism.common.block.states.BlockStateTransmitter.TransmitterType;
 import mekanism.common.capabilities.Capabilities;
@@ -43,7 +41,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.property.IExtendedBlockState;
-import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 public class TileEntityLogisticalTransporter extends TileEntityTransmitter<TileEntity, InventoryNetwork> {
@@ -273,9 +270,7 @@ public class TileEntityLogisticalTransporter extends TileEntityTransmitter<TileE
         }
 
         data.add(deletes.size());
-        for (Integer id : deletes) {
-            data.add(id);
-        }
+        data.addAll(deletes);
 
         return data;
     }

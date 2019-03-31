@@ -231,11 +231,7 @@ public class TileEntityLogisticalTransporter extends TileEntityTransmitter<TileE
         }
 
         // Serialize all the in-flight stacks (this includes their ID)
-        Collection<TransporterStack> stacks = getTransmitter().getTransit();
-        data.add(stacks.size());
-        for (TransporterStack stack : stacks) {
-            stack.write(getTransmitter(), data);
-        }
+        getTransmitter().writeToPacket(data);
 
         return data;
     }

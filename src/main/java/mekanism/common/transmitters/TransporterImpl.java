@@ -6,10 +6,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import javax.annotation.Nonnull;
 import mekanism.api.Coord4D;
 import mekanism.api.EnumColor;
 import mekanism.api.Range4D;
+import mekanism.api.TileNetworkList;
 import mekanism.common.Mekanism;
 import mekanism.common.base.ILogisticalTransporter;
 import mekanism.common.capabilities.Capabilities;
@@ -59,6 +62,14 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
         transit.put(id, s);
     }
 
+    public void writeToPacket(TileNetworkList data) {
+        data.add(transit.size());
+        for (Entry<Integer, TransporterStack> entry : transit.entrySet()) {
+            data.add(entry.getKey());
+            entry.getValue().write(this, data);
+        }
+    }
+
     public void readFromPacket(ByteBuf dataStream) {
         transit.clear();
 
@@ -70,7 +81,7 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
         }
     }
 
-    public void readFromNBT(NBTTagCompound nbtTags){
+    public void readFromNBT(NBTTagCompound nbtTags) {
         if (nbtTags.hasKey("color")) {
             setColor(TransporterUtils.colors.get(nbtTags.getInteger("color")));
         }
@@ -144,7 +155,6 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
                                 TileEntity tile = next.getTileEntity(world());
 
                                 if (tile != null) {
-                                    needsSync.put(stackId, stack);
                                     TransitResponse response = InventoryUtils
                                           .putStackInInventory(tile, TransitRequest.getFromTransport(stack),
                                                 stack.getSide(this), stack.pathType == Path.HOME);
@@ -154,7 +164,8 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
                                         deletes.add(stackId);
                                         continue;
                                     } else {
-                                        needsSync.put(stackId, stack);
+                                        //Don't add it ot needsSync here because it will be added in the below
+                                        // recalculate statement and then added or added to deletes
                                         stack.itemStack = response.getRejected(stack.itemStack);
 
                                         prevSet = next;
@@ -166,48 +177,24 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
 
                     if (!recalculate(stackId, stack, prevSet)) {
                         deletes.add(stackId);
-                        continue;
+                    } else if (prevSet != null) {
+                        stack.progress = 0;
                     } else {
-                        if (prevSet != null) {
-                            stack.progress = 0;
-                        } else {
-                            stack.progress = 50;
-                        }
+                        stack.progress = 50;
                     }
                 } else if (stack.progress == 50) {
                     if (stack.isFinal(this)) {
-                        if (stack.pathType == Path.DEST && (!checkSideForInsert(stack) || !InventoryUtils
-                              .canInsert(stack.getDest().getTileEntity(world()), stack.color, stack.itemStack,
-                                    stack.getSide(this), false))) {
+                        if (checkPath(stack, Path.DEST, false) || checkPath(stack, Path.HOME, true)
+                              || stack.pathType == Path.NONE) {
                             if (!recalculate(stackId, stack, null)) {
                                 deletes.add(stackId);
-                                continue;
-                            }
-                        } else if (stack.pathType == Path.HOME && (!checkSideForInsert(stack) || !InventoryUtils
-                              .canInsert(stack.getDest().getTileEntity(world()), stack.color, stack.itemStack,
-                                    stack.getSide(this), true))) {
-                            if (!recalculate(stackId, stack, null)) {
-                                deletes.add(stackId);
-                                continue;
-                            }
-                        } else if (stack.pathType == Path.NONE) {
-                            if (!recalculate(stackId, stack, null)) {
-                                deletes.add(stackId);
-                                continue;
                             }
                         }
                     } else {
                         TileEntity next = stack.getNext(this).getTileEntity(world());
-                        boolean recalculate = false;
-
                         if (!stack.canInsertToTransporter(next, stack.getSide(this))) {
-                            recalculate = true;
-                        }
-
-                        if (recalculate) {
                             if (!recalculate(stackId, stack, null)) {
                                 deletes.add(stackId);
-                                continue;
                             }
                         }
                     }
@@ -215,10 +202,8 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
             }
 
             if (deletes.size() > 0 || needsSync.size() > 0) {
-                // TODO: Rework above so that we are guaranteed that there is no overlap between deletes/needsSync
-                deletes.forEach(id -> needsSync.remove(id));
-
-                TileEntityMessage msg = new TileEntityMessage(coord(), getTileEntity().makeBatchPacket(needsSync, deletes));
+                TileEntityMessage msg = new TileEntityMessage(coord(),
+                      getTileEntity().makeBatchPacket(needsSync, deletes));
 
                 // Now remove any entries from transit that have been deleted
                 deletes.forEach(id -> transit.remove(id));
@@ -233,6 +218,12 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
         }
     }
 
+    private boolean checkPath(TransporterStack stack, Path dest, boolean home) {
+        return stack.pathType == dest && (!checkSideForInsert(stack) || !InventoryUtils
+              .canInsert(stack.getDest().getTileEntity(world()), stack.color, stack.itemStack,
+                    stack.getSide(this), home));
+    }
+
     private boolean checkSideForInsert(TransporterStack stack) {
         EnumFacing side = stack.getSide(this);
 
@@ -241,8 +232,6 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
     }
 
     private boolean recalculate(int stackId, TransporterStack stack, Coord4D from) {
-        needsSync.put(stackId, stack);
-
         if (stack.pathType != Path.NONE) {
             TransitResponse ret = stack.recalculatePath(TransitRequest.getFromTransport(stack), this, 0);
 
@@ -259,6 +248,8 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
             }
         }
 
+        //Only add to needsSync if true is being returned; otherwise it gets added to deletes
+        needsSync.put(stackId, stack);
         if (from != null) {
             stack.originalLocation = from;
         }
@@ -287,6 +278,11 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
 
         TransitResponse response = stack.recalculatePath(request, this, min);
 
+        return getTransitResponse(doEmit, stack, response);
+    }
+
+    @Nonnull
+    private TransitResponse getTransitResponse(boolean doEmit, TransporterStack stack, TransitResponse response) {
         if (!response.isEmpty()) {
             stack.itemStack = response.getStack();
 
@@ -321,22 +317,7 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
 
         TransitResponse response = stack.recalculateRRPath(request, outputter, this, min);
 
-        if (!response.isEmpty()) {
-            stack.itemStack = response.getStack();
-
-            if (doEmit) {
-                int stackId = nextId++;
-                transit.put(stackId, stack);
-                Mekanism.packetHandler
-                      .sendToReceivers(new TileEntityMessage(coord(), getTileEntity().makeSyncPacket(stackId, stack)),
-                            new Range4D(coord()));
-                MekanismUtils.saveChunk(getTileEntity());
-            }
-
-            return response;
-        }
-
-        return TransitResponse.EMPTY;
+        return getTransitResponse(doEmit, stack, response);
     }
 
     @Override
@@ -350,7 +331,7 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
         int stackId = nextId++;
         stack.progress = progress;
         transit.put(stackId, stack);
-        needsSync.put(stackId, stack);
+        //Don't add to needsSync as the only place this gets called immediately adds it to deletes afterwards
 
         // N.B. We are not marking the chunk as dirty here! I don't believe it's needed, since
         // the next tick will generate the necessary save and if we crash before the next tick,

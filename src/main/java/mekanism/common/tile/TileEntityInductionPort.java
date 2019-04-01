@@ -106,8 +106,9 @@ public class TileEntityInductionPort extends TileEntityInductionCasing implement
             IEnergyTile registered = EnergyNet.instance.getTile(world, getPos());
 
             if (registered != this) {
-                if (registered != null) {
+                if (registered != null && ic2Registered) {
                     MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(registered));
+                    ic2Registered = false;
                 } else {
                     MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
                     ic2Registered = true;
@@ -121,8 +122,9 @@ public class TileEntityInductionPort extends TileEntityInductionCasing implement
         if (!world.isRemote) {
             IEnergyTile registered = EnergyNet.instance.getTile(world, getPos());
 
-            if (registered != null) {
+            if (registered != null && ic2Registered) {
                 MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(registered));
+                ic2Registered = false;
             }
         }
     }

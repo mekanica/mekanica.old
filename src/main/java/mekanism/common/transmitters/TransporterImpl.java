@@ -138,17 +138,15 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
                         Coord4D next = stack.getPath().get(currentIndex - 1);
 
                         if (!stack.isFinal(this)) {
-                            if (next != null && stack.canInsertToTransporter(stack.getNext(this).getTileEntity(world()),
+                            if (next != null && stack.canInsertToTransporter(next.getTileEntity(world()),
                                   stack.getSide(this))) {
                                 ILogisticalTransporter nextTile = CapabilityUtils
                                       .getCapability(next.getTileEntity(world()),
                                             Capabilities.LOGISTICAL_TRANSPORTER_CAPABILITY, null);
-                                if (nextTile != null) {
-                                    nextTile.entityEntering(stack, stack.progress % 100);
-                                }
+                                nextTile.entityEntering(stack, stack.progress % 100);
                                 deletes.add(stackId);
-
                                 continue;
+
                             } else if (next != null) {
                                 prevSet = next;
                             }
@@ -160,15 +158,16 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
                                       .putStackInInventory(tile, TransitRequest.getFromTransport(stack),
                                             stack.getSide(this), stack.pathType == Path.HOME);
 
+                                // Nothing was rejected; remove the stack from the prediction tracker and
+                                // schedule this stack for deletion. Continue the loop thereafter
                                 if (response.getRejected(stack.itemStack).isEmpty()) {
                                     TransporterManager.remove(stack);
                                     deletes.add(stackId);
                                     continue;
                                 } else {
-                                    //Don't add it ot needsSync here because it will be added in the below
-                                    // recalculate statement and then added or added to deletes
+                                    // Some portion of the stack got rejected; save the remainder and
+                                    // let the recalculate below sort out what to do next
                                     stack.itemStack = response.getRejected(stack.itemStack);
-
                                     prevSet = next;
                                 }
                             }
@@ -182,6 +181,7 @@ public class TransporterImpl extends TransmitterImpl<TileEntity, InventoryNetwor
                     } else {
                         stack.progress = 50;
                     }
+
                 } else if (stack.progress == 50) {
                     if (stack.isFinal(this)) {
                         if (checkPath(stack, Path.DEST, false) || checkPath(stack, Path.HOME, true)

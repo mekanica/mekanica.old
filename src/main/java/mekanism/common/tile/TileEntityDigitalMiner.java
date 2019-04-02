@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import javax.annotation.Nonnull;
 import mekanism.api.Chunk3D;
 import mekanism.api.Coord4D;
@@ -77,6 +78,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class TileEntityDigitalMiner extends TileEntityElectricBlock implements IUpgradeTile, IRedstoneControl,
       IActiveState, ISustainedData, IChunkLoader, IAdvancedBoundingBlock {
 
+    private static final int[] INV_SLOTS = IntStream.range(0, 28).toArray();
+
     public static int[] EJECT_INV;
     public final double BASE_ENERGY_USAGE = usage.digitalMinerUsage;
     public Map<Chunk3D, BitSet> oresToMine = new HashMap<>();
@@ -85,7 +88,7 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
     public ThreadMinerSearch searcher = new ThreadMinerSearch(this);
     public double energyUsage = usage.digitalMinerUsage;
 
-    public int radius;
+    private int radius;
 
     public boolean inverse;
 
@@ -122,14 +125,14 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
 
     public boolean clientRendering = false;
 
-    private final int[] inventorySlots;
+    private Set<ChunkPos> chunkSet;
 
     /**
      * This machine's current RedstoneControl type.
      */
     public RedstoneControl controlType = RedstoneControl.DISABLED;
 
-    public TileComponentUpgrade upgradeComponent = new TileComponentUpgrade(this, 28);
+    public TileComponentUpgrade upgradeComponent = new TileComponentUpgrade(this, INV_SLOTS.length);
     public TileComponentSecurity securityComponent = new TileComponentSecurity(this);
     public TileComponentChunkLoader chunkLoaderComponent = new TileComponentChunkLoader(this);
     public String[] methods = {"setRadius", "setMin", "setMax", "addFilter", "removeFilter", "addOreFilter",
@@ -137,11 +140,7 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
 
     public TileEntityDigitalMiner() {
         super("DigitalMiner", BlockStateMachine.MachineType.DIGITAL_MINER.baseEnergy);
-        inventory = NonNullList.withSize(29, ItemStack.EMPTY);
-        inventorySlots = new int[inventory.size()];
-        for (int i = 0; i < inventorySlots.length; i++) {
-            inventorySlots[i] = i;
-        }
+        inventory = NonNullList.withSize(INV_SLOTS.length + 1, ItemStack.EMPTY);
         radius = 10;
 
         upgradeComponent.setSupported(Upgrade.ANCHOR);
@@ -335,6 +334,22 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
 
     public int getDelay() {
         return delayLength;
+    }
+
+    public int getRadius() {
+        return radius;
+    }
+
+    public void setRadius(int newRadius) {
+        boolean changed = (radius != newRadius);
+        radius = newRadius;
+
+        // If the radius changed and we're on the server, go ahead and refresh
+        // the chunk set
+        if (changed && hasWorld() && world.isRemote) {
+            chunkSet = null;
+            getChunkSet();
+        }
     }
 
     /*
@@ -605,7 +620,7 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
     }
 
     private void readBasicData(ByteBuf dataStream) {
-        radius = dataStream.readInt();//client allowed to use whatever server sends
+        setRadius(dataStream.readInt());//client allowed to use whatever server sends
         minY = dataStream.readInt();
         maxY = dataStream.readInt();
         doEject = dataStream.readBoolean();
@@ -648,7 +663,7 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
                     reset();
                     break;
                 case 6:
-                    radius = Math.min(dataStream.readInt(), general.digitalMinerMaxRadius);
+                    setRadius(Math.min(dataStream.readInt(), general.digitalMinerMaxRadius));
                     break;
                 case 7:
                     minY = dataStream.readInt();
@@ -952,10 +967,13 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
     @Nonnull
     @Override
     public int[] getSlotsForFace(@Nonnull EnumFacing side) {
-        if (side == facing.getOpposite()) {
-            return inventorySlots;
-        }
-        return InventoryUtils.EMPTY;
+        //Allow for automation via the top (as that is where it can auto pull from)
+        return side == EnumFacing.UP ||  side == facing.getOpposite() ? INV_SLOTS : InventoryUtils.EMPTY;
+    }
+
+    @Override
+    public boolean isItemValidForSlot(int slotID, @Nonnull ItemStack stack) {
+        return slotID != 27 || ChargeUtils.canBeDischarged(stack);
     }
 
     public TileEntity getEjectTile() {
@@ -1039,7 +1057,7 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
                 return new Object[]{"Invalid parameters."};
             }
 
-            radius = Math.min(((Double) arguments[0]).intValue(), general.digitalMinerMaxRadius);
+            setRadius(Math.min(((Double) arguments[0]).intValue(), general.digitalMinerMaxRadius));
         } else if (method == 1) {
             if (arguments.length != 1 || !(arguments[0] instanceof Double)) {
                 return new Object[]{"Invalid parameters."};
@@ -1168,7 +1186,7 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
 
     @Override
     public void setConfigurationData(NBTTagCompound nbtTags) {
-        radius = Math.min(nbtTags.getInteger("radius"), general.digitalMinerMaxRadius);
+        setRadius(Math.min(nbtTags.getInteger("radius"), general.digitalMinerMaxRadius));
         minY = nbtTags.getInteger("minY");
         maxY = nbtTags.getInteger("maxY");
         doEject = nbtTags.getBoolean("doEject");
@@ -1215,7 +1233,7 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
     @Override
     public void readSustainedData(ItemStack itemStack) {
         if (ItemDataUtils.hasData(itemStack, "hasMinerConfig")) {
-            radius = Math.min(ItemDataUtils.getInt(itemStack, "radius"), general.digitalMinerMaxRadius);
+            setRadius(Math.min(ItemDataUtils.getInt(itemStack, "radius"), general.digitalMinerMaxRadius));
             minY = ItemDataUtils.getInt(itemStack, "minY");
             maxY = ItemDataUtils.getInt(itemStack, "maxY");
             doEject = ItemDataUtils.getBoolean(itemStack, "doEject");
@@ -1299,7 +1317,12 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
 
     @Override
     public Set<ChunkPos> getChunkSet() {
-        return new Range4D(Coord4D.get(this)).expandFromCenter(radius).getIntersectingChunks().stream()
-              .map(Chunk3D::getPos).collect(Collectors.toSet());
+        if (chunkSet == null) {
+            chunkSet = new Range4D(Coord4D.get(this)).expandFromCenter(radius).
+                  getIntersectingChunks().stream().
+                  map(Chunk3D::getPos).collect(Collectors.toSet());
+
+        }
+        return chunkSet;
     }
 }

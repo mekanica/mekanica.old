@@ -136,7 +136,7 @@ for project in args.project:
         metadata["relations"] = {"projects": [{"slug": dep, "type": "requiredDependency"}]}
 
     if args.skipupload:
-        print("Skipping upload of %s" % filename)
+        print("Skipping %s upload of %s" % (args.rel, filename))
         continue
 
     # Setup files for POST

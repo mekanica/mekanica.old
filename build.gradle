@@ -22,13 +22,6 @@ apply plugin: 'idea'
 
 defaultTasks 'fullBuild'
 
-idea {
-    module {
-        // For some reason this is necessary for IDEA 2014 workspaces to recognize assets
-        inheritOutputDirs = true
-    }
-}
-
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 repositories {
@@ -88,7 +81,7 @@ repositories {
 
 group = "mekanica"
 version = "${minecraft_version}-${version}"
-archivesBaseName = "mekanica-all"
+archivesBaseName = "mekanica"
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
 
@@ -147,74 +140,11 @@ processResources {
 }
 
 jar {
-    manifest {
-        attributes 'FMLAT': 'mekanism_at.cfg'
-    }
-}
-
-task coreJar(type: Jar) {
     archiveName = "mekanica-${project.version}.jar"
-    dependsOn 'reobfJar'
-    classifier "core"
-
-    from('etc/core') {
-        include '*.info'
-        expand 'version': project.version, 'mc_version': "${minecraft_version}", 'mcmp_version': "${mcmp_version}"
-    }
-
-    from zipTree(jar.outputs.getFiles().getSingleFile()).matching {
-        exclude 'mekanism/tools/**', 'mekanism/generators/**', 'assets/mekanismtools/**', 'assets/mekanismgenerators/**', 'mcmod.info'
-    }
 
     manifest {
         attributes 'FMLAT': 'mekanism_at.cfg'
     }
-}
-
-task toolsJar(type: Jar) {
-    archiveName = "mekanica-tools-${project.version}.jar"
-    dependsOn 'reobfJar'
-    classifier "tools"
-
-    from('etc/tools') {
-        include '*.info'
-        expand 'version': project.version, 'mc_version': "${minecraft_version}", 'mcmp_version': "${mcmp_version}"
-    }
-
-    from zipTree(jar.outputs.getFiles().getSingleFile()).matching {
-        include 'mekanism/tools/**', 'assets/mekanismtools/**'
-    }
-}
-
-task generatorsJar(type: Jar) {
-    archiveName = "mekanica-generators-${project.version}.jar"
-    dependsOn 'reobfJar'
-    classifier "generators"
-
-    from('etc/generators') {
-        include '*.info'
-        expand 'version': project.version, 'mc_version': "${minecraft_version}", 'mcmp_version': "${mcmp_version}"
-    }
-
-    from zipTree(jar.outputs.getFiles().getSingleFile()).matching {
-        include 'mekanism/generators/**', 'assets/mekanismgenerators/**'
-    }
-}
-
-task apiJar(type: Jar) {
-    classifier "api"
-    baseName "mekanica"
-    dependsOn "sourceMainJava"
-    include 'mekanism/api/**'
-    from sourceSets.main.java.srcDirs
-    from sourceSets.main.output
-}
-
-artifacts {
-    archives apiJar
-    archives coreJar
-    archives toolsJar
-    archives generatorsJar
 }
 
 task fullBuild(type: Delete) {

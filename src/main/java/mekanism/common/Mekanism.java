@@ -227,10 +227,6 @@ public class Mekanism {
      */
     public static Configuration configuration;
     /**
-     * Mekanism version number
-     */
-    public static Version versionNumber = new Version(9, 4, 13);
-    /**
      * MultiblockManagers for various structrures
      */
     public static MultiblockManager<SynchronizedTankData> tankManager = new MultiblockManager<>("dynamicTank");
@@ -965,9 +961,6 @@ public class Mekanism {
         //Register player tracker
         MinecraftForge.EVENT_BUS.register(new CommonPlayerTracker());
         MinecraftForge.EVENT_BUS.register(new CommonPlayerTickHandler());
-
-        //Initialization notification
-        logger.info("Version " + versionNumber + " initializing...");
 
         //Register with ForgeChunkManager
         ForgeChunkManager.setForcedChunkLoadingCallback(this, new ChunkManager());

@@ -58,10 +58,6 @@ public class MekanismGenerators implements IModule {
     @Instance(MekanismGenerators.MODID)
     public static MekanismGenerators instance;
 
-    /**
-     * MekanismGenerators version number
-     */
-    public static Version versionNumber = new Version(9, 4, 13);
     public static final int DATA_VERSION = 1;
 
     public static MultiblockManager<SynchronizedTurbineData> turbineManager = new MultiblockManager<>(
@@ -143,11 +139,6 @@ public class MekanismGenerators implements IModule {
             RecipeHandler.addMetallurgicInfuserRecipe(InfuseRegistry.get("CARBON"), 10, StackUtils.size(ore, 4),
                   GeneratorsItems.Hohlraum.getEmptyItem());
         }
-    }
-
-    @Override
-    public Version getVersion() {
-        return versionNumber;
     }
 
     @Override

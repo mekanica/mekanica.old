@@ -12,13 +12,6 @@ import mekanism.common.Version;
 public interface IModule {
 
     /**
-     * Gets the version of the module.
-     *
-     * @return the module's version
-     */
-    Version getVersion();
-
-    /**
      * Gets the name of the module.  Note that this doesn't include "Mekanism" like the actual module's name does, just
      * the unique name.  For example, MekanismGenerators returns "Generators" here.
      *

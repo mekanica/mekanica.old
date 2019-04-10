@@ -300,6 +300,10 @@ public class ClientProxy extends CommonProxy {
               .get(Configuration.CATEGORY_CLIENT, "MultiblockFormParticles", true,
                     "Set to false to prevent particle spam when loading multiblocks (notification message will still display).")
               .getBoolean();
+        client.alignHUDLeft = Mekanism.configuration
+              .get(Configuration.CATEGORY_CLIENT, "AlignHUDLeft", true,
+                    "Align the HUD to the left if true; right if false")
+              .getBoolean();
 
         if (Mekanism.configuration.hasChanged()) {
             Mekanism.configuration.save();

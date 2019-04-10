@@ -11,6 +11,8 @@ import mekanism.client.render.particle.EntityJetpackSmokeFX;
 import mekanism.client.render.particle.EntityScubaBubbleFX;
 import mekanism.common.ColourRGBA;
 import mekanism.common.Mekanism;
+import mekanism.common.config.MekanismConfig;
+import mekanism.common.config.MekanismConfig.client;
 import mekanism.common.item.ItemConfigurator;
 import mekanism.common.item.ItemConfigurator.ConfiguratorMode;
 import mekanism.common.item.ItemFlamethrower;
@@ -101,21 +103,20 @@ public class RenderTickHandler {
 
                     ScaledResolution scaledresolution = new ScaledResolution(mc);
 
-                    int x = scaledresolution.getScaledWidth();
                     int y = scaledresolution.getScaledHeight();
 
                     if (stack.getItem() instanceof ItemJetpack) {
                         ItemJetpack jetpack = (ItemJetpack) stack.getItem();
 
-                        font.drawStringWithShadow("Mode: " + jetpack.getMode(stack).getName(), 1, y - 20, 0x404040);
-                        font.drawStringWithShadow("Hydrogen: " + jetpack.getStored(stack), 1, y - 11, 0x404040);
+                        drawString(scaledresolution, "Mode: " + jetpack.getMode(stack).getName(), client.alignHUDLeft,y - 20, 0xc8c8c8);
+                        drawString(scaledresolution, "Hydrogen: " + jetpack.getStored(stack), client.alignHUDLeft, y - 11, 0xc8c8c8);
                     } else if (stack.getItem() instanceof ItemScubaTank) {
                         ItemScubaTank scubaTank = (ItemScubaTank) stack.getItem();
                         String state = (scubaTank.getFlowing(stack) ? EnumColor.DARK_GREEN + "On"
                               : EnumColor.DARK_RED + "Off");
 
-                        font.drawStringWithShadow("Mode: " + state, 1, y - 20, 0x404040);
-                        font.drawStringWithShadow("Oxygen: " + scubaTank.getStored(stack), 1, y - 11, 0x404040);
+                        drawString(scaledresolution, "Mode: " + state, client.alignHUDLeft, y - 20, 0xc8c8c8);
+                        drawString(scaledresolution, "Oxygen: " + scubaTank.getStored(stack), client.alignHUDLeft, y - 11, 0xc8c8c8);
                     }
                 }
 
@@ -257,5 +258,17 @@ public class RenderTickHandler {
         }
 
         mc.effectRenderer.addEffect(fx);
+    }
+
+    private void drawString(ScaledResolution res, String s, boolean leftSide, int y, int color) {
+        FontRenderer font = mc.fontRenderer;
+
+        // Note that we always offset by 2 pixels when left or right aligned
+        if (leftSide) {
+            font.drawStringWithShadow(s, 2, y, color);
+        } else {
+            int width = font.getStringWidth(s) + 2;
+            font.drawStringWithShadow(s, res.getScaledWidth() - width, y, color);
+        }
     }
 }

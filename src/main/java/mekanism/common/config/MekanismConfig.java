@@ -92,6 +92,7 @@ public class MekanismConfig {
         public static boolean opaqueTransmitters = false;
         public static boolean allowConfiguratorModeScroll = true;
         public static boolean enableMultiblockFormationParticles = true;
+        public static boolean alignHUDLeft = true;
     }
 
     public static class usage {

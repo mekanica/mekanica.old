@@ -21,12 +21,14 @@ import mekanism.common.capabilities.Capabilities;
 import mekanism.common.network.PacketTileEntity.TileEntityMessage;
 import mekanism.common.util.CableUtils;
 import mekanism.common.util.CapabilityUtils;
+import mekanism.common.util.EnergyEmitter;
 import mekanism.common.util.HeatUtils;
 import mekanism.common.util.InventoryUtils;
 import mekanism.common.util.LangUtils;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.PipeUtils;
 import mekanism.generators.common.item.ItemHohlraum;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -49,6 +51,8 @@ public class TileEntityReactorPort extends TileEntityReactorBlock implements IFl
       IHeatTransfer, IConfigurable {
 
     public boolean fluidEject;
+
+    private EnergyEmitter energyEmitter = new EnergyEmitter(this);
 
     public TileEntityReactorPort() {
         super("name", 1);
@@ -87,7 +91,7 @@ public class TileEntityReactorPort extends TileEntityReactorBlock implements IFl
         super.onUpdate();
 
         if (!world.isRemote) {
-            CableUtils.emit(this);
+            energyEmitter.emit((int)Math.min(getEnergy(), getMaxOutput()));
 
             if (fluidEject && getReactor() != null && getReactor().getSteamTank().getFluid() != null) {
                 IFluidTank tank = getReactor().getSteamTank();
@@ -107,6 +111,18 @@ public class TileEntityReactorPort extends TileEntityReactorBlock implements IFl
                 }
             }
         }
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        energyEmitter.refresh();
+    }
+
+    @Override
+    public void onNeighborChange(Block block) {
+        super.onNeighborChange(block);
+        energyEmitter.refresh();
     }
 
     @Override

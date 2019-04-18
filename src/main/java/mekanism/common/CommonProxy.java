@@ -35,7 +35,6 @@ import mekanism.common.inventory.container.ContainerFluidicPlenisher;
 import mekanism.common.inventory.container.ContainerFormulaicAssemblicator;
 import mekanism.common.inventory.container.ContainerFuelwoodHeater;
 import mekanism.common.inventory.container.ContainerGasTank;
-import mekanism.common.inventory.container.ContainerInductionMatrix;
 import mekanism.common.inventory.container.ContainerLaserAmplifier;
 import mekanism.common.inventory.container.ContainerLaserTractorBeam;
 import mekanism.common.inventory.container.ContainerMetallurgicInfuser;
@@ -57,7 +56,6 @@ import mekanism.common.inventory.container.robit.ContainerRobitMain;
 import mekanism.common.inventory.container.robit.ContainerRobitRepair;
 import mekanism.common.inventory.container.robit.ContainerRobitSmelting;
 import mekanism.common.item.ItemPortableTeleporter;
-import mekanism.common.multiblock.UpdateProtocol.NodeChecker;
 import mekanism.common.network.PacketPortableTeleporter.PortableTeleporterMessage;
 import mekanism.common.tile.TileEntityChanceMachine;
 import mekanism.common.tile.TileEntityChemicalCrystallizer;
@@ -76,11 +74,9 @@ import mekanism.common.tile.TileEntityFluidicPlenisher;
 import mekanism.common.tile.TileEntityFormulaicAssemblicator;
 import mekanism.common.tile.TileEntityFuelwoodHeater;
 import mekanism.common.tile.TileEntityGasTank;
-import mekanism.common.tile.TileEntityInductionCasing;
 import mekanism.common.tile.TileEntityLaserAmplifier;
 import mekanism.common.tile.TileEntityLaserTractorBeam;
 import mekanism.common.tile.TileEntityMetallurgicInfuser;
-import mekanism.common.tile.TileEntityMultiblock;
 import mekanism.common.tile.TileEntityOredictionificator;
 import mekanism.common.tile.TileEntityPRC;
 import mekanism.common.tile.TileEntityQuantumEntangloporter;
@@ -229,18 +225,6 @@ public class CommonProxy implements IGuiProvider {
               "Conversion multiplier from RF to Joules (RF * JoulesToRF = Joules)").getDouble();
         general.TO_RF = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "RFToJoules", 0.4D,
               "Conversion multiplier from Joules to RF (Joules * RFToJoules = RF)").getDouble();
-        general.FROM_TESLA = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "JoulesToTesla", 2.5D,
-              "Conversion multiplier from Tesla to Joules (Tesla * JoulesToTesla = Joules)")
-              .getDouble();
-        general.TO_TESLA = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "TeslaToJoules", 0.4D,
-              "Conversion multiplier from Joules to Tesla (Joules * TeslaToJoules = Tesla)")
-              .getDouble();
-        general.FROM_FORGE = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "JoulesToForge", 2.5D,
-              "Conversion multiplier from Forge Energy to Joules (FE * JoulesToForge = Joules)")
-              .getDouble();
-        general.TO_FORGE = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "ForgeToJoules", 0.4D,
-              "Conversion multiplier from Joules to Forge Energy (Joules * ForgeToJoules = FE)")
-              .getDouble();
         general.FROM_H2 = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "HydrogenEnergyDensity", 200D,
               "How much energy is produced per mB of Hydrogen, also affects Electrolytic Separator usage, Ethylene burn rate and Gas generator energy capacity")
               .getDouble();
@@ -335,17 +319,6 @@ public class CommonProxy implements IGuiProvider {
 
         general.blacklistIC2 = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "BlacklistIC2Power", false,
               "Disables IC2 power integration. Requires world restart (server-side option in SMP).").getBoolean();
-        general.blacklistRF = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "BlacklistRFPower", false,
-              "Disables Thermal Expansion RedstoneFlux power integration. Requires world restart (server-side option in SMP).")
-              .getBoolean();
-        general.blacklistTesla = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "BlacklistTeslaPower", false,
-                    "Disables Tesla power integration. Requires world restart (server-side option in SMP).")
-              .getBoolean();
-        general.blacklistForge = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "BlacklistForgePower", false,
-                    "Disables Forge Energy (FE,IF,uF,CF) power integration. Requires world restart (server-side option in SMP).")
-              .getBoolean();
 
         String s = Mekanism.configuration
               .get(Configuration.CATEGORY_GENERAL, "EnergyType", "RF", "Displayed energy type in Mekanica GUIs.",
@@ -359,9 +332,6 @@ public class CommonProxy implements IGuiProvider {
             case "eu":
             case "ic2":
                 general.energyUnit = EnergyType.EU;
-                break;
-            case "tesla":
-                general.energyUnit = EnergyType.T;
                 break;
             default:
                 general.energyUnit = EnergyType.RF;
@@ -667,8 +637,6 @@ public class CommonProxy implements IGuiProvider {
                       (TileEntitySolarNeutronActivator) tileEntity);
             case 48:
                 return new ContainerNull(player, (TileEntityContainerBlock) tileEntity);
-            case 49:
-                return new ContainerInductionMatrix(player.inventory, (TileEntityInductionCasing) tileEntity);
             case 50:
                 return new ContainerNull(player, (TileEntityContainerBlock) tileEntity);
             case 51:

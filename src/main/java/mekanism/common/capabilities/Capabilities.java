@@ -16,9 +16,6 @@ import mekanism.api.transmitters.IBlockableConnection;
 import mekanism.api.transmitters.IGridTransmitter;
 import mekanism.common.base.ILogisticalTransporter;
 import mekanism.common.base.ITileNetwork;
-import net.darkhax.tesla.api.ITeslaConsumer;
-import net.darkhax.tesla.api.ITeslaHolder;
-import net.darkhax.tesla.api.ITeslaProducer;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 
@@ -26,15 +23,6 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
  * Created by ben on 30/04/16.
  */
 public class Capabilities {
-
-    @CapabilityInject(IStrictEnergyStorage.class)
-    public static Capability<IStrictEnergyStorage> ENERGY_STORAGE_CAPABILITY = null;
-
-    @CapabilityInject(IStrictEnergyAcceptor.class)
-    public static Capability<IStrictEnergyAcceptor> ENERGY_ACCEPTOR_CAPABILITY = null;
-
-    @CapabilityInject(IStrictEnergyOutputter.class)
-    public static Capability<IStrictEnergyOutputter> ENERGY_OUTPUTTER_CAPABILITY = null;
 
     @CapabilityInject(IConfigurable.class)
     public static Capability<IConfigurable> CONFIGURABLE_CAPABILITY = null;
@@ -78,18 +66,7 @@ public class Capabilities {
     @CapabilityInject(ILogisticalTransporter.class)
     public static Capability<ILogisticalTransporter> LOGISTICAL_TRANSPORTER_CAPABILITY = null;
 
-    @CapabilityInject(ITeslaConsumer.class)
-    public static Capability<ITeslaConsumer> TESLA_CONSUMER_CAPABILITY = null;
-
-    @CapabilityInject(ITeslaProducer.class)
-    public static Capability<ITeslaProducer> TESLA_PRODUCER_CAPABILITY = null;
-
-    @CapabilityInject(ITeslaHolder.class)
-    public static Capability<ITeslaHolder> TESLA_HOLDER_CAPABILITY = null;
-
     public static void registerCapabilities() {
-        DefaultStrictEnergyStorage.register();
-        DefaultStrictEnergyAcceptor.register();
         DefaultCableOutputter.register();
 
         DefaultGridTransmitter.register();
@@ -97,7 +74,6 @@ public class Capabilities {
         DefaultBlockableConnection.register();
 
         DefaultGasHandler.register();
-        DefaultTubeConnection.register();
 
         DefaultConfigurable.register();
         DefaultTileNetwork.register();

@@ -12,9 +12,11 @@ import mekanism.common.security.ISecurityTile;
 import mekanism.common.tile.component.TileComponentSecurity;
 import mekanism.common.tile.prefab.TileEntityEffectsBlock;
 import mekanism.common.util.CableUtils;
+import mekanism.common.util.EnergyEmitter;
 import mekanism.common.util.MekanismUtils;
 import mekanism.generators.common.block.states.BlockStateGenerator;
 import mekanism.generators.common.block.states.BlockStateGenerator.GeneratorType;
+import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -36,6 +38,8 @@ public abstract class TileEntityGenerator extends TileEntityEffectsBlock impleme
     public RedstoneControl controlType;
 
     public TileComponentSecurity securityComponent = new TileComponentSecurity(this);
+
+    private EnergyEmitter energyEmitter = new EnergyEmitter(this);
 
     /**
      * Generator -- a block that produces energy. It has a certain amount of fuel it can store as well as an output
@@ -69,9 +73,21 @@ public abstract class TileEntityGenerator extends TileEntityEffectsBlock impleme
             }
 
             if (MekanismUtils.canFunction(this)) {
-                CableUtils.emit(this);
+                energyEmitter.emit((int)Math.min(getEnergy(), getMaxOutput()));
             }
         }
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        energyEmitter.refresh();
+    }
+
+    @Override
+    public void onNeighborChange(Block block) {
+        super.onNeighborChange(block);
+        energyEmitter.refresh();
     }
 
     @Override

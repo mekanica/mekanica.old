@@ -42,10 +42,12 @@ import mekanism.common.tile.component.TileComponentUpgrade;
 import mekanism.common.tile.prefab.TileEntityElectricBlock;
 import mekanism.common.util.CableUtils;
 import mekanism.common.util.CapabilityUtils;
+import mekanism.common.util.EnergyEmitter;
 import mekanism.common.util.HeatUtils;
 import mekanism.common.util.InventoryUtils;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.PipeUtils;
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -77,6 +79,8 @@ public class TileEntityQuantumEntangloporter extends TileEntityElectricBlock imp
     public TileComponentSecurity securityComponent;
     public TileComponentChunkLoader chunkLoaderComponent;
     public TileComponentUpgrade upgradeComponent;
+
+    private EnergyEmitter energyEmitter = new EnergyEmitter(this);
 
     public TileEntityQuantumEntangloporter() {
         super("QuantumEntangloporter", 0);
@@ -118,7 +122,7 @@ public class TileEntityQuantumEntangloporter extends TileEntityElectricBlock imp
 
         if (!world.isRemote) {
             if (configComponent.isEjecting(TransmissionType.ENERGY)) {
-                CableUtils.emit(this);
+                energyEmitter.emit((int)Math.min(getEnergy(), getMaxOutput()));
             }
 
             double[] loss = simulateHeat();
@@ -152,6 +156,18 @@ public class TileEntityQuantumEntangloporter extends TileEntityElectricBlock imp
                 }
             }
         }
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        energyEmitter.refresh();
+    }
+
+    @Override
+    public void onNeighborChange(Block block) {
+        super.onNeighborChange(block);
+        energyEmitter.refresh();
     }
 
     private boolean hasFrequency() {

@@ -25,9 +25,11 @@ import mekanism.common.tile.component.TileComponentSecurity;
 import mekanism.common.tile.prefab.TileEntityElectricBlock;
 import mekanism.common.util.CableUtils;
 import mekanism.common.util.ChargeUtils;
+import mekanism.common.util.EnergyEmitter;
 import mekanism.common.util.InventoryUtils;
 import mekanism.common.util.LangUtils;
 import mekanism.common.util.MekanismUtils;
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -56,6 +58,8 @@ public class TileEntityEnergyCube extends TileEntityElectricBlock implements ICo
     public TileComponentEjector ejectorComponent;
     public TileComponentConfig configComponent;
     public TileComponentSecurity securityComponent;
+
+    private EnergyEmitter energyEmitter = new EnergyEmitter(this);
 
     /**
      * A block used to store and transfer electricity.
@@ -91,7 +95,7 @@ public class TileEntityEnergyCube extends TileEntityElectricBlock implements ICo
             ChargeUtils.discharge(1, this);
 
             if (MekanismUtils.canFunction(this) && configComponent.isEjecting(TransmissionType.ENERGY)) {
-                CableUtils.emit(this);
+                energyEmitter.emit((int)Math.min(getEnergy(), getMaxOutput()));
             }
 
             int newScale = getScaledEnergyLevel(20);
@@ -104,6 +108,18 @@ public class TileEntityEnergyCube extends TileEntityElectricBlock implements ICo
 
             prevScale = newScale;
         }
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        energyEmitter.refresh();
+    }
+
+    @Override
+    public void onNeighborChange(Block block) {
+        super.onNeighborChange(block);
+        energyEmitter.refresh();
     }
 
     @Override

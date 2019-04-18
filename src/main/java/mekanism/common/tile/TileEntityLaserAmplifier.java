@@ -346,20 +346,11 @@ public class TileEntityLaserAmplifier extends TileEntityContainerBlock implement
 
     @Override
     public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
-        return capability == Capabilities.ENERGY_STORAGE_CAPABILITY
-              || capability == Capabilities.ENERGY_OUTPUTTER_CAPABILITY
-              || capability == Capabilities.LASER_RECEPTOR_CAPABILITY
-              || super.hasCapability(capability, facing);
+        return capability == Capabilities.LASER_RECEPTOR_CAPABILITY  || super.hasCapability(capability, facing);
     }
 
     @Override
     public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
-        if (capability == Capabilities.ENERGY_STORAGE_CAPABILITY) {
-            return Capabilities.ENERGY_STORAGE_CAPABILITY.cast(this);
-        }
-        if (capability == Capabilities.ENERGY_OUTPUTTER_CAPABILITY) {
-            return Capabilities.ENERGY_OUTPUTTER_CAPABILITY.cast(this);
-        }
         if (capability == Capabilities.LASER_RECEPTOR_CAPABILITY) {
             return Capabilities.LASER_RECEPTOR_CAPABILITY.cast(this);
         }

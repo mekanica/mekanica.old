@@ -15,8 +15,6 @@ import mekanism.common.tile.TileEntityEnergyCube;
 import mekanism.common.tile.TileEntityFactory;
 import mekanism.common.tile.TileEntityFluidTank;
 import mekanism.common.tile.TileEntityGasTank;
-import mekanism.common.tile.TileEntityInductionCell;
-import mekanism.common.tile.TileEntityInductionProvider;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -34,8 +32,6 @@ public class WailaDataProvider implements IWailaDataProvider {
     public static void register(IWailaRegistrar registrar) {
         WailaDataProvider provider = new WailaDataProvider();
 
-        registrar.registerHeadProvider(provider, TileEntityInductionCell.class);
-        registrar.registerHeadProvider(provider, TileEntityInductionProvider.class);
         registrar.registerHeadProvider(provider, TileEntityFactory.class);
         registrar.registerHeadProvider(provider, TileEntityBoundingBlock.class);
         registrar.registerHeadProvider(provider, TileEntityAdvancedBoundingBlock.class);
@@ -59,11 +55,7 @@ public class WailaDataProvider implements IWailaDataProvider {
           IWailaConfigHandler config) {
         TileEntity tile = accessor.getTileEntity();
 
-        if (tile instanceof TileEntityInductionCell) {
-            currenttip.set(0, EnumColor.WHITE + ((TileEntityInductionCell) tile).getName());
-        } else if (tile instanceof TileEntityInductionProvider) {
-            currenttip.set(0, EnumColor.WHITE + ((TileEntityInductionProvider) tile).getName());
-        } else if (tile instanceof TileEntityFactory) {
+        if (tile instanceof TileEntityFactory) {
             currenttip.set(0, EnumColor.WHITE + ((TileEntityFactory) tile).getName());
         } else if (tile instanceof TileEntityFluidTank) {
             currenttip.set(0, EnumColor.WHITE + ((TileEntityFluidTank) tile).getName());

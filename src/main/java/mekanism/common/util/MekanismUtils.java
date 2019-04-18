@@ -752,8 +752,6 @@ public final class MekanismUtils {
                 return UnitDisplayUtils.getDisplayShort(energy * general.TO_RF, ElectricUnit.REDSTONE_FLUX);
             case EU:
                 return UnitDisplayUtils.getDisplayShort(energy * general.TO_IC2, ElectricUnit.ELECTRICAL_UNITS);
-            case T:
-                return UnitDisplayUtils.getDisplayShort(energy * general.TO_TESLA, ElectricUnit.TESLA);
         }
 
         return "error";
@@ -782,8 +780,6 @@ public final class MekanismUtils {
                 return energy * general.FROM_RF;
             case EU:
                 return energy * general.FROM_IC2;
-            case T:
-                return energy * general.FROM_TESLA;
             default:
                 return energy;
         }
@@ -801,8 +797,6 @@ public final class MekanismUtils {
                 return energy * general.TO_RF;
             case EU:
                 return energy * general.TO_IC2;
-            case T:
-                return energy * general.TO_RF / 10;
             default:
                 return energy;
         }
@@ -849,25 +843,7 @@ public final class MekanismUtils {
      * @return if RF power should be used
      */
     public static boolean useRF() {
-        return Mekanism.hooks.RFLoaded && !general.blacklistRF;
-    }
-
-    /**
-     * Whether or not Tesla power should be used.
-     *
-     * @return if Tesla power should be used
-     */
-    public static boolean useTesla() {
-        return Mekanism.hooks.TeslaLoaded && !general.blacklistTesla;
-    }
-
-    /**
-     * Whether or not Forge power should be used.
-     *
-     * @return if Forge power should be used
-     */
-    public static boolean useForge() {
-        return !general.blacklistForge;
+        return Mekanism.hooks.RFLoaded;
     }
 
     /**

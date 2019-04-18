@@ -12,7 +12,6 @@ import mekanism.api.EnumColor;
 import mekanism.api.Pos3D;
 import mekanism.client.SparkleAnimation.INodeChecker;
 import mekanism.client.entity.ParticleLaser;
-import mekanism.client.gui.GuiAmbientAccumulator;
 import mekanism.client.gui.GuiBoilerStats;
 import mekanism.client.gui.GuiCombiner;
 import mekanism.client.gui.GuiCrusher;
@@ -30,10 +29,8 @@ import mekanism.client.gui.GuiFluidicPlenisher;
 import mekanism.client.gui.GuiFormulaicAssemblicator;
 import mekanism.client.gui.GuiFuelwoodHeater;
 import mekanism.client.gui.GuiGasTank;
-import mekanism.client.gui.GuiInductionMatrix;
 import mekanism.client.gui.GuiLaserAmplifier;
 import mekanism.client.gui.GuiLaserTractorBeam;
-import mekanism.client.gui.GuiMatrixStats;
 import mekanism.client.gui.GuiMetallurgicInfuser;
 import mekanism.client.gui.GuiOredictionificator;
 import mekanism.client.gui.GuiOsmiumCompressor;
@@ -145,11 +142,8 @@ import mekanism.common.item.ItemCraftingFormula;
 import mekanism.common.item.ItemPortableTeleporter;
 import mekanism.common.item.ItemSeismicReader;
 import mekanism.common.item.ItemWalkieTalkie;
-import mekanism.common.multiblock.MultiblockManager;
-import mekanism.common.multiblock.UpdateProtocol.NodeChecker;
 import mekanism.common.network.PacketPortableTeleporter.PortableTeleporterMessage;
 import mekanism.common.tile.TileEntityAdvancedFactory;
-import mekanism.common.tile.TileEntityAmbientAccumulator;
 import mekanism.common.tile.TileEntityBin;
 import mekanism.common.tile.TileEntityBoilerCasing;
 import mekanism.common.tile.TileEntityBoilerValve;
@@ -177,12 +171,10 @@ import mekanism.common.tile.TileEntityFluidicPlenisher;
 import mekanism.common.tile.TileEntityFormulaicAssemblicator;
 import mekanism.common.tile.TileEntityFuelwoodHeater;
 import mekanism.common.tile.TileEntityGasTank;
-import mekanism.common.tile.TileEntityInductionCasing;
 import mekanism.common.tile.TileEntityLaserAmplifier;
 import mekanism.common.tile.TileEntityLaserTractorBeam;
 import mekanism.common.tile.TileEntityLogisticalSorter;
 import mekanism.common.tile.TileEntityMetallurgicInfuser;
-import mekanism.common.tile.TileEntityMultiblock;
 import mekanism.common.tile.TileEntityOredictionificator;
 import mekanism.common.tile.TileEntityOsmiumCompressor;
 import mekanism.common.tile.TileEntityPRC;
@@ -537,10 +529,6 @@ public class ClientProxy extends CommonProxy {
         }
 
         for (MachineType type : MachineType.values()) {
-            if (!type.isValidMachine()) {
-                continue;
-            }
-
             List<ModelResourceLocation> modelsToAdd = new ArrayList<>();
             String resource = "mekanism:" + type.getName();
             RecipeType recipePointer = null;
@@ -954,12 +942,6 @@ public class ClientProxy extends CommonProxy {
                 return new GuiQuantumEntangloporter(player.inventory, (TileEntityQuantumEntangloporter) tileEntity);
             case 47:
                 return new GuiSolarNeutronActivator(player.inventory, (TileEntitySolarNeutronActivator) tileEntity);
-            case 48:
-                return new GuiAmbientAccumulator(player, (TileEntityAmbientAccumulator) tileEntity);
-            case 49:
-                return new GuiInductionMatrix(player.inventory, (TileEntityInductionCasing) tileEntity);
-            case 50:
-                return new GuiMatrixStats(player.inventory, (TileEntityInductionCasing) tileEntity);
             case 51:
                 return new GuiTransporterConfig(player, (ISideConfiguration) tileEntity);
             case 52:

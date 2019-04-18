@@ -24,13 +24,16 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public abstract class DynamicNetwork<A, N extends DynamicNetwork<A, N>> implements IClientTicker, INetworkDataHandler {
 
-    public LinkedHashSet<IGridTransmitter<A, N>> transmitters = Sets.newLinkedHashSet();
-    public LinkedHashSet<IGridTransmitter<A, N>> transmittersToAdd = Sets.newLinkedHashSet();
-    public LinkedHashSet<IGridTransmitter<A, N>> transmittersAdded = Sets.newLinkedHashSet();
+    protected LinkedHashSet<IGridTransmitter<A, N>> transmitters = Sets.newLinkedHashSet();
+    protected LinkedHashSet<IGridTransmitter<A, N>> transmittersToAdd = Sets.newLinkedHashSet();
+    protected LinkedHashSet<IGridTransmitter<A, N>> transmittersAdded = Sets.newLinkedHashSet();
 
+    // TODO: Grok why ItemNetworkReader needs access to these two
     public HashMap<Coord4D, A> possibleAcceptors = new HashMap<>();
     public HashMap<Coord4D, EnumSet<EnumFacing>> acceptorDirections = new HashMap<>();
-    public HashMap<IGridTransmitter<A, N>, EnumSet<EnumFacing>> changedAcceptors = Maps.newHashMap();
+
+    protected HashMap<IGridTransmitter<A, N>, EnumSet<EnumFacing>> changedAcceptors = Maps.newHashMap();
+
     protected Range4D packetRange = null;
     protected int capacity = 0;
     protected double meanCapacity = 0;
@@ -263,6 +266,26 @@ public abstract class DynamicNetwork<A, N extends DynamicNetwork<A, N>> implemen
     public synchronized void updateCapacity() {
         updateMeanCapacity();
         capacity = (int) meanCapacity * transmitters.size();
+    }
+
+    public Object[] cloneTransmittersArray() {
+        return ((LinkedHashSet)transmitters.clone()).toArray();
+    }
+
+    public IGridTransmitter<A,N> iteratorNext() {
+        return transmitters.iterator().next();
+    }
+
+    public void add(IGridTransmitter<A, N> t) {
+        transmitters.add(t);
+    }
+
+    public void remove(IGridTransmitter<A, N> t) {
+        transmitters.remove(t);
+    }
+
+    public boolean isEmpty() {
+        return transmitters.isEmpty();
     }
 
     /**

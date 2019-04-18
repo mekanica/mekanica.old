@@ -14,7 +14,6 @@ import mekanism.common.capabilities.CapabilityWrapperManager;
 import mekanism.common.config.MekanismConfig.general;
 import mekanism.common.integration.MekanismHooks;
 import mekanism.common.integration.forgeenergy.ForgeEnergyIntegration;
-import mekanism.common.integration.tesla.TeslaIntegration;
 import mekanism.common.util.CapabilityUtils;
 import mekanism.common.util.MekanismUtils;
 import net.minecraft.nbt.NBTTagCompound;
@@ -44,8 +43,6 @@ public abstract class TileEntityElectricBlock extends TileEntityContainerBlock i
     public double maxEnergy;
 
     private boolean ic2Registered = false;
-    private CapabilityWrapperManager<IEnergyWrapper, TeslaIntegration> teslaManager = new CapabilityWrapperManager<>(
-          IEnergyWrapper.class, TeslaIntegration.class);
     private CapabilityWrapperManager<IEnergyWrapper, ForgeEnergyIntegration> forgeEnergyManager = new CapabilityWrapperManager<>(
           IEnergyWrapper.class, ForgeEnergyIntegration.class);
 
@@ -198,38 +195,6 @@ public abstract class TileEntityElectricBlock extends TileEntityContainerBlock i
     }
 
     @Override
-    @Method(modid = MekanismHooks.REDSTONEFLUX_MOD_ID)
-    public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
-        return (int) Math.round(
-              Math.min(Integer.MAX_VALUE, acceptEnergy(from, maxReceive * general.FROM_RF, simulate) * general.TO_RF));
-    }
-
-    @Override
-    @Method(modid = MekanismHooks.REDSTONEFLUX_MOD_ID)
-    public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
-        return (int) Math.round(
-              Math.min(Integer.MAX_VALUE, pullEnergy(from, maxExtract * general.FROM_RF, simulate) * general.TO_RF));
-    }
-
-    @Override
-    @Method(modid = MekanismHooks.REDSTONEFLUX_MOD_ID)
-    public boolean canConnectEnergy(EnumFacing from) {
-        return sideIsConsumer(from) || sideIsOutput(from);
-    }
-
-    @Override
-    @Method(modid = MekanismHooks.REDSTONEFLUX_MOD_ID)
-    public int getEnergyStored(EnumFacing from) {
-        return (int) Math.round(Math.min(Integer.MAX_VALUE, getEnergy() * general.TO_RF));
-    }
-
-    @Override
-    @Method(modid = MekanismHooks.REDSTONEFLUX_MOD_ID)
-    public int getMaxEnergyStored(EnumFacing from) {
-        return (int) Math.round(Math.min(Integer.MAX_VALUE, getMaxEnergy() * general.TO_RF));
-    }
-
-    @Override
     @Method(modid = MekanismHooks.IC2_MOD_ID)
     public int getSinkTier() {
         return !general.blacklistIC2 ? 4 : 0;
@@ -378,47 +343,26 @@ public abstract class TileEntityElectricBlock extends TileEntityContainerBlock i
         if (isCapabilityDisabled(capability, side)) {
             return false;
         }
-        return isStrictEnergy(capability) || capability == CapabilityEnergy.ENERGY || isTesla(capability, side) || super
-              .hasCapability(capability, side);
+        return capability == CapabilityEnergy.ENERGY || super.hasCapability(capability, side);
     }
 
     @Override
     public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing side) {
         if (isCapabilityDisabled(capability, side)) {
             return null;
-        } else if (isStrictEnergy(capability)) {
-            return (T) this;
         } else if (capability == CapabilityEnergy.ENERGY) {
             return CapabilityEnergy.ENERGY.cast(getForgeEnergyWrapper(side));
-        } else if (isTesla(capability, side)) {
-            return (T) getTeslaEnergyWrapper(side);
         }
         return super.getCapability(capability, side);
-    }
-
-    protected boolean isStrictEnergy(@Nonnull Capability capability) {
-        return capability == Capabilities.ENERGY_STORAGE_CAPABILITY
-              || capability == Capabilities.ENERGY_ACCEPTOR_CAPABILITY ||
-              capability == Capabilities.ENERGY_OUTPUTTER_CAPABILITY;
-    }
-
-    protected boolean isTesla(@Nonnull Capability capability, EnumFacing side) {
-        return capability == Capabilities.TESLA_HOLDER_CAPABILITY
-              || (capability == Capabilities.TESLA_CONSUMER_CAPABILITY && sideIsConsumer(side))
-              || (capability == Capabilities.TESLA_PRODUCER_CAPABILITY && sideIsOutput(side));
     }
 
     protected ForgeEnergyIntegration getForgeEnergyWrapper(EnumFacing side) {
         return forgeEnergyManager.getWrapper(this, side);
     }
 
-    protected TeslaIntegration getTeslaEnergyWrapper(EnumFacing side) {
-        return teslaManager.getWrapper(this, side);
-    }
-
     @Override
     public boolean isCapabilityDisabled(@Nonnull Capability<?> capability, EnumFacing side) {
-        if (isStrictEnergy(capability) || capability == CapabilityEnergy.ENERGY || isTesla(capability, side)) {
+        if (capability == CapabilityEnergy.ENERGY) {
             return !sideIsConsumer(side) && !sideIsOutput(side);
         }
         return super.isCapabilityDisabled(capability, side);

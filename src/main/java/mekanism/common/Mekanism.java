@@ -37,7 +37,6 @@ import mekanism.common.config.MekanismConfig.general;
 import mekanism.common.config.MekanismConfig.usage;
 import mekanism.common.content.boiler.SynchronizedBoilerData;
 import mekanism.common.content.entangloporter.InventoryFrequency;
-import mekanism.common.content.matrix.SynchronizedMatrixData;
 import mekanism.common.content.tank.SynchronizedTankData;
 import mekanism.common.content.transporter.PathfinderCache;
 import mekanism.common.content.transporter.TransporterManager;
@@ -67,7 +66,6 @@ import mekanism.common.recipe.outputs.ItemStackOutput;
 import mekanism.common.security.SecurityFrequency;
 import mekanism.common.tile.TileEntityAdvancedBoundingBlock;
 import mekanism.common.tile.TileEntityAdvancedFactory;
-import mekanism.common.tile.TileEntityAmbientAccumulator;
 import mekanism.common.tile.TileEntityBin;
 import mekanism.common.tile.TileEntityBoilerCasing;
 import mekanism.common.tile.TileEntityBoilerValve;
@@ -98,10 +96,6 @@ import mekanism.common.tile.TileEntityFormulaicAssemblicator;
 import mekanism.common.tile.TileEntityFuelwoodHeater;
 import mekanism.common.tile.TileEntityGasTank;
 import mekanism.common.tile.TileEntityGlowPanel;
-import mekanism.common.tile.TileEntityInductionCasing;
-import mekanism.common.tile.TileEntityInductionCell;
-import mekanism.common.tile.TileEntityInductionPort;
-import mekanism.common.tile.TileEntityInductionProvider;
 import mekanism.common.tile.TileEntityLaser;
 import mekanism.common.tile.TileEntityLaserAmplifier;
 import mekanism.common.tile.TileEntityLaserTractorBeam;
@@ -230,7 +224,6 @@ public class Mekanism {
      * MultiblockManagers for various structrures
      */
     public static MultiblockManager<SynchronizedTankData> tankManager = new MultiblockManager<>("dynamicTank");
-    public static MultiblockManager<SynchronizedMatrixData> matrixManager = new MultiblockManager<>("inductionMatrix");
     public static MultiblockManager<SynchronizedBoilerData> boilerManager = new MultiblockManager<>(
           "thermoelectricBoiler");
     /**
@@ -783,7 +776,6 @@ public class Mekanism {
         //Tile entities
         registerTileEntity(TileEntityAdvancedBoundingBlock.class, "advanced_bounding_block");
         registerTileEntity(TileEntityAdvancedFactory.class, "advanced_smelting_factory");
-        registerTileEntity(TileEntityAmbientAccumulator.class, "ambient_accumulator");
         registerTileEntity(TileEntityBin.class, "bin");
         registerTileEntity(TileEntityBoilerCasing.class, "boiler_casing");
         registerTileEntity(TileEntityBoilerValve.class, "boiler_valve");
@@ -815,10 +807,6 @@ public class Mekanism {
         registerTileEntity(TileEntityFuelwoodHeater.class, "fuelwood_heater");
         registerTileEntity(TileEntityGasTank.class, "gas_tank");
         registerTileEntity(TileEntityGlowPanel.class, "glow_panel");
-        registerTileEntity(TileEntityInductionCasing.class, "induction_casing");
-        registerTileEntity(TileEntityInductionCell.class, "induction_cell");
-        registerTileEntity(TileEntityInductionPort.class, "induction_port");
-        registerTileEntity(TileEntityInductionProvider.class, "induction_provider");
         registerTileEntity(TileEntityLaser.class, "laser");
         registerTileEntity(TileEntityLaserAmplifier.class, "laser_amplifier");
         registerTileEntity(TileEntityLaserTractorBeam.class, "laser_tractor_beam");
@@ -1041,7 +1029,7 @@ public class Mekanism {
     public void onEnergyTransferred(EnergyTransferEvent event) {
         try {
             packetHandler.sendToReceivers(new TransmitterUpdateMessage(PacketType.ENERGY,
-                        event.energyNetwork.transmitters.iterator().next().coord(), event.power),
+                        event.energyNetwork.iteratorNext().coord(), event.power),
                   event.energyNetwork.getPacketRange());
         } catch (Exception ignored) {
         }
@@ -1051,7 +1039,7 @@ public class Mekanism {
     public void onGasTransferred(GasTransferEvent event) {
         try {
             packetHandler.sendToReceivers(
-                  new TransmitterUpdateMessage(PacketType.GAS, event.gasNetwork.transmitters.iterator().next().coord(),
+                  new TransmitterUpdateMessage(PacketType.GAS, event.gasNetwork.iteratorNext().coord(),
                         event.transferType, event.didTransfer), event.gasNetwork.getPacketRange());
         } catch (Exception ignored) {
         }
@@ -1061,7 +1049,7 @@ public class Mekanism {
     public void onLiquidTransferred(FluidTransferEvent event) {
         try {
             packetHandler.sendToReceivers(new TransmitterUpdateMessage(PacketType.FLUID,
-                        event.fluidNetwork.transmitters.iterator().next().coord(), event.fluidType, event.didTransfer),
+                        event.fluidNetwork.iteratorNext().coord(), event.fluidType, event.didTransfer),
                   event.fluidNetwork.getPacketRange());
         } catch (Exception ignored) {
         }
@@ -1071,7 +1059,7 @@ public class Mekanism {
     public void onTransmittersAddedEvent(TransmittersAddedEvent event) {
         try {
             packetHandler.sendToReceivers(
-                  new TransmitterUpdateMessage(PacketType.UPDATE, event.network.transmitters.iterator().next().coord(),
+                  new TransmitterUpdateMessage(PacketType.UPDATE, event.network.iteratorNext().coord(),
                         event.newNetwork, event.newTransmitters), event.network.getPacketRange());
         } catch (Exception ignored) {
         }

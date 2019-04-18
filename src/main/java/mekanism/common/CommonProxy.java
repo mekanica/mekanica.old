@@ -35,7 +35,6 @@ import mekanism.common.inventory.container.ContainerFluidicPlenisher;
 import mekanism.common.inventory.container.ContainerFormulaicAssemblicator;
 import mekanism.common.inventory.container.ContainerFuelwoodHeater;
 import mekanism.common.inventory.container.ContainerGasTank;
-import mekanism.common.inventory.container.ContainerInductionMatrix;
 import mekanism.common.inventory.container.ContainerLaserAmplifier;
 import mekanism.common.inventory.container.ContainerLaserTractorBeam;
 import mekanism.common.inventory.container.ContainerMetallurgicInfuser;
@@ -57,7 +56,6 @@ import mekanism.common.inventory.container.robit.ContainerRobitMain;
 import mekanism.common.inventory.container.robit.ContainerRobitRepair;
 import mekanism.common.inventory.container.robit.ContainerRobitSmelting;
 import mekanism.common.item.ItemPortableTeleporter;
-import mekanism.common.multiblock.UpdateProtocol.NodeChecker;
 import mekanism.common.network.PacketPortableTeleporter.PortableTeleporterMessage;
 import mekanism.common.tile.TileEntityChanceMachine;
 import mekanism.common.tile.TileEntityChemicalCrystallizer;
@@ -76,11 +74,9 @@ import mekanism.common.tile.TileEntityFluidicPlenisher;
 import mekanism.common.tile.TileEntityFormulaicAssemblicator;
 import mekanism.common.tile.TileEntityFuelwoodHeater;
 import mekanism.common.tile.TileEntityGasTank;
-import mekanism.common.tile.TileEntityInductionCasing;
 import mekanism.common.tile.TileEntityLaserAmplifier;
 import mekanism.common.tile.TileEntityLaserTractorBeam;
 import mekanism.common.tile.TileEntityMetallurgicInfuser;
-import mekanism.common.tile.TileEntityMultiblock;
 import mekanism.common.tile.TileEntityOredictionificator;
 import mekanism.common.tile.TileEntityPRC;
 import mekanism.common.tile.TileEntityQuantumEntangloporter;
@@ -667,8 +663,6 @@ public class CommonProxy implements IGuiProvider {
                       (TileEntitySolarNeutronActivator) tileEntity);
             case 48:
                 return new ContainerNull(player, (TileEntityContainerBlock) tileEntity);
-            case 49:
-                return new ContainerInductionMatrix(player.inventory, (TileEntityInductionCasing) tileEntity);
             case 50:
                 return new ContainerNull(player, (TileEntityContainerBlock) tileEntity);
             case 51:

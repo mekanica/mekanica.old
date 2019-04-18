@@ -25,9 +25,6 @@ import mekanism.common.multiblock.IMultiblock;
 import mekanism.common.multiblock.IStructuralMultiblock;
 import mekanism.common.tile.TileEntityBin;
 import mekanism.common.tile.TileEntityDynamicTank;
-import mekanism.common.tile.TileEntityInductionCell;
-import mekanism.common.tile.TileEntityInductionPort;
-import mekanism.common.tile.TileEntityInductionProvider;
 import mekanism.common.tile.TileEntityMultiblock;
 import mekanism.common.tile.TileEntitySecurityDesk;
 import mekanism.common.tile.TileEntitySuperheatingElement;
@@ -234,22 +231,8 @@ public abstract class BlockBasic extends Block {
             state = state.withProperty(BlockStateBasic.activeProperty, ((IActiveState) tile).getActive());
         }
 
-        if (tile instanceof TileEntityInductionCell) {
-            state = state
-                  .withProperty(BlockStateBasic.tierProperty, ((TileEntityInductionCell) tile).tier.getBaseTier());
-        }
-
-        if (tile instanceof TileEntityInductionProvider) {
-            state = state
-                  .withProperty(BlockStateBasic.tierProperty, ((TileEntityInductionProvider) tile).tier.getBaseTier());
-        }
-
         if (tile instanceof TileEntityBin) {
             state = state.withProperty(BlockStateBasic.tierProperty, ((TileEntityBin) tile).tier.getBaseTier());
-        }
-
-        if (tile instanceof TileEntityInductionPort) {
-            state = state.withProperty(BlockStateBasic.activeProperty, ((TileEntityInductionPort) tile).mode);
         }
 
         if (tile instanceof TileEntitySuperheatingElement) {
@@ -309,8 +292,6 @@ public abstract class BlockBasic extends Block {
         for (BasicBlockType type : BasicBlockType.values()) {
             if (type.blockType == getBasicBlock()) {
                 switch (type) {
-                    case INDUCTION_CELL:
-                    case INDUCTION_PROVIDER:
                     case BIN:
                         for (BaseTier tier : BaseTier.values()) {
                             if (type == BasicBlockType.BIN || tier.isObtainable()) {
@@ -701,12 +682,6 @@ public abstract class BlockBasic extends Block {
             if (tileEntity.getItemCount() > 0) {
                 inv.setItemType(tileEntity.itemType);
             }
-        } else if (type == BasicBlockType.INDUCTION_CELL) {
-            TileEntityInductionCell tileEntity = (TileEntityInductionCell) world.getTileEntity(pos);
-            ((ItemBlockBasic) ret.getItem()).setBaseTier(ret, tileEntity.tier.getBaseTier());
-        } else if (type == BasicBlockType.INDUCTION_PROVIDER) {
-            TileEntityInductionProvider tileEntity = (TileEntityInductionProvider) world.getTileEntity(pos);
-            ((ItemBlockBasic) ret.getItem()).setBaseTier(ret, tileEntity.tier.getBaseTier());
         }
 
         TileEntity tileEntity = world.getTileEntity(pos);

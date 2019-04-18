@@ -29,10 +29,8 @@ import mekanism.client.gui.GuiFluidicPlenisher;
 import mekanism.client.gui.GuiFormulaicAssemblicator;
 import mekanism.client.gui.GuiFuelwoodHeater;
 import mekanism.client.gui.GuiGasTank;
-import mekanism.client.gui.GuiInductionMatrix;
 import mekanism.client.gui.GuiLaserAmplifier;
 import mekanism.client.gui.GuiLaserTractorBeam;
-import mekanism.client.gui.GuiMatrixStats;
 import mekanism.client.gui.GuiMetallurgicInfuser;
 import mekanism.client.gui.GuiOredictionificator;
 import mekanism.client.gui.GuiOsmiumCompressor;
@@ -173,7 +171,6 @@ import mekanism.common.tile.TileEntityFluidicPlenisher;
 import mekanism.common.tile.TileEntityFormulaicAssemblicator;
 import mekanism.common.tile.TileEntityFuelwoodHeater;
 import mekanism.common.tile.TileEntityGasTank;
-import mekanism.common.tile.TileEntityInductionCasing;
 import mekanism.common.tile.TileEntityLaserAmplifier;
 import mekanism.common.tile.TileEntityLaserTractorBeam;
 import mekanism.common.tile.TileEntityLogisticalSorter;
@@ -945,10 +942,6 @@ public class ClientProxy extends CommonProxy {
                 return new GuiQuantumEntangloporter(player.inventory, (TileEntityQuantumEntangloporter) tileEntity);
             case 47:
                 return new GuiSolarNeutronActivator(player.inventory, (TileEntitySolarNeutronActivator) tileEntity);
-            case 49:
-                return new GuiInductionMatrix(player.inventory, (TileEntityInductionCasing) tileEntity);
-            case 50:
-                return new GuiMatrixStats(player.inventory, (TileEntityInductionCasing) tileEntity);
             case 51:
                 return new GuiTransporterConfig(player, (ISideConfiguration) tileEntity);
             case 52:

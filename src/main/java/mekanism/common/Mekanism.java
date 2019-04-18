@@ -37,7 +37,6 @@ import mekanism.common.config.MekanismConfig.general;
 import mekanism.common.config.MekanismConfig.usage;
 import mekanism.common.content.boiler.SynchronizedBoilerData;
 import mekanism.common.content.entangloporter.InventoryFrequency;
-import mekanism.common.content.matrix.SynchronizedMatrixData;
 import mekanism.common.content.tank.SynchronizedTankData;
 import mekanism.common.content.transporter.PathfinderCache;
 import mekanism.common.content.transporter.TransporterManager;
@@ -97,10 +96,6 @@ import mekanism.common.tile.TileEntityFormulaicAssemblicator;
 import mekanism.common.tile.TileEntityFuelwoodHeater;
 import mekanism.common.tile.TileEntityGasTank;
 import mekanism.common.tile.TileEntityGlowPanel;
-import mekanism.common.tile.TileEntityInductionCasing;
-import mekanism.common.tile.TileEntityInductionCell;
-import mekanism.common.tile.TileEntityInductionPort;
-import mekanism.common.tile.TileEntityInductionProvider;
 import mekanism.common.tile.TileEntityLaser;
 import mekanism.common.tile.TileEntityLaserAmplifier;
 import mekanism.common.tile.TileEntityLaserTractorBeam;
@@ -229,7 +224,6 @@ public class Mekanism {
      * MultiblockManagers for various structrures
      */
     public static MultiblockManager<SynchronizedTankData> tankManager = new MultiblockManager<>("dynamicTank");
-    public static MultiblockManager<SynchronizedMatrixData> matrixManager = new MultiblockManager<>("inductionMatrix");
     public static MultiblockManager<SynchronizedBoilerData> boilerManager = new MultiblockManager<>(
           "thermoelectricBoiler");
     /**
@@ -813,10 +807,6 @@ public class Mekanism {
         registerTileEntity(TileEntityFuelwoodHeater.class, "fuelwood_heater");
         registerTileEntity(TileEntityGasTank.class, "gas_tank");
         registerTileEntity(TileEntityGlowPanel.class, "glow_panel");
-        registerTileEntity(TileEntityInductionCasing.class, "induction_casing");
-        registerTileEntity(TileEntityInductionCell.class, "induction_cell");
-        registerTileEntity(TileEntityInductionPort.class, "induction_port");
-        registerTileEntity(TileEntityInductionProvider.class, "induction_provider");
         registerTileEntity(TileEntityLaser.class, "laser");
         registerTileEntity(TileEntityLaserAmplifier.class, "laser_amplifier");
         registerTileEntity(TileEntityLaserTractorBeam.class, "laser_tractor_beam");

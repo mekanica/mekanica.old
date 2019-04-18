@@ -14,10 +14,6 @@ import mekanism.common.tile.TileEntityBoilerCasing;
 import mekanism.common.tile.TileEntityBoilerValve;
 import mekanism.common.tile.TileEntityDynamicTank;
 import mekanism.common.tile.TileEntityDynamicValve;
-import mekanism.common.tile.TileEntityInductionCasing;
-import mekanism.common.tile.TileEntityInductionCell;
-import mekanism.common.tile.TileEntityInductionPort;
-import mekanism.common.tile.TileEntityInductionProvider;
 import mekanism.common.tile.TileEntityPressureDisperser;
 import mekanism.common.tile.TileEntitySecurityDesk;
 import mekanism.common.tile.TileEntityStructuralGlass;
@@ -112,14 +108,6 @@ public class BlockStateBasic extends ExtendedBlockState {
               TileEntityThermalEvaporationValve.class, true, Predicates.alwaysFalse(), false, false, false),
         THERMAL_EVAPORATION_BLOCK(BasicBlock.BASIC_BLOCK_2, 0, "ThermalEvaporationBlock",
               TileEntityThermalEvaporationBlock.class, true, Predicates.alwaysFalse(), false, false, false),
-        INDUCTION_CASING(BasicBlock.BASIC_BLOCK_2, 1, "InductionCasing", TileEntityInductionCasing.class, true,
-              Predicates.alwaysFalse(), false, false, false),
-        INDUCTION_PORT(BasicBlock.BASIC_BLOCK_2, 2, "InductionPort", TileEntityInductionPort.class, true,
-              Predicates.alwaysFalse(), true, false, false),
-        INDUCTION_CELL(BasicBlock.BASIC_BLOCK_2, 3, "InductionCell", TileEntityInductionCell.class, true,
-              Predicates.alwaysFalse(), false, true, false),
-        INDUCTION_PROVIDER(BasicBlock.BASIC_BLOCK_2, 4, "InductionProvider", TileEntityInductionProvider.class, true,
-              Predicates.alwaysFalse(), false, true, false),
         SUPERHEATING_ELEMENT(BasicBlock.BASIC_BLOCK_2, 5, "SuperheatingElement", TileEntitySuperheatingElement.class,
               true, Predicates.alwaysFalse(), false, false, false),
         PRESSURE_DISPERSER(BasicBlock.BASIC_BLOCK_2, 6, "PressureDisperser", TileEntityPressureDisperser.class, true,

@@ -21,10 +21,12 @@ import mekanism.common.integration.computer.IComputerIntegration;
 import mekanism.common.integration.forgeenergy.ForgeEnergyIntegration;
 import mekanism.common.tile.TileEntityGasTank.GasMode;
 import mekanism.common.util.CableUtils;
+import mekanism.common.util.EnergyEmitter;
 import mekanism.common.util.LangUtils;
 import mekanism.common.util.MekanismUtils;
 import mekanism.common.util.PipeUtils;
 import mekanism.generators.common.content.turbine.TurbineFluidTank;
+import net.minecraft.block.Block;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
@@ -45,6 +47,8 @@ public class TileEntityTurbineValve extends TileEntityTurbineCasing implements I
     private CapabilityWrapperManager<IEnergyWrapper, ForgeEnergyIntegration> forgeEnergyManager = new CapabilityWrapperManager<>(
           IEnergyWrapper.class, ForgeEnergyIntegration.class);
 
+    private EnergyEmitter energyEmitter = new EnergyEmitter(this);
+
     public TileEntityTurbineValve() {
         super("TurbineValve");
         fluidTank = new TurbineFluidTank(this);
@@ -61,9 +65,21 @@ public class TileEntityTurbineValve extends TileEntityTurbineCasing implements I
         if (!world.isRemote) {
             if (structure != null) {
                 double prev = getEnergy();
-                CableUtils.emit(this);
+                energyEmitter.emit((int)Math.min(getEnergy(), getMaxOutput()));
             }
         }
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        energyEmitter.refresh();
+    }
+
+    @Override
+    public void onNeighborChange(Block block) {
+        super.onNeighborChange(block);
+        energyEmitter.refresh();
     }
 
     @Override

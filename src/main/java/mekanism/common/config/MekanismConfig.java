@@ -36,12 +36,10 @@ public class MekanismConfig {
         public static TempType tempUnit = TempType.K;
         public static double TO_IC2 = 0.1;
         public static double TO_RF = 0.4;
-        public static double TO_TESLA = 0.4;
         public static double TO_FORGE = 0.4;
         public static double FROM_H2 = 200;
         public static double FROM_IC2 = 10;
         public static double FROM_RF = 2.5;
-        public static double FROM_TESLA = 2.5;
         public static double FROM_FORGE = 2.5;
         public static int laserRange = 64;
         public static double laserEnergyNeededPerHardness = 100000;

@@ -1,21 +1,14 @@
 package mekanism.common.util;
 
-import cofh.redstoneflux.api.IEnergyConnection;
-import cofh.redstoneflux.api.IEnergyProvider;
-import cofh.redstoneflux.api.IEnergyReceiver;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 import mekanism.api.Coord4D;
-import mekanism.api.energy.IStrictEnergyAcceptor;
-import mekanism.api.energy.IStrictEnergyOutputter;
 import mekanism.api.transmitters.TransmissionType;
 import mekanism.common.base.IEnergyWrapper;
 import mekanism.common.capabilities.Capabilities;
 import mekanism.common.config.MekanismConfig.general;
-import mekanism.common.integration.ic2.IC2Integration;
-import net.darkhax.tesla.api.ITeslaConsumer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -70,11 +63,7 @@ public final class CableUtils {
             return false;
         }
 
-        return isAcceptor(cableEntity, tile, side) || isOutputter(tile, side) ||
-              (MekanismUtils.useRF() && tile instanceof IEnergyConnection && ((IEnergyConnection) tile)
-                    .canConnectEnergy(side.getOpposite())) ||
-              (MekanismUtils.useForge() && CapabilityUtils
-                    .hasCapability(tile, CapabilityEnergy.ENERGY, side.getOpposite()));
+        return isAcceptor(cableEntity, tile, side) || isOutputter(tile, side);
     }
 
     public static TileEntity[] getConnectedOutputters(BlockPos pos, World world) {
@@ -92,36 +81,12 @@ public final class CableUtils {
     }
 
     private static boolean isOutputter(TileEntity tileEntity, EnumFacing side) {
-        if (tileEntity == null) {
-            return false;
-        }
-
-        if (CapabilityUtils.hasCapability(tileEntity, Capabilities.ENERGY_OUTPUTTER_CAPABILITY, side.getOpposite())) {
-            IStrictEnergyOutputter outputter = CapabilityUtils
-                  .getCapability(tileEntity, Capabilities.ENERGY_OUTPUTTER_CAPABILITY, side.getOpposite());
-
-            if (outputter != null && outputter.canOutputEnergy(side.getOpposite())) {
-                return true;
-            }
-        }
-
-        if (MekanismUtils.useTesla() && CapabilityUtils
-              .hasCapability(tileEntity, Capabilities.TESLA_PRODUCER_CAPABILITY, side.getOpposite())) {
-            return true;
-        }
-
-        if (MekanismUtils.useForge() && CapabilityUtils
+        if (tileEntity != null && CapabilityUtils
               .hasCapability(tileEntity, CapabilityEnergy.ENERGY, side.getOpposite())) {
             return CapabilityUtils.getCapability(tileEntity, CapabilityEnergy.ENERGY, side.getOpposite()).canExtract();
         }
 
-        if (MekanismUtils.useRF() && tileEntity instanceof IEnergyProvider && ((IEnergyConnection) tileEntity)
-              .canConnectEnergy(side.getOpposite())) {
-            return true;
-        }
-
-        return MekanismUtils.useIC2() && IC2Integration.isOutputter(tileEntity, side);
-
+        return false;
     }
 
     private static boolean isAcceptor(TileEntity orig, TileEntity tileEntity, EnumFacing side) {
@@ -129,20 +94,8 @@ public final class CableUtils {
             return false;
         }
 
-        if (CapabilityUtils.hasCapability(tileEntity, Capabilities.ENERGY_ACCEPTOR_CAPABILITY, side.getOpposite())) {
-            return CapabilityUtils
-                  .getCapability(tileEntity, Capabilities.ENERGY_ACCEPTOR_CAPABILITY, side.getOpposite())
-                  .canReceiveEnergy(side.getOpposite());
-        } else if (MekanismUtils.useTesla() && CapabilityUtils
-              .hasCapability(tileEntity, Capabilities.TESLA_CONSUMER_CAPABILITY, side.getOpposite())) {
-            return true;
-        } else if (MekanismUtils.useForge() && CapabilityUtils
-              .hasCapability(tileEntity, CapabilityEnergy.ENERGY, side.getOpposite())) {
+        if (CapabilityUtils.hasCapability(tileEntity, CapabilityEnergy.ENERGY, side.getOpposite())) {
             return CapabilityUtils.getCapability(tileEntity, CapabilityEnergy.ENERGY, side.getOpposite()).canReceive();
-        } else if (MekanismUtils.useIC2() && IC2Integration.isAcceptor(orig, tileEntity, side)) {
-            return true;
-        } else if (MekanismUtils.useRF() && tileEntity instanceof IEnergyReceiver) {
-            return ((IEnergyReceiver) tileEntity).canConnectEnergy(side.getOpposite());
         }
 
         return false;
@@ -169,7 +122,7 @@ public final class CableUtils {
 
                     do {
                         double prev = sent;
-                        sent += emit_do(emitter, outputtingSides, energyToSend - sent, tryAgain);
+                        sent += emit_do(emitter, outputtingSides, energyToSend - sent);
 
                         tryAgain = energyToSend - sent > 0 && sent - prev > 0 && i < 100;
 
@@ -182,8 +135,7 @@ public final class CableUtils {
         }
     }
 
-    private static double emit_do(IEnergyWrapper emitter, List<EnumFacing> outputtingSides, double totalToSend,
-          boolean tryAgain) {
+    private static double emit_do(IEnergyWrapper emitter, List<EnumFacing> outputtingSides, double totalToSend) {
         double remains = totalToSend % outputtingSides.size();
         double splitSend = (totalToSend - remains) / outputtingSides.size();
         double sent = 0;
@@ -197,7 +149,12 @@ public final class CableUtils {
             remains = 0;
 
             double prev = sent;
-            sent += emit_do_do(emitter, tileEntity, side, toSend, tryAgain);
+
+            if (CapabilityUtils.hasCapability(tileEntity, CapabilityEnergy.ENERGY, side.getOpposite())) {
+                IEnergyStorage storage = CapabilityUtils.getCapability(tileEntity, CapabilityEnergy.ENERGY, side.getOpposite());
+                sent += storage.receiveEnergy((int) Math.round(Math.min(Integer.MAX_VALUE, toSend * general.TO_FORGE)),
+                            false) * general.FROM_FORGE;
+            }
 
             if (sent - prev == 0) {
                 it.remove();
@@ -207,41 +164,4 @@ public final class CableUtils {
         return sent;
     }
 
-    private static double emit_do_do(IEnergyWrapper from, TileEntity tileEntity, EnumFacing side, double currentSending,
-          boolean tryAgain) {
-        double sent = 0;
-
-        if (CapabilityUtils.hasCapability(tileEntity, Capabilities.ENERGY_ACCEPTOR_CAPABILITY, side.getOpposite())) {
-            IStrictEnergyAcceptor acceptor = CapabilityUtils
-                  .getCapability(tileEntity, Capabilities.ENERGY_ACCEPTOR_CAPABILITY, side.getOpposite());
-
-            if (acceptor.canReceiveEnergy(side.getOpposite())) {
-                sent += acceptor.acceptEnergy(side.getOpposite(), currentSending, false);
-            }
-        } else if (MekanismUtils.useTesla() && CapabilityUtils
-              .hasCapability(tileEntity, Capabilities.TESLA_CONSUMER_CAPABILITY, side.getOpposite())) {
-            ITeslaConsumer consumer = CapabilityUtils
-                  .getCapability(tileEntity, Capabilities.TESLA_CONSUMER_CAPABILITY, side.getOpposite());
-            sent += consumer.givePower(Math.round(currentSending * general.TO_TESLA), false) * general.FROM_TESLA;
-        } else if (MekanismUtils.useForge() && CapabilityUtils
-              .hasCapability(tileEntity, CapabilityEnergy.ENERGY, side.getOpposite())) {
-            IEnergyStorage storage = CapabilityUtils
-                  .getCapability(tileEntity, CapabilityEnergy.ENERGY, side.getOpposite());
-            sent += storage
-                  .receiveEnergy((int) Math.round(Math.min(Integer.MAX_VALUE, currentSending * general.TO_FORGE)),
-                        false) * general.FROM_FORGE;
-        } else if (MekanismUtils.useRF() && tileEntity instanceof IEnergyReceiver) {
-            IEnergyReceiver handler = (IEnergyReceiver) tileEntity;
-
-            if (handler.canConnectEnergy(side.getOpposite())) {
-                int toSend = Math.min((int) Math.round(currentSending * general.TO_RF), Integer.MAX_VALUE);
-                int used = handler.receiveEnergy(side.getOpposite(), toSend, false);
-                sent += used * general.FROM_RF;
-            }
-        } else if (MekanismUtils.useIC2()) {
-            sent += IC2Integration.emitEnergy(from, tileEntity, side, currentSending);
-        }
-
-        return sent;
-    }
 }

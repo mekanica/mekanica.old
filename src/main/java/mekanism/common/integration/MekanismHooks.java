@@ -45,7 +45,6 @@ public final class MekanismHooks {
     public static final String IC2_MOD_ID = "ic2";
     public static final String COMPUTERCRAFT_MOD_ID = "computercraft";
     public static final String APPLIED_ENERGISTICS_2_MOD_ID = "appliedenergistics2";
-    public static final String TESLA_MOD_ID = "tesla";
     public static final String MCMULTIPART_MOD_ID = "mcmultipart";
     public static final String REDSTONEFLUX_MOD_ID = "redstoneflux";
     public static final String OPENCOMPUTERS_MOD_ID = "opencomputers";
@@ -69,9 +68,6 @@ public final class MekanismHooks {
         }
         if (Loader.isModLoaded(APPLIED_ENERGISTICS_2_MOD_ID)) {
             AE2Loaded = true;
-        }
-        if (Loader.isModLoaded(TESLA_MOD_ID)) {
-            TeslaLoaded = true;
         }
         if (Loader.isModLoaded(MCMULTIPART_MOD_ID)) {
             MCMPLoaded = true;

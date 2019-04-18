@@ -14,7 +14,6 @@ import mekanism.api.energy.IEnergizedItem;
 import mekanism.common.Mekanism;
 import mekanism.common.MekanismItems;
 import mekanism.common.base.ISustainedInventory;
-import mekanism.common.capabilities.Capabilities;
 import mekanism.common.config.MekanismConfig.general;
 import mekanism.common.entity.ai.RobitAIFollow;
 import mekanism.common.entity.ai.RobitAIPickup;
@@ -24,7 +23,6 @@ import mekanism.common.item.ItemRobit;
 import mekanism.common.tile.TileEntityChargepad;
 import mekanism.common.util.MekanismUtils;
 import micdoodle8.mods.galacticraft.api.entity.IEntityBreathable;
-import net.darkhax.tesla.api.ITeslaProducer;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAILookIdle;
@@ -184,12 +182,6 @@ public class EntityRobit extends EntityCreature implements IInventory, ISustaine
             if (!stack.isEmpty() && getEnergy() < MAX_ELECTRICITY) {
                 if (stack.getItem() instanceof IEnergizedItem) {
                     setEnergy(getEnergy() + EnergizedItemManager.discharge(stack, MAX_ELECTRICITY - getEnergy()));
-                } else if (MekanismUtils.useTesla() && stack
-                      .hasCapability(Capabilities.TESLA_PRODUCER_CAPABILITY, null)) {
-                    ITeslaProducer producer = stack.getCapability(Capabilities.TESLA_PRODUCER_CAPABILITY, null);
-
-                    long needed = Math.round((MAX_ELECTRICITY - getEnergy()) * general.TO_TESLA);
-                    setEnergy(getEnergy() + producer.takePower(needed, false) * general.FROM_TESLA);
                 } else if (MekanismUtils.useForge() && stack.hasCapability(CapabilityEnergy.ENERGY, null)) {
                     IEnergyStorage storage = stack.getCapability(CapabilityEnergy.ENERGY, null);
 

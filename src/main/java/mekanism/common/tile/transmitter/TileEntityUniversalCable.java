@@ -1,14 +1,11 @@
 package mekanism.common.tile.transmitter;
 
-import cofh.redstoneflux.api.IEnergyProvider;
 import cofh.redstoneflux.api.IEnergyReceiver;
-import ic2.api.energy.EnergyNet;
-import ic2.api.energy.tile.IEnergySource;
-import ic2.api.energy.tile.IEnergyTile;
 import io.netty.buffer.ByteBuf;
 import java.util.Collection;
 import java.util.List;
 import javax.annotation.Nonnull;
+import mekanism.api.TileNetworkList;
 import mekanism.api.energy.EnergyStack;
 import mekanism.api.energy.IStrictEnergyAcceptor;
 import mekanism.api.energy.IStrictEnergyStorage;
@@ -17,19 +14,16 @@ import mekanism.common.Tier;
 import mekanism.common.Tier.BaseTier;
 import mekanism.common.Tier.CableTier;
 import mekanism.common.base.EnergyAcceptorWrapper;
-import mekanism.api.TileNetworkList;
 import mekanism.common.block.states.BlockStateTransmitter.TransmitterType;
 import mekanism.common.capabilities.Capabilities;
 import mekanism.common.capabilities.CapabilityWrapperManager;
 import mekanism.common.config.MekanismConfig.general;
 import mekanism.common.integration.MekanismHooks;
 import mekanism.common.integration.forgeenergy.ForgeEnergyCableIntegration;
-import mekanism.common.integration.tesla.TeslaCableIntegration;
 import mekanism.common.transmitters.grid.EnergyNetwork;
 import mekanism.common.util.CableUtils;
 import mekanism.common.util.CapabilityUtils;
 import mekanism.common.util.MekanismUtils;
-import net.darkhax.tesla.api.ITeslaProducer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -50,8 +44,6 @@ public class TileEntityUniversalCable extends TileEntityTransmitter<EnergyAccept
     public double lastWrite = 0;
 
     public EnergyStack buffer = new EnergyStack(0);
-    private CapabilityWrapperManager teslaManager = new CapabilityWrapperManager<>(getClass(),
-          TeslaCableIntegration.class);
     private CapabilityWrapperManager forgeEnergyManager = new CapabilityWrapperManager<>(getClass(),
           ForgeEnergyCableIntegration.class);
 
@@ -102,19 +94,6 @@ public class TileEntityUniversalCable extends TileEntityTransmitter<EnergyAccept
                             }
 
                             storage.setEnergy(storage.getEnergy() - toDraw);
-                        } else if (MekanismUtils.useTesla() && CapabilityUtils
-                              .hasCapability(outputter, Capabilities.TESLA_PRODUCER_CAPABILITY, side.getOpposite())) {
-                            ITeslaProducer producer = CapabilityUtils
-                                  .getCapability(outputter, Capabilities.TESLA_PRODUCER_CAPABILITY, side.getOpposite());
-                            double toDraw = producer
-                                  .takePower(Math.round(Math.min(Integer.MAX_VALUE, canDraw * general.TO_TESLA)), true)
-                                  * general.FROM_TESLA;
-
-                            if (toDraw > 0) {
-                                toDraw -= takeEnergy(toDraw, true);
-                            }
-
-                            producer.takePower(Math.round(toDraw * general.TO_TESLA), false);
                         } else if (MekanismUtils.useForge() && CapabilityUtils
                               .hasCapability(outputter, CapabilityEnergy.ENERGY, side.getOpposite())) {
                             IEnergyStorage storage = CapabilityUtils
@@ -126,32 +105,7 @@ public class TileEntityUniversalCable extends TileEntityTransmitter<EnergyAccept
                                 toDraw -= takeEnergy(toDraw, true);
                             }
 
-                            storage.extractEnergy((int) Math.round(toDraw * general.TO_TESLA), false);
-                        } else if (MekanismUtils.useRF() && outputter instanceof IEnergyProvider) {
-                            double toDraw = ((IEnergyProvider) outputter).extractEnergy(side.getOpposite(),
-                                  (int) Math.round(Math.min(Integer.MAX_VALUE, canDraw * general.TO_RF)), true)
-                                  * general.FROM_RF;
-
-                            if (toDraw > 0) {
-                                toDraw -= takeEnergy(toDraw, true);
-                            }
-
-                            ((IEnergyProvider) outputter)
-                                  .extractEnergy(side.getOpposite(), (int) Math.round(toDraw * general.TO_RF), false);
-                        } else if (MekanismUtils.useIC2()) {
-                            IEnergyTile tile = EnergyNet.instance.getSubTile(outputter.getWorld(), outputter.getPos());
-
-                            if (tile instanceof IEnergySource) {
-                                double received = Math
-                                      .min(((IEnergySource) tile).getOfferedEnergy() * general.FROM_IC2, canDraw);
-                                double toDraw = received;
-
-                                if (received > 0) {
-                                    toDraw -= takeEnergy(received, true);
-                                }
-
-                                ((IEnergySource) tile).drawEnergy(toDraw * general.TO_IC2);
-                            }
+                            storage.extractEnergy((int) Math.round(toDraw * general.TO_FORGE), false);
                         }
                     }
                 }
@@ -379,7 +333,6 @@ public class TileEntityUniversalCable extends TileEntityTransmitter<EnergyAccept
     public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
         return capability == Capabilities.ENERGY_STORAGE_CAPABILITY
               || capability == Capabilities.ENERGY_ACCEPTOR_CAPABILITY
-              || capability == Capabilities.TESLA_CONSUMER_CAPABILITY
               || capability == CapabilityEnergy.ENERGY
               || super.hasCapability(capability, facing);
     }
@@ -389,10 +342,6 @@ public class TileEntityUniversalCable extends TileEntityTransmitter<EnergyAccept
         if (capability == Capabilities.ENERGY_STORAGE_CAPABILITY
               || capability == Capabilities.ENERGY_ACCEPTOR_CAPABILITY) {
             return (T) this;
-        }
-
-        if (capability == Capabilities.TESLA_CONSUMER_CAPABILITY) {
-            return (T) teslaManager.getWrapper(this, facing);
         }
 
         if (capability == CapabilityEnergy.ENERGY) {

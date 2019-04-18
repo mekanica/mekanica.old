@@ -1320,7 +1320,7 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
         }
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return true;
-        } else if (isStrictEnergy(capability) || capability == CapabilityEnergy.ENERGY || isTesla(capability, side)) {
+        } else if (isStrictEnergy(capability) || capability == CapabilityEnergy.ENERGY) {
             return true;
         }
         return hasCapability(capability, side);
@@ -1336,8 +1336,6 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
             return (T) this;
         } else if (capability == CapabilityEnergy.ENERGY) {
             return CapabilityEnergy.ENERGY.cast(getForgeEnergyWrapper(side));
-        } else if (isTesla(capability, side)) {
-            return (T) getTeslaEnergyWrapper(side);
         }
         return getCapability(capability, side);
     }
@@ -1359,7 +1357,7 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
             }
             return true;
         }
-        if (isStrictEnergy(capability) || capability == CapabilityEnergy.ENERGY || isTesla(capability, side)) {
+        if (isStrictEnergy(capability) || capability == CapabilityEnergy.ENERGY) {
             if (offset.equals(Vec3i.NULL_VECTOR)) {
                 //Disable if it is the bottom port but wrong side of it
                 return side != EnumFacing.DOWN;
@@ -1383,7 +1381,7 @@ public class TileEntityDigitalMiner extends TileEntityElectricBlock implements I
         //Return some capabilities as disabled, and handle them with offset capabilities instead
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return true;
-        } else if (isStrictEnergy(capability) || capability == CapabilityEnergy.ENERGY || isTesla(capability, side)) {
+        } else if (isStrictEnergy(capability) || capability == CapabilityEnergy.ENERGY) {
             return true;
         }
         return super.isCapabilityDisabled(capability, side);

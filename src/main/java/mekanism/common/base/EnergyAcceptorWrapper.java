@@ -10,7 +10,6 @@ import mekanism.common.capabilities.Capabilities;
 import mekanism.common.config.MekanismConfig.general;
 import mekanism.common.util.CapabilityUtils;
 import mekanism.common.util.MekanismUtils;
-import net.darkhax.tesla.api.ITeslaConsumer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -30,10 +29,6 @@ public abstract class EnergyAcceptorWrapper implements IStrictEnergyAcceptor {
         if (CapabilityUtils.hasCapability(tileEntity, Capabilities.ENERGY_ACCEPTOR_CAPABILITY, side)) {
             wrapper = new MekanismAcceptor(
                   CapabilityUtils.getCapability(tileEntity, Capabilities.ENERGY_ACCEPTOR_CAPABILITY, side));
-        } else if (MekanismUtils.useTesla() && CapabilityUtils
-              .hasCapability(tileEntity, Capabilities.TESLA_CONSUMER_CAPABILITY, side)) {
-            wrapper = new TeslaAcceptor(
-                  CapabilityUtils.getCapability(tileEntity, Capabilities.TESLA_CONSUMER_CAPABILITY, side));
         } else if (MekanismUtils.useForge() && CapabilityUtils
               .hasCapability(tileEntity, CapabilityEnergy.ENERGY, side)) {
             wrapper = new ForgeAcceptor(CapabilityUtils.getCapability(tileEntity, CapabilityEnergy.ENERGY, side));
@@ -144,38 +139,6 @@ public abstract class EnergyAcceptorWrapper implements IStrictEnergyAcceptor {
 
         public double fromEU(double eu) {
             return eu * general.FROM_IC2;
-        }
-    }
-
-    public static class TeslaAcceptor extends EnergyAcceptorWrapper {
-
-        private ITeslaConsumer acceptor;
-
-        public TeslaAcceptor(ITeslaConsumer teslaConsumer) {
-            acceptor = teslaConsumer;
-        }
-
-        @Override
-        public double acceptEnergy(EnumFacing side, double amount, boolean simulate) {
-            return fromTesla(acceptor.givePower(toTesla(amount), false));
-        }
-
-        @Override
-        public boolean canReceiveEnergy(EnumFacing side) {
-            return acceptor.givePower(1, true) > 0;
-        }
-
-        @Override
-        public boolean needsEnergy(EnumFacing side) {
-            return canReceiveEnergy(side);
-        }
-
-        public long toTesla(double joules) {
-            return Math.round(joules * general.TO_TESLA);
-        }
-
-        public double fromTesla(double tesla) {
-            return tesla * general.FROM_TESLA;
         }
     }
 

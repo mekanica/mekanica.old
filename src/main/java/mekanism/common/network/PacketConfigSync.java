@@ -40,8 +40,6 @@ public class PacketConfigSync implements IMessageHandler<ConfigSyncMessage, IMes
             dataStream.writeDouble(general.TO_IC2);
             dataStream.writeDouble(general.FROM_RF);
             dataStream.writeDouble(general.TO_RF);
-            dataStream.writeDouble(general.FROM_TESLA);
-            dataStream.writeDouble(general.TO_TESLA);
             dataStream.writeDouble(general.FROM_FORGE);
             dataStream.writeDouble(general.TO_FORGE);
             dataStream.writeDouble(general.FROM_H2);
@@ -133,8 +131,6 @@ public class PacketConfigSync implements IMessageHandler<ConfigSyncMessage, IMes
             general.TO_IC2 = dataStream.readDouble();
             general.FROM_RF = dataStream.readDouble();
             general.TO_RF = dataStream.readDouble();
-            general.FROM_TESLA = dataStream.readDouble();
-            general.TO_TESLA = dataStream.readDouble();
             general.FROM_FORGE = dataStream.readDouble();
             general.TO_FORGE = dataStream.readDouble();
             general.FROM_H2 = dataStream.readDouble();

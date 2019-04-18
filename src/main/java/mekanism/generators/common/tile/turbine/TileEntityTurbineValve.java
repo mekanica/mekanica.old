@@ -20,7 +20,6 @@ import mekanism.common.config.MekanismConfig.generators;
 import mekanism.common.integration.MekanismHooks;
 import mekanism.common.integration.computer.IComputerIntegration;
 import mekanism.common.integration.forgeenergy.ForgeEnergyIntegration;
-import mekanism.common.integration.tesla.TeslaIntegration;
 import mekanism.common.tile.TileEntityGasTank.GasMode;
 import mekanism.common.util.CableUtils;
 import mekanism.common.util.LangUtils;
@@ -44,8 +43,6 @@ public class TileEntityTurbineValve extends TileEntityTurbineCasing implements I
           "getSteamInput"};
     public boolean ic2Registered = false;
     public TurbineFluidTank fluidTank;
-    private CapabilityWrapperManager<IEnergyWrapper, TeslaIntegration> teslaManager = new CapabilityWrapperManager<>(
-          IEnergyWrapper.class, TeslaIntegration.class);
     private CapabilityWrapperManager<IEnergyWrapper, ForgeEnergyIntegration> forgeEnergyManager = new CapabilityWrapperManager<>(
           IEnergyWrapper.class, ForgeEnergyIntegration.class);
 
@@ -406,8 +403,6 @@ public class TileEntityTurbineValve extends TileEntityTurbineCasing implements I
             if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY
                   || capability == Capabilities.ENERGY_STORAGE_CAPABILITY
                   || capability == Capabilities.ENERGY_OUTPUTTER_CAPABILITY
-                  || capability == Capabilities.TESLA_HOLDER_CAPABILITY
-                  || (capability == Capabilities.TESLA_PRODUCER_CAPABILITY && sideIsOutput(facing))
                   || capability == CapabilityEnergy.ENERGY) {
                 return true;
             }
@@ -426,11 +421,6 @@ public class TileEntityTurbineValve extends TileEntityTurbineCasing implements I
 
             if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
                 return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FluidHandlerWrapper(this, side));
-            }
-
-            if (capability == Capabilities.TESLA_HOLDER_CAPABILITY
-                  || (capability == Capabilities.TESLA_PRODUCER_CAPABILITY && sideIsOutput(facing))) {
-                return (T) teslaManager.getWrapper(this, facing);
             }
 
             if (capability == CapabilityEnergy.ENERGY) {

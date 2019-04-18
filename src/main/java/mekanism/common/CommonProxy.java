@@ -225,12 +225,6 @@ public class CommonProxy implements IGuiProvider {
               "Conversion multiplier from RF to Joules (RF * JoulesToRF = Joules)").getDouble();
         general.TO_RF = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "RFToJoules", 0.4D,
               "Conversion multiplier from Joules to RF (Joules * RFToJoules = RF)").getDouble();
-        general.FROM_TESLA = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "JoulesToTesla", 2.5D,
-              "Conversion multiplier from Tesla to Joules (Tesla * JoulesToTesla = Joules)")
-              .getDouble();
-        general.TO_TESLA = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "TeslaToJoules", 0.4D,
-              "Conversion multiplier from Joules to Tesla (Joules * TeslaToJoules = Tesla)")
-              .getDouble();
         general.FROM_FORGE = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "JoulesToForge", 2.5D,
               "Conversion multiplier from Forge Energy to Joules (FE * JoulesToForge = Joules)")
               .getDouble();
@@ -334,10 +328,6 @@ public class CommonProxy implements IGuiProvider {
         general.blacklistRF = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "BlacklistRFPower", false,
               "Disables Thermal Expansion RedstoneFlux power integration. Requires world restart (server-side option in SMP).")
               .getBoolean();
-        general.blacklistTesla = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "BlacklistTeslaPower", false,
-                    "Disables Tesla power integration. Requires world restart (server-side option in SMP).")
-              .getBoolean();
         general.blacklistForge = Mekanism.configuration
               .get(Configuration.CATEGORY_GENERAL, "BlacklistForgePower", false,
                     "Disables Forge Energy (FE,IF,uF,CF) power integration. Requires world restart (server-side option in SMP).")
@@ -355,9 +345,6 @@ public class CommonProxy implements IGuiProvider {
             case "eu":
             case "ic2":
                 general.energyUnit = EnergyType.EU;
-                break;
-            case "tesla":
-                general.energyUnit = EnergyType.T;
                 break;
             default:
                 general.energyUnit = EnergyType.RF;

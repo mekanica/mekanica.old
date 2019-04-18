@@ -25,7 +25,7 @@ public class ForgeEnergyItemWrapper extends ItemCapability implements IEnergySto
             int toReceive = Math.min(maxReceive, energyNeeded);
 
             if (!simulate) {
-                getItem().setEnergy(getStack(), getItem().getEnergy(getStack()) + toReceive * general.FROM_TESLA);
+                getItem().setEnergy(getStack(), getItem().getEnergy(getStack()) + toReceive * general.FROM_FORGE);
             }
 
             return toReceive;
@@ -41,7 +41,7 @@ public class ForgeEnergyItemWrapper extends ItemCapability implements IEnergySto
             int toSend = Math.min(maxExtract, energyRemaining);
 
             if (!simulate) {
-                getItem().setEnergy(getStack(), getItem().getEnergy(getStack()) - toSend * general.FROM_TESLA);
+                getItem().setEnergy(getStack(), getItem().getEnergy(getStack()) - toSend * general.FROM_FORGE);
             }
 
             return toSend;

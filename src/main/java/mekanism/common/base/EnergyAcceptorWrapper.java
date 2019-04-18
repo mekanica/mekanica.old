@@ -25,10 +25,7 @@ public abstract class EnergyAcceptorWrapper implements IStrictEnergyAcceptor {
 
         EnergyAcceptorWrapper wrapper = null;
 
-        if (CapabilityUtils.hasCapability(tileEntity, Capabilities.ENERGY_ACCEPTOR_CAPABILITY, side)) {
-            wrapper = new MekanismAcceptor(
-                  CapabilityUtils.getCapability(tileEntity, Capabilities.ENERGY_ACCEPTOR_CAPABILITY, side));
-        } else if (CapabilityUtils.hasCapability(tileEntity, CapabilityEnergy.ENERGY, side)) {
+        if (CapabilityUtils.hasCapability(tileEntity, CapabilityEnergy.ENERGY, side)) {
             wrapper = new ForgeAcceptor(CapabilityUtils.getCapability(tileEntity, CapabilityEnergy.ENERGY, side));
         } else if (MekanismUtils.useIC2()) {
             IEnergyTile tile = EnergyNet.instance.getSubTile(tileEntity.getWorld(), tileEntity.getPos());
@@ -46,30 +43,6 @@ public abstract class EnergyAcceptorWrapper implements IStrictEnergyAcceptor {
     }
 
     public abstract boolean needsEnergy(EnumFacing side);
-
-    public static class MekanismAcceptor extends EnergyAcceptorWrapper {
-
-        private IStrictEnergyAcceptor acceptor;
-
-        public MekanismAcceptor(IStrictEnergyAcceptor mekAcceptor) {
-            acceptor = mekAcceptor;
-        }
-
-        @Override
-        public double acceptEnergy(EnumFacing side, double amount, boolean simulate) {
-            return acceptor.acceptEnergy(side, amount, simulate);
-        }
-
-        @Override
-        public boolean canReceiveEnergy(EnumFacing side) {
-            return acceptor.canReceiveEnergy(side);
-        }
-
-        @Override
-        public boolean needsEnergy(EnumFacing side) {
-            return acceptor.acceptEnergy(side, 1, true) > 0;
-        }
-    }
 
     public static class IC2Acceptor extends EnergyAcceptorWrapper {
 

@@ -13,7 +13,6 @@ import mekanism.api.Coord4D;
 import mekanism.common.base.FluidHandlerWrapper;
 import mekanism.common.base.IEnergyWrapper;
 import mekanism.common.base.IFluidHandlerWrapper;
-import mekanism.common.capabilities.Capabilities;
 import mekanism.common.capabilities.CapabilityWrapperManager;
 import mekanism.common.config.MekanismConfig.general;
 import mekanism.common.config.MekanismConfig.generators;
@@ -361,8 +360,6 @@ public class TileEntityTurbineValve extends TileEntityTurbineCasing implements I
     public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing side) {
         if ((!world.isRemote && structure != null) || (world.isRemote && clientHasStructure)) {
             if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY
-                  || capability == Capabilities.ENERGY_STORAGE_CAPABILITY
-                  || capability == Capabilities.ENERGY_OUTPUTTER_CAPABILITY
                   || capability == CapabilityEnergy.ENERGY) {
                 return true;
             }
@@ -374,11 +371,6 @@ public class TileEntityTurbineValve extends TileEntityTurbineCasing implements I
     @Override
     public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing side) {
         if ((!world.isRemote && structure != null) || (world.isRemote && clientHasStructure)) {
-            if (capability == Capabilities.ENERGY_STORAGE_CAPABILITY
-                  || capability == Capabilities.ENERGY_OUTPUTTER_CAPABILITY) {
-                return (T) this;
-            }
-
             if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
                 return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(new FluidHandlerWrapper(this, side));
             }

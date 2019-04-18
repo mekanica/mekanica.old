@@ -74,21 +74,7 @@ public class TileEntityUniversalCable extends TileEntityTransmitter<EnergyAccept
                     if (connectedOutputters[side.ordinal()] != null) {
                         TileEntity outputter = connectedOutputters[side.ordinal()];
 
-                        if (CapabilityUtils
-                              .hasCapability(outputter, Capabilities.ENERGY_OUTPUTTER_CAPABILITY, side.getOpposite())
-                              && CapabilityUtils
-                              .hasCapability(outputter, Capabilities.ENERGY_STORAGE_CAPABILITY, side.getOpposite())) {
-                            IStrictEnergyStorage storage = CapabilityUtils
-                                  .getCapability(outputter, Capabilities.ENERGY_STORAGE_CAPABILITY, side.getOpposite());
-                            double received = Math.min(storage.getEnergy(), canDraw);
-                            double toDraw = received;
-
-                            if (received > 0) {
-                                toDraw -= takeEnergy(received, true);
-                            }
-
-                            storage.setEnergy(storage.getEnergy() - toDraw);
-                        } else if (CapabilityUtils.hasCapability(outputter, CapabilityEnergy.ENERGY, side.getOpposite())) {
+                        if (CapabilityUtils.hasCapability(outputter, CapabilityEnergy.ENERGY, side.getOpposite())) {
                             IEnergyStorage storage = CapabilityUtils
                                   .getCapability(outputter, CapabilityEnergy.ENERGY, side.getOpposite());
                             double toDraw = storage.extractEnergy((int) Math.round(canDraw * general.TO_RF), true)
@@ -299,19 +285,11 @@ public class TileEntityUniversalCable extends TileEntityTransmitter<EnergyAccept
 
     @Override
     public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
-        return capability == Capabilities.ENERGY_STORAGE_CAPABILITY
-              || capability == Capabilities.ENERGY_ACCEPTOR_CAPABILITY
-              || capability == CapabilityEnergy.ENERGY
-              || super.hasCapability(capability, facing);
+        return capability == CapabilityEnergy.ENERGY || super.hasCapability(capability, facing);
     }
 
     @Override
     public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
-        if (capability == Capabilities.ENERGY_STORAGE_CAPABILITY
-              || capability == Capabilities.ENERGY_ACCEPTOR_CAPABILITY) {
-            return (T) this;
-        }
-
         if (capability == CapabilityEnergy.ENERGY) {
             return (T) forgeEnergyManager.getWrapper(this, facing);
         }

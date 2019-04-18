@@ -343,26 +343,17 @@ public abstract class TileEntityElectricBlock extends TileEntityContainerBlock i
         if (isCapabilityDisabled(capability, side)) {
             return false;
         }
-        return isStrictEnergy(capability) || capability == CapabilityEnergy.ENERGY || super
-              .hasCapability(capability, side);
+        return capability == CapabilityEnergy.ENERGY || super.hasCapability(capability, side);
     }
 
     @Override
     public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing side) {
         if (isCapabilityDisabled(capability, side)) {
             return null;
-        } else if (isStrictEnergy(capability)) {
-            return (T) this;
         } else if (capability == CapabilityEnergy.ENERGY) {
             return CapabilityEnergy.ENERGY.cast(getForgeEnergyWrapper(side));
         }
         return super.getCapability(capability, side);
-    }
-
-    protected boolean isStrictEnergy(@Nonnull Capability capability) {
-        return capability == Capabilities.ENERGY_STORAGE_CAPABILITY
-              || capability == Capabilities.ENERGY_ACCEPTOR_CAPABILITY ||
-              capability == Capabilities.ENERGY_OUTPUTTER_CAPABILITY;
     }
 
     protected ForgeEnergyIntegration getForgeEnergyWrapper(EnumFacing side) {
@@ -371,7 +362,7 @@ public abstract class TileEntityElectricBlock extends TileEntityContainerBlock i
 
     @Override
     public boolean isCapabilityDisabled(@Nonnull Capability<?> capability, EnumFacing side) {
-        if (isStrictEnergy(capability) || capability == CapabilityEnergy.ENERGY) {
+        if (capability == CapabilityEnergy.ENERGY) {
             return !sideIsConsumer(side) && !sideIsOutput(side);
         }
         return super.isCapabilityDisabled(capability, side);

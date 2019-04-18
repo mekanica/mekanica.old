@@ -67,7 +67,6 @@ import mekanism.common.recipe.outputs.ItemStackOutput;
 import mekanism.common.security.SecurityFrequency;
 import mekanism.common.tile.TileEntityAdvancedBoundingBlock;
 import mekanism.common.tile.TileEntityAdvancedFactory;
-import mekanism.common.tile.TileEntityAmbientAccumulator;
 import mekanism.common.tile.TileEntityBin;
 import mekanism.common.tile.TileEntityBoilerCasing;
 import mekanism.common.tile.TileEntityBoilerValve;
@@ -783,7 +782,6 @@ public class Mekanism {
         //Tile entities
         registerTileEntity(TileEntityAdvancedBoundingBlock.class, "advanced_bounding_block");
         registerTileEntity(TileEntityAdvancedFactory.class, "advanced_smelting_factory");
-        registerTileEntity(TileEntityAmbientAccumulator.class, "ambient_accumulator");
         registerTileEntity(TileEntityBin.class, "bin");
         registerTileEntity(TileEntityBoilerCasing.class, "boiler_casing");
         registerTileEntity(TileEntityBoilerValve.class, "boiler_valve");

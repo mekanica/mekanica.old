@@ -16,7 +16,6 @@ import mekanism.common.block.BlockMachine;
 import mekanism.common.config.MekanismConfig.general;
 import mekanism.common.config.MekanismConfig.usage;
 import mekanism.common.tile.TileEntityAdvancedFactory;
-import mekanism.common.tile.TileEntityAmbientAccumulator;
 import mekanism.common.tile.TileEntityChargepad;
 import mekanism.common.tile.TileEntityChemicalCrystallizer;
 import mekanism.common.tile.TileEntityChemicalDissolutionChamber;
@@ -180,8 +179,6 @@ public class BlockStateMachine extends ExtendedBlockState {
               TileEntityQuantumEntangloporter.class, true, false, false, Predicates.alwaysTrue(), false),
         SOLAR_NEUTRON_ACTIVATOR(MachineBlock.MACHINE_BLOCK_3, 1, "SolarNeutronActivator", 47,
               TileEntitySolarNeutronActivator.class, false, true, false, Plane.HORIZONTAL, true),
-        AMBIENT_ACCUMULATOR(MachineBlock.MACHINE_BLOCK_3, 2, "AmbientAccumulator", 48,
-              TileEntityAmbientAccumulator.class, true, false, false, Predicates.alwaysFalse(), true),
         OREDICTIONIFICATOR(MachineBlock.MACHINE_BLOCK_3, 3, "Oredictionificator", 52,
               TileEntityOredictionificator.class, false, false, false, Plane.HORIZONTAL, true),
         RESISTIVE_HEATER(MachineBlock.MACHINE_BLOCK_3, 4, "ResistiveHeater", 53, TileEntityResistiveHeater.class, true,
@@ -229,9 +226,7 @@ public class BlockStateMachine extends ExtendedBlockState {
             List<MachineType> ret = new ArrayList<>();
 
             for (MachineType type : MachineType.values()) {
-                if (type.isValidMachine()) {
-                    ret.add(type);
-                }
+                ret.add(type);
             }
 
             return ret;
@@ -273,10 +268,6 @@ public class BlockStateMachine extends ExtendedBlockState {
         @Override
         public boolean isEnabled() {
             return general.machinesManager.isEnabled(blockName);
-        }
-
-        public boolean isValidMachine() {
-            return this != AMBIENT_ACCUMULATOR;
         }
 
         public TileEntity create() {
@@ -356,8 +347,6 @@ public class BlockStateMachine extends ExtendedBlockState {
                     return 0;
                 case SOLAR_NEUTRON_ACTIVATOR:
                     return 0;
-                case AMBIENT_ACCUMULATOR:
-                    return 0;
                 case RESISTIVE_HEATER:
                     return 100;
                 case FORMULAIC_ASSEMBLICATOR:
@@ -417,7 +406,7 @@ public class BlockStateMachine extends ExtendedBlockState {
 
         @Override
         public boolean apply(MachineType input) {
-            return input.typeBlock == machineBlock && input.isValidMachine();
+            return input.typeBlock == machineBlock;
         }
     }
 

@@ -284,10 +284,6 @@ public final class RecipeHandler {
         addRecipe(Recipe.SOLAR_NEUTRON_ACTIVATOR, new SolarNeutronRecipe(inputGas, outputGas));
     }
 
-    public static void addAmbientGas(int dimensionID, String ambientGasName) {
-        addRecipe(Recipe.AMBIENT_ACCUMULATOR, new AmbientGasRecipe(dimensionID, ambientGasName));
-    }
-
     /**
      * Gets the Metallurgic Infuser Recipe for the InfusionInput in the parameters.
      *
@@ -529,13 +525,6 @@ public final class RecipeHandler {
         return null;
     }
 
-    public static AmbientGasRecipe getDimensionGas(IntegerInput input) {
-        Map<IntegerInput, AmbientGasRecipe> recipes = Recipe.AMBIENT_ACCUMULATOR.get();
-        AmbientGasRecipe recipe = recipes.get(input);
-
-        return recipe == null ? null : recipe.copy();
-    }
-
     /**
      * Gets the whether the input ItemStack is in a recipe
      *
@@ -655,10 +644,6 @@ public final class RecipeHandler {
         public static final Recipe<PressurizedInput, PressurizedOutput, PressurizedRecipe> PRESSURIZED_REACTION_CHAMBER = new Recipe<>(
               MachineType.PRESSURIZED_REACTION_CHAMBER.blockName, "PRESSURIZED_REACTION_CHAMBER",
               PressurizedInput.class, PressurizedOutput.class, PressurizedRecipe.class);
-
-        public static final Recipe<IntegerInput, GasOutput, AmbientGasRecipe> AMBIENT_ACCUMULATOR = new Recipe<>(
-              MachineType.AMBIENT_ACCUMULATOR.blockName, "AMBIENT_ACCUMULATOR", IntegerInput.class, GasOutput.class,
-              AmbientGasRecipe.class);
 
         public static final Recipe<FluidInput, FluidOutput, ThermalEvaporationRecipe> THERMAL_EVAPORATION_PLANT = new Recipe<>(
               "ThermalEvaporationPlant", "THERMAL_EVAPORATION_PLANT", FluidInput.class, FluidOutput.class,

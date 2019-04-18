@@ -25,7 +25,7 @@ import net.minecraftforge.energy.IEnergyStorage;
 
 public final class CableUtils {
 
-    public static boolean isCable(TileEntity tileEntity) {
+    private static boolean isCable(TileEntity tileEntity) {
         if (CapabilityUtils.hasCapability(tileEntity, Capabilities.GRID_TRANSMITTER_CAPABILITY, null)) {
             return TransmissionType.checkTransmissionType(
                   CapabilityUtils.getCapability(tileEntity, Capabilities.GRID_TRANSMITTER_CAPABILITY, null),
@@ -42,7 +42,7 @@ public final class CableUtils {
      * @param sideFunction - set of sides to check
      * @return boolean[] of adjacent connections
      */
-    public static boolean[] getConnections(TileEntity tileEntity, Function<EnumFacing, Boolean> sideFunction) {
+    private static boolean[] getConnections(TileEntity tileEntity, Function<EnumFacing, Boolean> sideFunction) {
         boolean[] connectable = new boolean[]{false, false, false, false, false, false};
         Coord4D coord = Coord4D.get(tileEntity);
 
@@ -77,16 +77,6 @@ public final class CableUtils {
                     .hasCapability(tile, CapabilityEnergy.ENERGY, side.getOpposite()));
     }
 
-    /**
-     * Gets all the connected cables around a specific tile entity.
-     *
-     * @param tileEntity - center tile entity
-     * @return TileEntity[] of connected cables
-     */
-    public static TileEntity[] getConnectedOutputters(TileEntity tileEntity) {
-        return getConnectedOutputters(tileEntity.getPos(), tileEntity.getWorld());
-    }
-
     public static TileEntity[] getConnectedOutputters(BlockPos pos, World world) {
         TileEntity[] outputters = new TileEntity[]{null, null, null, null, null, null};
 
@@ -101,7 +91,7 @@ public final class CableUtils {
         return outputters;
     }
 
-    public static boolean isOutputter(TileEntity tileEntity, EnumFacing side) {
+    private static boolean isOutputter(TileEntity tileEntity, EnumFacing side) {
         if (tileEntity == null) {
             return false;
         }
@@ -134,7 +124,7 @@ public final class CableUtils {
 
     }
 
-    public static boolean isAcceptor(TileEntity orig, TileEntity tileEntity, EnumFacing side) {
+    private static boolean isAcceptor(TileEntity orig, TileEntity tileEntity, EnumFacing side) {
         if (CapabilityUtils.hasCapability(tileEntity, Capabilities.GRID_TRANSMITTER_CAPABILITY, side.getOpposite())) {
             return false;
         }

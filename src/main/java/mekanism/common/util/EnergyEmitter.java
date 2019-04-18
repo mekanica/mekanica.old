@@ -26,12 +26,12 @@ public class EnergyEmitter {
 
         // Walk around each of our sides, checking to see if this block outputs energy
         for (EnumFacing side: EnumFacing.values()) {
-            IEnergyStorage store = parent.getCapability(CapabilityEnergy.ENERGY, side);
-            if (store != null && store.canExtract()) {
+            IEnergyStorage source = parent.getCapability(CapabilityEnergy.ENERGY, side);
+            if (source != null && source.canExtract()) {
                 // Construct an emit target for the side in question, if the appropriate capability exists
-                IEnergyStorage target = coord.offset(side).getTileEntity(world).getCapability(CapabilityEnergy.ENERGY, side.getOpposite());
-                if (target != null) {
-                    targets.add(new EmitTarget(store, target));
+                TileEntity targetTile = coord.offset(side).getTileEntity(world);
+                if (targetTile != null && targetTile.hasCapability(CapabilityEnergy.ENERGY, side.getOpposite())) {
+                    targets.add(new EmitTarget(source, targetTile.getCapability(CapabilityEnergy.ENERGY, side.getOpposite())));
                 }
             }
         }

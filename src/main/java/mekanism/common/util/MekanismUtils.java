@@ -843,16 +843,7 @@ public final class MekanismUtils {
      * @return if RF power should be used
      */
     public static boolean useRF() {
-        return Mekanism.hooks.RFLoaded && !general.blacklistRF;
-    }
-
-    /**
-     * Whether or not Forge power should be used.
-     *
-     * @return if Forge power should be used
-     */
-    public static boolean useForge() {
-        return !general.blacklistForge;
+        return Mekanism.hooks.RFLoaded;
     }
 
     /**

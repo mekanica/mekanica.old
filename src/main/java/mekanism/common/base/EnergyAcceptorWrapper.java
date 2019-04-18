@@ -1,6 +1,5 @@
 package mekanism.common.base;
 
-import cofh.redstoneflux.api.IEnergyReceiver;
 import ic2.api.energy.EnergyNet;
 import ic2.api.energy.tile.IEnergySink;
 import ic2.api.energy.tile.IEnergyTile;
@@ -29,11 +28,8 @@ public abstract class EnergyAcceptorWrapper implements IStrictEnergyAcceptor {
         if (CapabilityUtils.hasCapability(tileEntity, Capabilities.ENERGY_ACCEPTOR_CAPABILITY, side)) {
             wrapper = new MekanismAcceptor(
                   CapabilityUtils.getCapability(tileEntity, Capabilities.ENERGY_ACCEPTOR_CAPABILITY, side));
-        } else if (MekanismUtils.useForge() && CapabilityUtils
-              .hasCapability(tileEntity, CapabilityEnergy.ENERGY, side)) {
+        } else if (CapabilityUtils.hasCapability(tileEntity, CapabilityEnergy.ENERGY, side)) {
             wrapper = new ForgeAcceptor(CapabilityUtils.getCapability(tileEntity, CapabilityEnergy.ENERGY, side));
-        } else if (MekanismUtils.useRF() && tileEntity instanceof IEnergyReceiver) {
-            wrapper = new RFAcceptor((IEnergyReceiver) tileEntity);
         } else if (MekanismUtils.useIC2()) {
             IEnergyTile tile = EnergyNet.instance.getSubTile(tileEntity.getWorld(), tileEntity.getPos());
 
@@ -72,38 +68,6 @@ public abstract class EnergyAcceptorWrapper implements IStrictEnergyAcceptor {
         @Override
         public boolean needsEnergy(EnumFacing side) {
             return acceptor.acceptEnergy(side, 1, true) > 0;
-        }
-    }
-
-    public static class RFAcceptor extends EnergyAcceptorWrapper {
-
-        private IEnergyReceiver acceptor;
-
-        public RFAcceptor(IEnergyReceiver rfAcceptor) {
-            acceptor = rfAcceptor;
-        }
-
-        @Override
-        public double acceptEnergy(EnumFacing side, double amount, boolean simulate) {
-            return fromRF(acceptor.receiveEnergy(side, Math.min(Integer.MAX_VALUE, toRF(amount)), simulate));
-        }
-
-        @Override
-        public boolean canReceiveEnergy(EnumFacing side) {
-            return acceptor.canConnectEnergy(side);
-        }
-
-        @Override
-        public boolean needsEnergy(EnumFacing side) {
-            return acceptor.receiveEnergy(side, 1, true) > 0;
-        }
-
-        public int toRF(double joules) {
-            return (int) Math.round(joules * general.TO_RF);
-        }
-
-        public double fromRF(int rf) {
-            return rf * general.FROM_RF;
         }
     }
 
@@ -166,11 +130,11 @@ public abstract class EnergyAcceptorWrapper implements IStrictEnergyAcceptor {
         }
 
         public int toForge(double joules) {
-            return (int) Math.round(joules * general.TO_FORGE);
+            return (int) Math.round(joules * general.TO_RF);
         }
 
         public double fromForge(double forge) {
-            return forge * general.FROM_FORGE;
+            return forge * general.FROM_RF;
         }
     }
 }

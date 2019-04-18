@@ -1,6 +1,5 @@
 package mekanism.common.tile.transmitter;
 
-import cofh.redstoneflux.api.IEnergyReceiver;
 import io.netty.buffer.ByteBuf;
 import java.util.Collection;
 import java.util.List;
@@ -18,7 +17,6 @@ import mekanism.common.block.states.BlockStateTransmitter.TransmitterType;
 import mekanism.common.capabilities.Capabilities;
 import mekanism.common.capabilities.CapabilityWrapperManager;
 import mekanism.common.config.MekanismConfig.general;
-import mekanism.common.integration.MekanismHooks;
 import mekanism.common.integration.forgeenergy.ForgeEnergyCableIntegration;
 import mekanism.common.transmitters.grid.EnergyNetwork;
 import mekanism.common.util.CableUtils;
@@ -30,13 +28,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.fml.common.Optional;
 
-@Optional.InterfaceList(
-      @Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyReceiver", modid = MekanismHooks.REDSTONEFLUX_MOD_ID)
-)
 public class TileEntityUniversalCable extends TileEntityTransmitter<EnergyAcceptorWrapper, EnergyNetwork> implements
-      IStrictEnergyAcceptor, IStrictEnergyStorage, IEnergyReceiver {
+      IStrictEnergyAcceptor, IStrictEnergyStorage {
 
     public Tier.CableTier tier = CableTier.BASIC;
 
@@ -94,18 +88,17 @@ public class TileEntityUniversalCable extends TileEntityTransmitter<EnergyAccept
                             }
 
                             storage.setEnergy(storage.getEnergy() - toDraw);
-                        } else if (MekanismUtils.useForge() && CapabilityUtils
-                              .hasCapability(outputter, CapabilityEnergy.ENERGY, side.getOpposite())) {
+                        } else if (CapabilityUtils.hasCapability(outputter, CapabilityEnergy.ENERGY, side.getOpposite())) {
                             IEnergyStorage storage = CapabilityUtils
                                   .getCapability(outputter, CapabilityEnergy.ENERGY, side.getOpposite());
-                            double toDraw = storage.extractEnergy((int) Math.round(canDraw * general.TO_FORGE), true)
-                                  * general.FROM_FORGE;
+                            double toDraw = storage.extractEnergy((int) Math.round(canDraw * general.TO_RF), true)
+                                  * general.FROM_RF;
 
                             if (toDraw > 0) {
                                 toDraw -= takeEnergy(toDraw, true);
                             }
 
-                            storage.extractEnergy((int) Math.round(toDraw * general.TO_FORGE), false);
+                            storage.extractEnergy((int) Math.round(toDraw * general.TO_RF), false);
                         }
                     }
                 }
@@ -197,31 +190,6 @@ public class TileEntityUniversalCable extends TileEntityTransmitter<EnergyAccept
             getTransmitter().getTransmitterNetwork().buffer.amount -= lastWrite;
             buffer.amount = lastWrite;
         }
-    }
-
-    @Override
-    @Optional.Method(modid = MekanismHooks.REDSTONEFLUX_MOD_ID)
-    public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
-        return maxReceive - (int) Math
-              .round(Math.min(Integer.MAX_VALUE, takeEnergy(maxReceive * general.FROM_RF, !simulate) * general.TO_RF));
-    }
-
-    @Override
-    @Optional.Method(modid = MekanismHooks.REDSTONEFLUX_MOD_ID)
-    public boolean canConnectEnergy(EnumFacing from) {
-        return canConnect(from);
-    }
-
-    @Override
-    @Optional.Method(modid = MekanismHooks.REDSTONEFLUX_MOD_ID)
-    public int getEnergyStored(EnumFacing from) {
-        return (int) Math.round(Math.min(Integer.MAX_VALUE, getEnergy() * general.TO_RF));
-    }
-
-    @Override
-    @Optional.Method(modid = MekanismHooks.REDSTONEFLUX_MOD_ID)
-    public int getMaxEnergyStored(EnumFacing from) {
-        return (int) Math.round(Math.min(Integer.MAX_VALUE, getMaxEnergy() * general.TO_RF));
     }
 
     @Override

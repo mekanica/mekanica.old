@@ -152,8 +152,8 @@ public final class CableUtils {
 
             if (CapabilityUtils.hasCapability(tileEntity, CapabilityEnergy.ENERGY, side.getOpposite())) {
                 IEnergyStorage storage = CapabilityUtils.getCapability(tileEntity, CapabilityEnergy.ENERGY, side.getOpposite());
-                sent += storage.receiveEnergy((int) Math.round(Math.min(Integer.MAX_VALUE, toSend * general.TO_FORGE)),
-                            false) * general.FROM_FORGE;
+                sent += storage.receiveEnergy((int) Math.round(Math.min(Integer.MAX_VALUE, toSend * general.TO_RF)),
+                            false) * general.FROM_RF;
             }
 
             if (sent - prev == 0) {

@@ -143,46 +143,6 @@ public class TileEntityTurbineValve extends TileEntityTurbineCasing implements I
     }
 
     @Override
-    @Method(modid = MekanismHooks.REDSTONEFLUX_MOD_ID)
-    public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
-        return 0;
-    }
-
-    @Override
-    @Method(modid = MekanismHooks.REDSTONEFLUX_MOD_ID)
-    public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
-        if (sideIsOutput(from)) {
-            double toSend = Math.min(getEnergy(), Math.min(getMaxOutput(), maxExtract * general.FROM_RF));
-
-            if (!simulate) {
-                setEnergy(getEnergy() - toSend);
-            }
-
-            return (int) Math.round(Math.min(Integer.MAX_VALUE, toSend * general.TO_RF));
-        }
-
-        return 0;
-    }
-
-    @Override
-    @Method(modid = MekanismHooks.REDSTONEFLUX_MOD_ID)
-    public boolean canConnectEnergy(EnumFacing from) {
-        return structure != null;
-    }
-
-    @Override
-    @Method(modid = MekanismHooks.REDSTONEFLUX_MOD_ID)
-    public int getEnergyStored(EnumFacing from) {
-        return (int) Math.round(Math.min(Integer.MAX_VALUE, getEnergy() * general.TO_RF));
-    }
-
-    @Override
-    @Method(modid = MekanismHooks.REDSTONEFLUX_MOD_ID)
-    public int getMaxEnergyStored(EnumFacing from) {
-        return (int) Math.round(Math.min(Integer.MAX_VALUE, getMaxEnergy() * general.TO_RF));
-    }
-
-    @Override
     @Method(modid = MekanismHooks.IC2_MOD_ID)
     public int getSinkTier() {
         return 4;

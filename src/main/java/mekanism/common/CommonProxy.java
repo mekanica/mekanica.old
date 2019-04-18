@@ -225,12 +225,6 @@ public class CommonProxy implements IGuiProvider {
               "Conversion multiplier from RF to Joules (RF * JoulesToRF = Joules)").getDouble();
         general.TO_RF = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "RFToJoules", 0.4D,
               "Conversion multiplier from Joules to RF (Joules * RFToJoules = RF)").getDouble();
-        general.FROM_FORGE = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "JoulesToForge", 2.5D,
-              "Conversion multiplier from Forge Energy to Joules (FE * JoulesToForge = Joules)")
-              .getDouble();
-        general.TO_FORGE = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "ForgeToJoules", 0.4D,
-              "Conversion multiplier from Joules to Forge Energy (Joules * ForgeToJoules = FE)")
-              .getDouble();
         general.FROM_H2 = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "HydrogenEnergyDensity", 200D,
               "How much energy is produced per mB of Hydrogen, also affects Electrolytic Separator usage, Ethylene burn rate and Gas generator energy capacity")
               .getDouble();
@@ -325,13 +319,6 @@ public class CommonProxy implements IGuiProvider {
 
         general.blacklistIC2 = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "BlacklistIC2Power", false,
               "Disables IC2 power integration. Requires world restart (server-side option in SMP).").getBoolean();
-        general.blacklistRF = Mekanism.configuration.get(Configuration.CATEGORY_GENERAL, "BlacklistRFPower", false,
-              "Disables Thermal Expansion RedstoneFlux power integration. Requires world restart (server-side option in SMP).")
-              .getBoolean();
-        general.blacklistForge = Mekanism.configuration
-              .get(Configuration.CATEGORY_GENERAL, "BlacklistForgePower", false,
-                    "Disables Forge Energy (FE,IF,uF,CF) power integration. Requires world restart (server-side option in SMP).")
-              .getBoolean();
 
         String s = Mekanism.configuration
               .get(Configuration.CATEGORY_GENERAL, "EnergyType", "RF", "Displayed energy type in Mekanica GUIs.",

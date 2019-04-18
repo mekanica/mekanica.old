@@ -17,11 +17,11 @@ public class ForgeEnergyIntegration implements IEnergyStorage {
     }
 
     public static double forgeToMek(int forge) {
-        return forge * general.FROM_FORGE;
+        return forge * general.FROM_RF;
     }
 
     public static int mekToForge(double mek) {
-        return (int) Math.round(mek * general.TO_FORGE);
+        return (int) Math.round(mek * general.FROM_RF);
     }
 
     @Override

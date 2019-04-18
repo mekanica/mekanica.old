@@ -1,6 +1,5 @@
 package mekanism.common.item;
 
-import cofh.redstoneflux.api.IEnergyContainerItem;
 import ic2.api.item.IElectricItemManager;
 import ic2.api.item.ISpecialElectricItem;
 import io.netty.buffer.ByteBuf;
@@ -104,11 +103,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author AidanBrady
  */
 @InterfaceList({
-      @Interface(iface = "cofh.redstoneflux.api.IEnergyContainerItem", modid = MekanismHooks.REDSTONEFLUX_MOD_ID),
       @Interface(iface = "ic2.api.item.ISpecialElectricItem", modid = MekanismHooks.IC2_MOD_ID)
 })
 public class ItemBlockMachine extends ItemBlock implements IEnergizedItem, ISpecialElectricItem, IFactory,
-      ISustainedInventory, ISustainedTank, IEnergyContainerItem, IFluidItemWrapper, ITierItem, ISecurityItem,
+      ISustainedInventory, ISustainedTank, IFluidItemWrapper, ITierItem, ISecurityItem,
       IItemNetwork {
 
     public Block metaBlock;
@@ -649,52 +647,6 @@ public class ItemBlockMachine extends ItemBlock implements IEnergizedItem, ISpec
     @Override
     public boolean canSend(ItemStack itemStack) {
         return false;
-    }
-
-    @Override
-    @Method(modid = MekanismHooks.REDSTONEFLUX_MOD_ID)
-    public int receiveEnergy(ItemStack theItem, int energy, boolean simulate) {
-        if (canReceive(theItem)) {
-            double energyNeeded = getMaxEnergy(theItem) - getEnergy(theItem);
-            double toReceive = Math.min(energy * general.FROM_RF, energyNeeded);
-
-            if (!simulate) {
-                setEnergy(theItem, getEnergy(theItem) + toReceive);
-            }
-
-            return (int) Math.round(toReceive * general.TO_RF);
-        }
-
-        return 0;
-    }
-
-    @Override
-    @Method(modid = MekanismHooks.REDSTONEFLUX_MOD_ID)
-    public int extractEnergy(ItemStack theItem, int energy, boolean simulate) {
-        if (canSend(theItem)) {
-            double energyRemaining = getEnergy(theItem);
-            double toSend = Math.min((energy * general.FROM_RF), energyRemaining);
-
-            if (!simulate) {
-                setEnergy(theItem, getEnergy(theItem) - toSend);
-            }
-
-            return (int) Math.round(toSend * general.TO_RF);
-        }
-
-        return 0;
-    }
-
-    @Override
-    @Method(modid = MekanismHooks.REDSTONEFLUX_MOD_ID)
-    public int getEnergyStored(ItemStack theItem) {
-        return (int) (getEnergy(theItem) * general.TO_RF);
-    }
-
-    @Override
-    @Method(modid = MekanismHooks.REDSTONEFLUX_MOD_ID)
-    public int getMaxEnergyStored(ItemStack theItem) {
-        return (int) (getMaxEnergy(theItem) * general.TO_RF);
     }
 
     @Override

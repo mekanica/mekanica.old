@@ -195,38 +195,6 @@ public abstract class TileEntityElectricBlock extends TileEntityContainerBlock i
     }
 
     @Override
-    @Method(modid = MekanismHooks.REDSTONEFLUX_MOD_ID)
-    public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
-        return (int) Math.round(
-              Math.min(Integer.MAX_VALUE, acceptEnergy(from, maxReceive * general.FROM_RF, simulate) * general.TO_RF));
-    }
-
-    @Override
-    @Method(modid = MekanismHooks.REDSTONEFLUX_MOD_ID)
-    public int extractEnergy(EnumFacing from, int maxExtract, boolean simulate) {
-        return (int) Math.round(
-              Math.min(Integer.MAX_VALUE, pullEnergy(from, maxExtract * general.FROM_RF, simulate) * general.TO_RF));
-    }
-
-    @Override
-    @Method(modid = MekanismHooks.REDSTONEFLUX_MOD_ID)
-    public boolean canConnectEnergy(EnumFacing from) {
-        return sideIsConsumer(from) || sideIsOutput(from);
-    }
-
-    @Override
-    @Method(modid = MekanismHooks.REDSTONEFLUX_MOD_ID)
-    public int getEnergyStored(EnumFacing from) {
-        return (int) Math.round(Math.min(Integer.MAX_VALUE, getEnergy() * general.TO_RF));
-    }
-
-    @Override
-    @Method(modid = MekanismHooks.REDSTONEFLUX_MOD_ID)
-    public int getMaxEnergyStored(EnumFacing from) {
-        return (int) Math.round(Math.min(Integer.MAX_VALUE, getMaxEnergy() * general.TO_RF));
-    }
-
-    @Override
     @Method(modid = MekanismHooks.IC2_MOD_ID)
     public int getSinkTier() {
         return !general.blacklistIC2 ? 4 : 0;

@@ -182,13 +182,13 @@ public class EntityRobit extends EntityCreature implements IInventory, ISustaine
             if (!stack.isEmpty() && getEnergy() < MAX_ELECTRICITY) {
                 if (stack.getItem() instanceof IEnergizedItem) {
                     setEnergy(getEnergy() + EnergizedItemManager.discharge(stack, MAX_ELECTRICITY - getEnergy()));
-                } else if (MekanismUtils.useForge() && stack.hasCapability(CapabilityEnergy.ENERGY, null)) {
+                } else if (stack.hasCapability(CapabilityEnergy.ENERGY, null)) {
                     IEnergyStorage storage = stack.getCapability(CapabilityEnergy.ENERGY, null);
 
                     if (storage.canExtract()) {
                         int needed = (int) Math
-                              .round(Math.min(Integer.MAX_VALUE, (MAX_ELECTRICITY - getEnergy()) * general.TO_FORGE));
-                        setEnergy(getEnergy() + storage.extractEnergy(needed, false) * general.FROM_FORGE);
+                              .round(Math.min(Integer.MAX_VALUE, (MAX_ELECTRICITY - getEnergy()) * general.TO_RF));
+                        setEnergy(getEnergy() + storage.extractEnergy(needed, false) * general.FROM_RF);
                     }
                 } else if (MekanismUtils.useRF() && stack.getItem() instanceof IEnergyContainerItem) {
                     IEnergyContainerItem item = (IEnergyContainerItem) stack.getItem();
